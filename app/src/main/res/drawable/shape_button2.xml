@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/colorBackground" />
+    <stroke android:width="2dp"
+        android:color="@color/spinnerstyle" />
+    <corners android:topLeftRadius="125dp"
+        android:topRightRadius="125dp"
+        android:bottomRightRadius="125dp"
+        android:bottomLeftRadius="125dp"/>
+    <padding android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp"/>
+
+    <selector xmlns:android="http://schemas.android.com/apk/res/android">
+        <item android:drawable="@drawable/normal_btn" android:state_pressed="false"/>
+        <item android:drawable="@drawable/press_btn" android:state_pressed="true"/>
+    </selector>
+</shape>

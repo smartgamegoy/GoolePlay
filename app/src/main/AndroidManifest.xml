@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.jetec.nordic_googleplay">
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/icon"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        tools:ignore="GoogleAppIndexingWarning"
+        android:fullBackupContent="@xml/backup_descriptor">
+        <activity
+            android:name="com.jetec.nordic_googleplay.Activity.MainActivity"
+            android:theme="@style/nordic_use"
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.jetec.nordic_googleplay.Activity.DeviceList"
+            android:theme="@style/nordic_use"
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator">
+        </activity>
+        <activity
+            android:name="com.jetec.nordic_googleplay.Activity.DeviceFunction"
+            android:theme="@style/nordic_use"
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator">
+        </activity>
+        <activity android:name="com.jetec.nordic_googleplay.Activity.LogChartView"
+            android:theme="@style/nordic_use"
+            tools:ignore="InnerclassSeparator">
+        </activity>
+        <activity
+            android:name="com.jetec.nordic_googleplay.Activity.ChartActivity"
+            android:theme="@style/nordic_use"
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator">
+        </activity>
+        <activity
+            android:name="com.jetec.nordic_googleplay.Activity.SearchActivity"
+            android:theme="@style/nordic_use"
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator">
+        </activity>
+        <service
+            android:name="com.jetec.nordic_googleplay.Service.BluetoothLeService"
+            tools:ignore="InnerclassSeparator" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.your.package.fileProvider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>
