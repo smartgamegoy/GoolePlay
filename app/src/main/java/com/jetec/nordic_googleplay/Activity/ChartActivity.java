@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import com.jetec.nordic_googleplay.R;
+import com.jetec.nordic_googleplay.Value;
 import com.jetec.nordic_googleplay.ViewAdapter.ChartData;
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class ChartActivity extends AppCompatActivity {
 
     private Vibrator vibrator;
     private Menu menu;
-    private ArrayList<String> timelist, charttime, Logdata, Tlist, Hlist, Clist;
+    private ArrayList<String> timelist, charttime, Logdata, Firstlist, Secondlist, Thirdlist;
     private String TAG = "Chartlog", getdate, getsize, gett, geth, getc;
     private int thread;
     private ChartData chartData;
@@ -42,25 +43,26 @@ public class ChartActivity extends AppCompatActivity {
         timelist = new ArrayList<String>();
         charttime = new ArrayList<String>();
         Logdata = new ArrayList<String>();
-        Tlist = new ArrayList<String>();
-        Hlist = new ArrayList<String>();
-        Clist = new ArrayList<String>();
+        Firstlist = new ArrayList<String>();
+        Secondlist = new ArrayList<String>();
+        Thirdlist = new ArrayList<String>();
 
         timelist.clear();
         charttime.clear();
         Logdata.clear();
-        Tlist.clear();
-        Hlist.clear();
-        Clist.clear();
+        Firstlist.clear();
+        Secondlist.clear();
+        Thirdlist.clear();
 
         Intent intent = getIntent();
-        timelist = intent.getStringArrayListExtra("timelist");
-        charttime = intent.getStringArrayListExtra("charttime");
-        Tlist = intent.getStringArrayListExtra("Tlist");
-        Hlist = intent.getStringArrayListExtra("Hlist");
-        Clist = intent.getStringArrayListExtra("Clist");
-        all_Width = intent.getDoubleExtra("all_Width", all_Width);
-        all_Height = intent.getDoubleExtra("all_Height", all_Height);
+
+        timelist = Value.timelist;
+        charttime = Value.charttime;
+        Firstlist = Value.Firstlist;
+        Secondlist = Value.Secondlist;
+        Thirdlist = Value.Thirdlist;
+        all_Width = Value.all_Width;
+        all_Height = Value.all_Height;
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -68,11 +70,47 @@ public class ChartActivity extends AppCompatActivity {
 
         getdate = getString(R.string.datetime);
         getsize = getString(R.string.size);
-        gett = getString(R.string.Temperature);
-        geth = getString(R.string.Humidity);
-        getc = getString(R.string.Co2);
 
-        chartData = new ChartData(this, charttime, Tlist, Hlist, Clist, getdate, getsize,
+        if(Value.name.get(2).toString().matches("C")) {
+            getc = getString(R.string.Co2);
+        }
+        else if(Value.name.get(2).toString().matches("T")){
+            getc = getString(R.string.Temperature);
+        }
+        else if(Value.name.get(2).toString().matches("H")){
+            getc = getString(R.string.Humidity);
+        }
+        else if(Value.name.get(2).toString().matches("I")){
+            getc = getString(R.string.I3row);
+        }
+
+        if(Value.name.get(1).toString().matches("C")) {
+            geth = getString(R.string.Co2);
+        }
+        else if(Value.name.get(1).toString().matches("T")){
+            geth = getString(R.string.Temperature);
+        }
+        else if(Value.name.get(1).toString().matches("H")){
+            geth = getString(R.string.Humidity);
+        }
+        else if(Value.name.get(1).toString().matches("I")){
+            geth = getString(R.string.I2row);
+        }
+
+        if(Value.name.get(0).toString().matches("C")) {
+            gett = getString(R.string.Co2);
+        }
+        else if(Value.name.get(0).toString().matches("T")){
+            gett = getString(R.string.Temperature);
+        }
+        else if(Value.name.get(0).toString().matches("H")){
+            gett = getString(R.string.Humidity);
+        }
+        else if(Value.name.get(0).toString().matches("I")){
+            gett = getString(R.string.I1row);
+        }
+
+        chartData = new ChartData(this, charttime, Firstlist, Secondlist, Thirdlist, getdate, getsize,
                 gett, geth, getc);
         chart_list.setAdapter(chartData);
     }
@@ -80,16 +118,8 @@ public class ChartActivity extends AppCompatActivity {
     private void searchdata(){
 
         Intent intent = new Intent(ChartActivity.this, SearchActivity.class);
-        intent.putStringArrayListExtra("charttime", charttime);
-        intent.putStringArrayListExtra("timelist", timelist);
-        intent.putStringArrayListExtra("Tlist",Tlist);
-        intent.putStringArrayListExtra("Hlist",Hlist);
-        intent.putStringArrayListExtra("Clist",Clist);
-        intent.putExtra("all_Height", all_Height);
-        intent.putExtra("all_Width", all_Width);
 
         startActivity(intent);
-
     }
 
     @Override

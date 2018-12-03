@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import com.jetec.nordic_googleplay.R;
+import com.jetec.nordic_googleplay.Value;
 import com.jetec.nordic_googleplay.ViewAdapter.SearchData;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,7 +42,7 @@ public class SearchActivity extends AppCompatActivity {
     private SearchData searchData;
     private Dialog datedialog = null, timedialog = null;
     private int page, state;
-    private ArrayList<String> charttime, Tlist, Hlist, Clist, condition1, condition2, condition3;
+    private ArrayList<String> charttime, Firstlist, Secondlist, Thirdlist, condition1, condition2, condition3;
     private ArrayList<String> new_time, new_T, new_H, new_C, idlist;
     private String date, CO2, Humidity, Temperature, record, getdate = "yyyy-mm-dd", gettime = "00:00",
             TAG = "searchLog", chose1, chose2, intput;
@@ -84,9 +85,9 @@ public class SearchActivity extends AppCompatActivity {
         state = 0;
 
         charttime = new ArrayList<String>();
-        Tlist = new ArrayList<String>();
-        Hlist = new ArrayList<String>();
-        Clist = new ArrayList<String>();
+        Firstlist = new ArrayList<String>();
+        Secondlist = new ArrayList<String>();
+        Thirdlist = new ArrayList<String>();
         condition1 = new ArrayList<String>();
         condition2 = new ArrayList<String>();
         condition3 = new ArrayList<String>();
@@ -97,9 +98,9 @@ public class SearchActivity extends AppCompatActivity {
         idlist = new ArrayList<String>();
 
         charttime.clear();
-        Tlist.clear();
-        Hlist.clear();
-        Clist.clear();
+        Firstlist.clear();
+        Secondlist.clear();
+        Thirdlist.clear();
         idlist.clear();
         condition1.clear();
         condition2.clear();
@@ -109,18 +110,53 @@ public class SearchActivity extends AppCompatActivity {
         new_H.clear();
         new_C.clear();
 
-        Intent intent = getIntent();
-        charttime = intent.getStringArrayListExtra("charttime");
-        Tlist = intent.getStringArrayListExtra("Tlist");
-        Hlist = intent.getStringArrayListExtra("Hlist");
-        Clist = intent.getStringArrayListExtra("Clist");
-        all_Width = intent.getDoubleExtra("all_Width", all_Width);
-        all_Height = intent.getDoubleExtra("all_Height", all_Height);
+        charttime = Value.charttime;
+        Firstlist = Value.Firstlist;
+        Secondlist = Value.Secondlist;
+        Thirdlist = Value.Thirdlist;
+        all_Width = Value.all_Width;
+        all_Height = Value.all_Height;
 
         date = getString(R.string.datetime);    //項目，條件，數值
-        CO2 = getString(R.string.Co2);
-        Humidity = getString(R.string.Humidity);
-        Temperature = getString(R.string.Temperature);
+        if(Value.name.get(2).toString().matches("C")) {
+            CO2 = getString(R.string.Co2);
+        }
+        else if(Value.name.get(2).toString().matches("T")){
+            CO2 = getString(R.string.Temperature);
+        }
+        else if(Value.name.get(2).toString().matches("H")){
+            CO2 = getString(R.string.Humidity);
+        }
+        else if(Value.name.get(2).toString().matches("I")){
+            CO2 = getString(R.string.I3row);
+        }
+
+        if(Value.name.get(1).toString().matches("C")) {
+            Humidity = getString(R.string.Co2);
+        }
+        else if(Value.name.get(1).toString().matches("T")){
+            Humidity = getString(R.string.Temperature);
+        }
+        else if(Value.name.get(1).toString().matches("H")){
+            Humidity = getString(R.string.Humidity);
+        }
+        else if(Value.name.get(1).toString().matches("I")){
+            Humidity = getString(R.string.I2row);
+        }
+
+        if(Value.name.get(0).toString().matches("C")) {
+            Temperature = getString(R.string.Co2);
+        }
+        else if(Value.name.get(0).toString().matches("T")){
+            Temperature = getString(R.string.Temperature);
+        }
+        else if(Value.name.get(0).toString().matches("H")){
+            Temperature = getString(R.string.Humidity);
+        }
+        else if(Value.name.get(0).toString().matches("I")){
+            Temperature = getString(R.string.I1row);
+        }
+
         record = getString(R.string.size);
 
         new Thread(timecheck).start();
@@ -325,12 +361,12 @@ public class SearchActivity extends AppCompatActivity {
                                     if(sdf.parse(timecomparison).before(sdf.parse(charttime.get(i)))){
                                         new_time.add(charttime.get(i));
                                         idlist.add(String.valueOf(i + 1));
-                                        if (Tlist.size() > 0)
-                                            new_T.add(Tlist.get(i));
-                                        if (Hlist.size() > 0)
-                                            new_H.add(Hlist.get(i));
-                                        if (Clist.size() > 0)
-                                            new_T.add(Clist.get(i));
+                                        if (Firstlist.size() > 0)
+                                            new_T.add(Firstlist.get(i));
+                                        if (Secondlist.size() > 0)
+                                            new_H.add(Secondlist.get(i));
+                                        if (Thirdlist.size() > 0)
+                                            new_T.add(Thirdlist.get(i));
                                     }
                                 }
                                 showpage();
@@ -347,12 +383,12 @@ public class SearchActivity extends AppCompatActivity {
                                             || sdf.parse(timecomparison).equals(sdf.parse(charttime.get(i)))){
                                         new_time.add(charttime.get(i));
                                         idlist.add(String.valueOf(i + 1));
-                                        if(Tlist.size() > 0)
-                                            new_T.add(Tlist.get(i));
-                                        if(Hlist.size() > 0)
-                                            new_H.add(Hlist.get(i));
-                                        if(Clist.size() > 0)
-                                            new_T.add(Clist.get(i));
+                                        if(Firstlist.size() > 0)
+                                            new_T.add(Firstlist.get(i));
+                                        if(Secondlist.size() > 0)
+                                            new_H.add(Secondlist.get(i));
+                                        if(Thirdlist.size() > 0)
+                                            new_T.add(Thirdlist.get(i));
                                     }
                                 }
                                 showpage();
@@ -368,12 +404,12 @@ public class SearchActivity extends AppCompatActivity {
                                     if(sdf.parse(timecomparison).equals(sdf.parse(charttime.get(i)))){
                                         new_time.add(charttime.get(i));
                                         idlist.add(String.valueOf(i + 1));
-                                        if(Tlist.size() > 0)
-                                            new_T.add(Tlist.get(i));
-                                        if(Hlist.size() > 0)
-                                            new_H.add(Hlist.get(i));
-                                        if(Clist.size() > 0)
-                                            new_T.add(Clist.get(i));
+                                        if(Firstlist.size() > 0)
+                                            new_T.add(Firstlist.get(i));
+                                        if(Secondlist.size() > 0)
+                                            new_H.add(Secondlist.get(i));
+                                        if(Thirdlist.size() > 0)
+                                            new_T.add(Thirdlist.get(i));
                                     }
                                 }
                                 showpage();
@@ -390,12 +426,12 @@ public class SearchActivity extends AppCompatActivity {
                                             || sdf.parse(timecomparison).equals(sdf.parse(charttime.get(i)))){
                                         new_time.add(charttime.get(i));
                                         idlist.add(String.valueOf(i + 1));
-                                        if(Tlist.size() > 0)
-                                            new_T.add(Tlist.get(i));
-                                        if(Hlist.size() > 0)
-                                            new_H.add(Hlist.get(i));
-                                        if(Clist.size() > 0)
-                                            new_T.add(Clist.get(i));
+                                        if(Firstlist.size() > 0)
+                                            new_T.add(Firstlist.get(i));
+                                        if(Secondlist.size() > 0)
+                                            new_H.add(Secondlist.get(i));
+                                        if(Thirdlist.size() > 0)
+                                            new_T.add(Thirdlist.get(i));
                                     }
                                 }
                                 showpage();
@@ -411,12 +447,12 @@ public class SearchActivity extends AppCompatActivity {
                                     if(sdf.parse(timecomparison).after(sdf.parse(charttime.get(i)))){
                                         new_time.add(charttime.get(i));
                                         idlist.add(String.valueOf(i + 1));
-                                        if(Tlist.size() > 0)
-                                            new_T.add(Tlist.get(i));
-                                        if(Hlist.size() > 0)
-                                            new_H.add(Hlist.get(i));
-                                        if(Clist.size() > 0)
-                                            new_T.add(Clist.get(i));
+                                        if(Firstlist.size() > 0)
+                                            new_T.add(Firstlist.get(i));
+                                        if(Secondlist.size() > 0)
+                                            new_H.add(Secondlist.get(i));
+                                        if(Thirdlist.size() > 0)
+                                            new_T.add(Thirdlist.get(i));
                                     }
                                 }
                                 showpage();
@@ -507,14 +543,14 @@ public class SearchActivity extends AppCompatActivity {
                 for(; i < j; i++){
                     new_time.add(charttime.get(i));
                     idlist.add(String.valueOf(i + 2));
-                    if(Tlist.size() > 0) {
-                        new_T.add(Tlist.get(i));
+                    if(Firstlist.size() > 0) {
+                        new_T.add(Firstlist.get(i));
                     }
-                    if(Hlist.size() > 0){
-                        new_H.add(Hlist.get(i));
+                    if(Secondlist.size() > 0){
+                        new_H.add(Secondlist.get(i));
                     }
-                    if(Clist.size() > 0){
-                        new_C.add(Clist.get(i));
+                    if(Thirdlist.size() > 0){
+                        new_C.add(Thirdlist.get(i));
                     }
                 }
                 showpage();
@@ -525,14 +561,14 @@ public class SearchActivity extends AppCompatActivity {
                 for(; i <= j; i++){
                     new_time.add(charttime.get(i));
                     idlist.add(String.valueOf(i + 1));
-                    if(Tlist.size() > 0) {
-                        new_T.add(Tlist.get(i));
+                    if(Firstlist.size() > 0) {
+                        new_T.add(Firstlist.get(i));
                     }
-                    if(Hlist.size() > 0){
-                        new_H.add(Hlist.get(i));
+                    if(Secondlist.size() > 0){
+                        new_H.add(Secondlist.get(i));
                     }
-                    if(Clist.size() > 0){
-                        new_C.add(Clist.get(i));
+                    if(Thirdlist.size() > 0){
+                        new_C.add(Thirdlist.get(i));
                     }
                 }
                 showpage();
@@ -542,14 +578,14 @@ public class SearchActivity extends AppCompatActivity {
                 int j = charttime.size() - 1;
                 new_time.add(charttime.get(i));
                 idlist.add(String.valueOf(i + 1));
-                if(Tlist.size() > 0) {
-                    new_T.add(Tlist.get(j));
+                if(Firstlist.size() > 0) {
+                    new_T.add(Firstlist.get(j));
                 }
-                if(Hlist.size() > 0){
-                    new_H.add(Hlist.get(j));
+                if(Secondlist.size() > 0){
+                    new_H.add(Secondlist.get(j));
                 }
-                if(Clist.size() > 0){
-                    new_C.add(Clist.get(j));
+                if(Thirdlist.size() > 0){
+                    new_C.add(Thirdlist.get(j));
                 }
                 showpage();
             }
@@ -558,14 +594,14 @@ public class SearchActivity extends AppCompatActivity {
                 for(int j = 0; j <= i; j++){
                     new_time.add(charttime.get(j));
                     idlist.add(String.valueOf(j + 1));
-                    if(Tlist.size() > 0) {
-                        new_T.add(Tlist.get(j));
+                    if(Firstlist.size() > 0) {
+                        new_T.add(Firstlist.get(j));
                     }
-                    if(Hlist.size() > 0){
-                        new_H.add(Hlist.get(j));
+                    if(Secondlist.size() > 0){
+                        new_H.add(Secondlist.get(j));
                     }
-                    if(Clist.size() > 0){
-                        new_C.add(Clist.get(j));
+                    if(Thirdlist.size() > 0){
+                        new_C.add(Thirdlist.get(j));
                     }
                 }
                 showpage();
@@ -575,14 +611,14 @@ public class SearchActivity extends AppCompatActivity {
                 for(int j = 0; j < i; j++){
                     new_time.add(charttime.get(j));
                     idlist.add(String.valueOf(j + 1));
-                    if(Tlist.size() > 0) {
-                        new_T.add(Tlist.get(j));
+                    if(Firstlist.size() > 0) {
+                        new_T.add(Firstlist.get(j));
                     }
-                    if(Hlist.size() > 0){
-                        new_H.add(Hlist.get(j));
+                    if(Secondlist.size() > 0){
+                        new_H.add(Secondlist.get(j));
                     }
-                    if(Clist.size() > 0){
-                        new_C.add(Clist.get(j));
+                    if(Thirdlist.size() > 0){
+                        new_C.add(Thirdlist.get(j));
                     }
                 }
                 showpage();
@@ -596,16 +632,16 @@ public class SearchActivity extends AppCompatActivity {
                 float i = Float.valueOf(s3);
                 Log.e(TAG, "i = " + i);
                 for(int k = 0; k < charttime.size(); k++){
-                    if(Tlist.size() > 0) {
-                        if((Float.valueOf(Tlist.get(k)) / 10) > i) {
-                            Log.e(TAG, "Tlist = " + Tlist.get(k));
+                    if(Firstlist.size() > 0) {
+                        if((Float.valueOf(Firstlist.get(k)) / 10) > i) {
+                            Log.e(TAG, "Firstlist = " + Firstlist.get(k));
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
-                            new_T.add(Tlist.get(k));
-                            if(Hlist.size() > 0)
-                                new_H.add(Hlist.get(k));
-                            if(Clist.size() > 0)
-                                new_C.add(Clist.get(k));
+                            new_T.add(Firstlist.get(k));
+                            if(Secondlist.size() > 0)
+                                new_H.add(Secondlist.get(k));
+                            if(Thirdlist.size() > 0)
+                                new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
@@ -614,15 +650,15 @@ public class SearchActivity extends AppCompatActivity {
             else if(s2.matches("≧")){
                 float i = Float.valueOf(s3);
                 for(int k = 0; k < charttime.size(); k++){
-                    if(Tlist.size() > 0) {
-                        if((Float.valueOf(Tlist.get(k)) / 10) >= i) {
+                    if(Firstlist.size() > 0) {
+                        if((Float.valueOf(Firstlist.get(k)) / 10) >= i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
-                            new_T.add(Tlist.get(k));
-                            if(Hlist.size() > 0)
-                                new_H.add(Hlist.get(k));
-                            if(Clist.size() > 0)
-                                new_C.add(Clist.get(k));
+                            new_T.add(Firstlist.get(k));
+                            if(Secondlist.size() > 0)
+                                new_H.add(Secondlist.get(k));
+                            if(Thirdlist.size() > 0)
+                                new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
@@ -631,15 +667,15 @@ public class SearchActivity extends AppCompatActivity {
             else if(s2.matches("＝")){
                 float i = Float.valueOf(s3);
                 for(int k = 0; k < charttime.size(); k++){
-                    if(Tlist.size() > 0) {
-                        if((Float.valueOf(Tlist.get(k)) / 10) == i) {
+                    if(Firstlist.size() > 0) {
+                        if((Float.valueOf(Firstlist.get(k)) / 10) == i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
-                            new_T.add(Tlist.get(k));
-                            if(Hlist.size() > 0)
-                                new_H.add(Hlist.get(k));
-                            if(Clist.size() > 0)
-                                new_C.add(Clist.get(k));
+                            new_T.add(Firstlist.get(k));
+                            if(Secondlist.size() > 0)
+                                new_H.add(Secondlist.get(k));
+                            if(Thirdlist.size() > 0)
+                                new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
@@ -648,15 +684,15 @@ public class SearchActivity extends AppCompatActivity {
             else if(s2.matches("≦")){
                 float i = Float.valueOf(s3);
                 for(int k = 0; k < charttime.size(); k++){
-                    if(Tlist.size() > 0) {
-                        if((Float.valueOf(Tlist.get(k)) / 10) <= i) {
+                    if(Firstlist.size() > 0) {
+                        if((Float.valueOf(Firstlist.get(k)) / 10) <= i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
-                            new_T.add(Tlist.get(k));
-                            if(Hlist.size() > 0)
-                                new_H.add(Hlist.get(k));
-                            if(Clist.size() > 0)
-                                new_C.add(Clist.get(k));
+                            new_T.add(Firstlist.get(k));
+                            if(Secondlist.size() > 0)
+                                new_H.add(Secondlist.get(k));
+                            if(Thirdlist.size() > 0)
+                                new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
@@ -665,15 +701,15 @@ public class SearchActivity extends AppCompatActivity {
             else if(s2.matches("＜")){
                 float i = Float.valueOf(s3);
                 for(int k = 0; k < charttime.size(); k++){
-                    if(Tlist.size() > 0) {
-                        if((Float.valueOf(Tlist.get(k)) / 10) < i) {
+                    if(Firstlist.size() > 0) {
+                        if((Float.valueOf(Firstlist.get(k)) / 10) < i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
-                            new_T.add(Tlist.get(k));
-                            if(Hlist.size() > 0)
-                                new_H.add(Hlist.get(k));
-                            if(Clist.size() > 0)
-                                new_C.add(Clist.get(k));
+                            new_T.add(Firstlist.get(k));
+                            if(Secondlist.size() > 0)
+                                new_H.add(Secondlist.get(k));
+                            if(Thirdlist.size() > 0)
+                                new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
@@ -687,15 +723,15 @@ public class SearchActivity extends AppCompatActivity {
             if(s2.matches("＞")){
                 float i = Float.valueOf(s3);
                 for(int k = 0; k < charttime.size(); k++){
-                    if(Hlist.size() > 0) {
-                        if((Float.valueOf(Hlist.get(k)) / 10) > i) {
+                    if(Secondlist.size() > 0) {
+                        if((Float.valueOf(Secondlist.get(k)) / 10) > i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
-                            new_H.add(Hlist.get(k));
-                            if(Tlist.size() > 0)
-                                new_T.add(Tlist.get(k));
-                            if(Clist.size() > 0)
-                                new_C.add(Clist.get(k));
+                            new_H.add(Secondlist.get(k));
+                            if(Firstlist.size() > 0)
+                                new_T.add(Firstlist.get(k));
+                            if(Thirdlist.size() > 0)
+                                new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
@@ -704,15 +740,15 @@ public class SearchActivity extends AppCompatActivity {
             else if(s2.matches("≧")){
                 float i = Float.valueOf(s3);
                 for(int k = 0; k < charttime.size(); k++){
-                    if(Hlist.size() > 0) {
-                        if((Float.valueOf(Hlist.get(k)) / 10) >= i) {
+                    if(Secondlist.size() > 0) {
+                        if((Float.valueOf(Secondlist.get(k)) / 10) >= i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
-                            new_H.add(Hlist.get(k));
-                            if(Tlist.size() > 0)
-                                new_T.add(Tlist.get(k));
-                            if(Clist.size() > 0)
-                                new_C.add(Clist.get(k));
+                            new_H.add(Secondlist.get(k));
+                            if(Firstlist.size() > 0)
+                                new_T.add(Firstlist.get(k));
+                            if(Thirdlist.size() > 0)
+                                new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
@@ -721,15 +757,15 @@ public class SearchActivity extends AppCompatActivity {
             else if(s2.matches("＝")){
                 float i = Float.valueOf(s3);
                 for(int k = 0; k < charttime.size(); k++){
-                    if(Hlist.size() > 0) {
-                        if((Float.valueOf(Hlist.get(k)) / 10) == i) {
+                    if(Secondlist.size() > 0) {
+                        if((Float.valueOf(Secondlist.get(k)) / 10) == i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
-                            new_H.add(Hlist.get(k));
-                            if(Tlist.size() > 0)
-                                new_T.add(Tlist.get(k));
-                            if(Clist.size() > 0)
-                                new_C.add(Clist.get(k));
+                            new_H.add(Secondlist.get(k));
+                            if(Firstlist.size() > 0)
+                                new_T.add(Firstlist.get(k));
+                            if(Thirdlist.size() > 0)
+                                new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
@@ -738,15 +774,15 @@ public class SearchActivity extends AppCompatActivity {
             else if(s2.matches("≦")){
                 float i = Float.valueOf(s3);
                 for(int k = 0; k < charttime.size(); k++){
-                    if(Hlist.size() > 0) {
-                        if((Float.valueOf(Hlist.get(k)) / 10) <= i) {
+                    if(Secondlist.size() > 0) {
+                        if((Float.valueOf(Secondlist.get(k)) / 10) <= i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
-                            new_H.add(Hlist.get(k));
-                            if(Tlist.size() > 0)
-                                new_T.add(Tlist.get(k));
-                            if(Clist.size() > 0)
-                                new_C.add(Clist.get(k));
+                            new_H.add(Secondlist.get(k));
+                            if(Firstlist.size() > 0)
+                                new_T.add(Firstlist.get(k));
+                            if(Thirdlist.size() > 0)
+                                new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
@@ -755,15 +791,15 @@ public class SearchActivity extends AppCompatActivity {
             else if(s2.matches("＜")){
                 float i = Float.valueOf(s3);
                 for(int k = 0; k < charttime.size(); k++){
-                    if(Hlist.size() > 0) {
-                        if((Float.valueOf(Hlist.get(k)) / 10) < i) {
+                    if(Secondlist.size() > 0) {
+                        if((Float.valueOf(Secondlist.get(k)) / 10) < i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
-                            new_H.add(Hlist.get(k));
-                            if(Tlist.size() > 0)
-                                new_T.add(Tlist.get(k));
-                            if(Clist.size() > 0)
-                                new_C.add(Clist.get(k));
+                            new_H.add(Secondlist.get(k));
+                            if(Firstlist.size() > 0)
+                                new_T.add(Firstlist.get(k));
+                            if(Thirdlist.size() > 0)
+                                new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
@@ -818,15 +854,15 @@ public class SearchActivity extends AppCompatActivity {
                     sleep(30);
                     condition1.add(record);
                     sleep(30);
-                    if(Tlist.size() > 0){
+                    if(Firstlist.size() > 0){
                         condition1.add(Temperature);
                         sleep(30);
                     }
-                    if(Hlist.size() > 0){
+                    if(Secondlist.size() > 0){
                         condition1.add(Humidity);
                         sleep(30);
                     }
-                    if(Clist.size() > 0){
+                    if(Thirdlist.size() > 0){
                         condition1.add(CO2);
                         sleep(30);
                     }

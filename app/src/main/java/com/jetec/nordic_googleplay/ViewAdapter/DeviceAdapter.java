@@ -1,5 +1,6 @@
 package com.jetec.nordic_googleplay.ViewAdapter;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,20 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import com.jetec.nordic_googleplay.R;
+
 import java.util.List;
 
 public class DeviceAdapter extends BaseAdapter {
-    private Context context;
     private List<BluetoothDevice> devices;
     private LayoutInflater inflater;
-    private double all_Width;
 
-    public DeviceAdapter(Context context, List<BluetoothDevice> devices, double all_Width) {
-        this.context = context;
+    public DeviceAdapter(Context context, List<BluetoothDevice> devices) {
         inflater = LayoutInflater.from(context);
         this.devices = devices;
-        this.all_Width = all_Width;
     }
 
     @Override
@@ -38,6 +37,7 @@ public class DeviceAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -50,10 +50,8 @@ public class DeviceAdapter extends BaseAdapter {
         }
 
         BluetoothDevice device = devices.get(position);
-        final TextView device_name = ((TextView) view.findViewById(R.id.search_device));
-        final TextView device_address = ((TextView) view.findViewById(R.id.device_address));
-        device_name.setPadding((int)(all_Width/6),0,0,0);
-        device_address.setPadding((int)(all_Width/6),0,0,0);
+        final TextView device_name = view.findViewById(R.id.search_device);
+        final TextView device_address = view.findViewById(R.id.device_address);
         device_name.setVisibility(View.VISIBLE);
         device_address.setVisibility(View.VISIBLE);
         if(device.getName() == null) {

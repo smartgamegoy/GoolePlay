@@ -8,14 +8,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.jetec.nordic_googleplay.R;
 
+import java.util.ArrayList;
+
 public class ChartList extends BaseAdapter {
 
     private Context context;
     private LayoutInflater inflater;
     private double all_Width, all_Height;
-    private String[] chartlist;
+    private ArrayList<String> chartlist;
 
-    public ChartList(Context context, double all_Width, double all_Height, String[] chartlist) {
+    public ChartList(Context context, double all_Width, double all_Height, ArrayList<String> chartlist) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.all_Width = all_Width;
@@ -25,12 +27,12 @@ public class ChartList extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return chartlist.length;
+        return chartlist.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return chartlist[position];
+        return chartlist.get(position);
     }
 
     @Override
@@ -49,7 +51,7 @@ public class ChartList extends BaseAdapter {
             view = (ViewGroup) inflater.inflate(R.layout.chartlist, null);
         }
 
-        String name = chartlist[position];
+        String name = chartlist.get(position);
         final TextView chart_name = ((TextView) view.findViewById(R.id.chart_name));
         chart_name.setPadding((int)(all_Width/8),0,0,0);
         chart_name.setVisibility(View.VISIBLE);

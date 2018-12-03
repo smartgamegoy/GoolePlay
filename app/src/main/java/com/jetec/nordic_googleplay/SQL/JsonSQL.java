@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 public class JsonSQL extends SQLiteOpenHelper {
 
-    Context context;
     private final static String table_name = "datalist"; //資料表名
     private final static String db_name = "jsonsql.db";    //資料庫名
     private static final int VERSION = 2;
@@ -25,9 +24,8 @@ public class JsonSQL extends SQLiteOpenHelper {
     public Cursor select()
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(table_name, null, null, null, null,
+        return db.query(table_name, null, null, null, null,
                 null, null, null);
-        return cursor;
     }
 
     @Override
@@ -37,8 +35,9 @@ public class JsonSQL extends SQLiteOpenHelper {
                 "address" + " TEXT, " +
                 "Charttime" + " TEXT, " +
                 "Timelist" + " TEXT, " +
-                "Tlist" + " TEXT, " +
-                "Hlist" + " TEXT" + ")";
+                "Firstlist" + " TEXT, " +
+                "Secondlist" + " TEXT, " +
+                "Thirdlist" + " TEXT" + ")";
         db.execSQL(DATABASE_CREATE_TABLE);
     }
 
@@ -77,16 +76,17 @@ public class JsonSQL extends SQLiteOpenHelper {
         db.delete(table_name, "address" + "=?",del);
     }
 
-    public long insert(JSONArray charttime,JSONArray timelist, JSONArray tlist, JSONArray hlist, String address)
-    {
+    public long insert(JSONArray charttime, JSONArray timelist, JSONArray Firstlist,
+                       JSONArray Secondlist, JSONArray Thirdlist, String address) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put("address", address);
         cv.put("Charttime", charttime.toString());
         cv.put("Timelist", timelist.toString());
-        cv.put("Tlist", tlist.toString());
-        cv.put("Hlist", hlist.toString());
+        cv.put("Firstlist", Firstlist.toString());
+        cv.put("Secondlist", Secondlist.toString());
+        cv.put("Thirdlist", Thirdlist.toString());
 
         Log.e("TAG",charttime.toString());
 
@@ -103,13 +103,15 @@ public class JsonSQL extends SQLiteOpenHelper {
         cursor.moveToFirst();
         String Charttime = cursor.getString(cursor.getColumnIndex("Charttime"));
         String Timelist = cursor.getString(cursor.getColumnIndex("Timelist"));
-        String Tlist = cursor.getString(cursor.getColumnIndex("Tlist"));
-        String Hlist = cursor.getString(cursor.getColumnIndex("Hlist"));
+        String Firstlist = cursor.getString(cursor.getColumnIndex("Firstlist"));
+        String Secondlist = cursor.getString(cursor.getColumnIndex("Secondlist"));
+        String Thirdlist = cursor.getString(cursor.getColumnIndex("Thirdlist"));
 
         dataList.add(Charttime);
         dataList.add(Timelist);
-        dataList.add(Tlist);
-        dataList.add(Hlist);
+        dataList.add(Firstlist);
+        dataList.add(Secondlist);
+        dataList.add(Thirdlist);
 
         return dataList;
     }

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.jetec.nordic_googleplay.R;
+
 import java.util.List;
 
 public class Function extends BaseAdapter {

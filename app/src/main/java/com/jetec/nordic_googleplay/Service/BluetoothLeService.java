@@ -26,9 +26,8 @@ public class BluetoothLeService extends Service {
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
-    private BluetoothGatt mBluetoothGatt;
-    private int mConnectionState = STATE_DISCONNECTED;
-    private Intent intent;
+    public BluetoothGatt mBluetoothGatt;
+    public int mConnectionState = STATE_DISCONNECTED;
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
     private static final int STATE_CONNECTED = 2;
@@ -58,7 +57,6 @@ public class BluetoothLeService extends Service {
         BluetoothGattService RxService = mBluetoothGatt.getService(UUID.fromString(Service_uuid));
         if (RxService == null) {
             showMessage("Rx service not found on enable!");
-            disconnect();
             broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
         }
@@ -69,8 +67,8 @@ public class BluetoothLeService extends Service {
             broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
         }
-        mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
         mBluetoothGatt.setCharacteristicNotification(TxChar,true);
+        mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
         BluetoothGattDescriptor descriptor = TxChar.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
@@ -79,8 +77,6 @@ public class BluetoothLeService extends Service {
 
     public void writeRXCharacteristic(byte[] value) {
         BluetoothGattService RxService = mBluetoothGatt.getService(UUID.fromString(Service_uuid));
-        if(mBluetoothGatt == null)
-            showMessage("mBluetoothGatt null"+ mBluetoothGatt);
         if (RxService == null) {
             showMessage("Rx service not found on RxService!");
             broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
@@ -94,7 +90,6 @@ public class BluetoothLeService extends Service {
         }
         RxChar.setValue(value);
         boolean status = mBluetoothGatt.writeCharacteristic(RxChar);
-        //mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
         Log.e(TAG, "writeRXCharacteristic - status = " + status);
     }
 
@@ -116,7 +111,6 @@ public class BluetoothLeService extends Service {
                 Log.e(TAG,"已連線");
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                boolean trying;
                 Log.e(TAG,"斷線囉");
                 gatt.close();
                 intentAction = ACTION_GATT_DISCONNECTED;
@@ -155,7 +149,6 @@ public class BluetoothLeService extends Service {
 
     private void broadcastUpdate(final String action) {
         final Intent intent = new Intent(action);
-        //LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         this.sendBroadcast(intent);
     }
 
@@ -163,12 +156,13 @@ public class BluetoothLeService extends Service {
         // This is special handling for the Heart Rate Measurement profile.  Data parsing is
         // carried out as per profile specifications:
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        intent = new Intent(action);
-        /*if (UUID.fromString(Characteristic_uuid_TX).equals(characteristic.getUuid())) {
+        Log.e(TAG,"uuid = " + characteristic.getUuid());
+        if (UUID.fromString(Characteristic_uuid_TX).equals(characteristic.getUuid())) {
+            Intent intent = new Intent(action);
+            intent.putExtra(EXTRA_DATA, characteristic.getValue());
+            this.sendBroadcast(intent);
         } else {
-        }*/
-        intent.putExtra(EXTRA_DATA, characteristic.getValue());
-        this.sendBroadcast(intent);
+        }
     }
 
     public class LocalBinder extends Binder {
@@ -193,10 +187,10 @@ public class BluetoothLeService extends Service {
 
     private final IBinder mBinder = new LocalBinder();
     /**
-         * Initializes a reference to the local Bluetooth adapter.
-        *
-        * @return Return true if the initialization is successful.
-        */
+     * Initializes a reference to the local Bluetooth adapter.
+     *
+     * @return Return true if the initialization is successful.
+     */
     public boolean initialize() {
         // For API level 18 and above, get a reference to BluetoothAdapter through
         // BluetoothManager.
@@ -215,15 +209,15 @@ public class BluetoothLeService extends Service {
         return true;
     }
     /**
-         * Connects to the GATT server hosted on the Bluetooth LE device.
-         *
-         * @param address The device address of the destination device.
-         *
-        * @return Return true if the connection is initiated successfully. The connection result
-        *         is reported asynchronously through the
-        *         {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
-        *         callback.
-        */
+     * Connects to the GATT server hosted on the Bluetooth LE device.
+     *
+     * @param address The device address of the destination device.
+     *
+     * @return Return true if the connection is initiated successfully. The connection result
+     *         is reported asynchronously through the
+     *         {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
+     *         callback.
+     */
     public boolean connect(String address) {
         if (mBluetoothAdapter == null || address == null) {
             Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
@@ -273,11 +267,11 @@ public class BluetoothLeService extends Service {
         return true;
     }
     /**
-        * Disconnects an existing connection or cancel a pending connection. The disconnection result
-        * is reported asynchronously through the
-        * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
-        * callback.
-        */
+     * Disconnects an existing connection or cancel a pending connection. The disconnection result
+     * is reported asynchronously through the
+     * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
+     * callback.
+     */
     public void disconnect() {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
@@ -286,9 +280,9 @@ public class BluetoothLeService extends Service {
         mBluetoothGatt.disconnect();
     }
     /**
-        * After using a given BLE device, the app must call this method to ensure resources are
-        * released properly.
-        */
+     * After using a given BLE device, the app must call this method to ensure resources are
+     * released properly.
+     */
     public void close() {
         if (mBluetoothGatt == null) {
             return;
@@ -297,12 +291,12 @@ public class BluetoothLeService extends Service {
         mBluetoothGatt = null;
     }
     /**
-        * Request a read on a given {@code BluetoothGattCharacteristic}. The read result is reported
-        * asynchronously through the {@code BluetoothGattCallback#onCharacteristicRead(android.bluetooth.BluetoothGatt, android.bluetooth.BluetoothGattCharacteristic, int)}
-        * callback.
-        *
-        * @param characteristic The characteristic to read from.
-        */
+     * Request a read on a given {@code BluetoothGattCharacteristic}. The read result is reported
+     * asynchronously through the {@code BluetoothGattCallback#onCharacteristicRead(android.bluetooth.BluetoothGatt, android.bluetooth.BluetoothGattCharacteristic, int)}
+     * callback.
+     *
+     * @param characteristic The characteristic to read from.
+     */
     public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
@@ -311,11 +305,11 @@ public class BluetoothLeService extends Service {
         mBluetoothGatt.readCharacteristic(characteristic);
     }
     /**
-        * Enables or disables notification on a give characteristic.
-        *
-        * @param characteristic Characteristic to act on.
-        * @param enabled If true, enable notification.  False otherwise.
-        */
+     * Enables or disables notification on a give characteristic.
+     *
+     * @param characteristic Characteristic to act on.
+     * @param enabled If true, enable notification.  False otherwise.
+     */
     public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, boolean enabled) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
@@ -331,11 +325,11 @@ public class BluetoothLeService extends Service {
         }
     }
     /**
-        * Retrieves a list of supported GATT services on the connected device. This should be
-        * invoked only after {@code BluetoothGatt#discoverServices()} completes successfully.
-        *
-        * @return A {@code List} of supported services.
-        */
+     * Retrieves a list of supported GATT services on the connected device. This should be
+     * invoked only after {@code BluetoothGatt#discoverServices()} completes successfully.
+     *
+     * @return A {@code List} of supported services.
+     */
     public List<BluetoothGattService> getSupportedGattServices() {
         if (mBluetoothGatt == null)
             return null;
@@ -354,7 +348,7 @@ public class BluetoothLeService extends Service {
                     return bool;
                 }
             } catch (Exception localException) {
-                Log.i(TAG, "An exception occured while refreshing device");
+                Log.e(TAG, "An exception occured while refreshing device");
             }
         }
         return false;

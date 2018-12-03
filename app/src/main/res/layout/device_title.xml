@@ -12,6 +12,7 @@
         android:background="@color/colortoolbar">
 
         <TextView
+            android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -21,5 +22,7 @@
             android:textSize="21sp" />
 
     </android.support.v7.widget.Toolbar>
+
+    <include layout="@layout/function_list" />
 
 </android.support.constraint.ConstraintLayout>

@@ -11,19 +11,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,39 +33,54 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.jetec.nordic_googleplay.R;
+import com.jetec.nordic_googleplay.CheckDeviceName;
+import com.jetec.nordic_googleplay.GetString;
+import com.jetec.nordic_googleplay.SendLog;
 import com.jetec.nordic_googleplay.Service.BluetoothLeService;
+import com.jetec.nordic_googleplay.Thread.ConnectThread;
 import com.jetec.nordic_googleplay.ViewAdapter.DeviceAdapter;
+import com.jetec.nordic_googleplay.Initialization;
+import com.jetec.nordic_googleplay.SQL.ModelSQL;
+import com.jetec.nordic_googleplay.R;
+import com.jetec.nordic_googleplay.SendValue;
+import com.jetec.nordic_googleplay.Value;
+import org.json.JSONArray;
+import org.json.JSONException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
 import static java.lang.Thread.sleep;
 
 public class DeviceList extends AppCompatActivity {
 
-    private static final int UART_PROFILE_DISCONNECTED = 21;
-    private int mState = UART_PROFILE_DISCONNECTED;
     private static final long SCAN_PERIOD = 8000; //8 seconds
 
-    private ConnectThread connectThread;
+    private ModelSQL modelSQL;
+    private CheckDeviceName checkDeviceName;
+    private GetString setString;
+    private Initialization initialization;
     private Handler mHandler;
+    private SendValue sendValue;
     private BluetoothDevice device;
     private DeviceAdapter deviceAdapter;
     private BluetoothLeService mBluetoothLeService;
     private BluetoothAdapter mBluetoothAdapter;
     private List<BluetoothDevice> deviceList;
     private Vibrator vibrator;
+    private JSONArray modelJSON;
     private View no_device;
     private ListView list_device;
     private Intent intents;
-    private ArrayList<String> return_RX, SelectItem, DataSave, SQLdata, Logdata;
-    private String[] check_arr = {"PV1", "PV2", "EH1", "EL1", "EH2", "EL2", "CR1", "CR2", "ADR"/*, "DPP"*/, "OVER"};
+    private ArrayList<String> return_RX, SelectItem, DataSave, Jsonlist;
     private Dialog progressDialog = null, progressDialog2 = null;
-    private String TAG = "DeviceList", BID, text, log = "log", Jetec = "Jetec", E_word, P_word, G_word, get_fun = "get";
-    private double all_Width, all_Height;
-    private int jsonflag, send, connect_flag, check, flag;
-    private boolean s_connect = false, setdpp = false;
+    private String TAG = "DeviceList";
+    private String text;
+    private String Jetec = "Jetec";
+    private int check, flag;
+    private boolean s_connect = false;
     private byte[] txValue;
+    private SendLog sendLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,60 +89,59 @@ public class DeviceList extends AppCompatActivity {
         vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
         BluetoothManager bluetoothManager = getManager(this);
         mBluetoothAdapter = bluetoothManager.getAdapter();
-        get_intent();
+        modelSQL = new ModelSQL(this);
+        try {
+            get_intent();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void get_intent(){
+    @SuppressLint("HandlerLeak")
+    private Handler connectHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Remote_connec();
+        }
+    };
 
-        mHandler = new Handler();
-        connectThread = new ConnectThread();
+    private void get_intent() throws JSONException {
 
         Intent intent = getIntent();
-        all_Width = intent.getDoubleExtra("all_Width", all_Width);
-        all_Height = intent.getDoubleExtra("all_Height", all_Height);
-        jsonflag = intent.getIntExtra("jsonflag", jsonflag);
-        send = intent.getIntExtra("send", send);
-        connect_flag = intent.getIntExtra("connect_flag", connect_flag);
+        String[] default_model = intent.getStringArrayExtra("default_model");
+        modelJSON = new JSONArray(default_model);
 
         show_device();
     }
 
-    private void show_device(){
+    private void show_device() {
+
         setContentView(R.layout.activity_main);
-
         flag = 0;
-        double bar = 0;
-        TypedValue tv = new TypedValue();
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-        {
-            bar = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
-        }
 
-        Log.e(TAG,"bar_height = " + bar);
+        mHandler = new Handler();
+        checkDeviceName = new CheckDeviceName();
+        setString = new GetString();
 
-        LinearLayout linear_view = (LinearLayout)findViewById(R.id.linear_view);
-        no_device = findViewById( R.id.no_data);
-        no_device.setVisibility( View.VISIBLE );   //VISIBLE / GONE
-        linear_view.setPadding(0,(int)bar,0,0);
-
+        no_device = findViewById(R.id.no_data);
+        no_device.setVisibility(View.VISIBLE);   //VISIBLE / GONE
         device_list();
     }
 
-    private void device_list(){
-        return_RX = new ArrayList<String>();
-        SelectItem = new ArrayList<String>();
-        DataSave = new ArrayList<String>();
-        SQLdata = new ArrayList<String>();
-        Logdata = new ArrayList<String>();
+    private void device_list() {
+        return_RX = new ArrayList<>();
+        SelectItem = new ArrayList<>();
+        DataSave = new ArrayList<>();
+        Jsonlist = new ArrayList<>();
+        deviceList = new ArrayList<>();
+        deviceAdapter = new DeviceAdapter(this, deviceList);
 
-        deviceList = new ArrayList<BluetoothDevice>();
-        deviceAdapter = new DeviceAdapter(this, deviceList, all_Width);
-
-        list_device = (ListView)findViewById(R.id.list_data);
+        list_device = findViewById(R.id.list_data);
         list_device.setAdapter(deviceAdapter);
         list_device.setOnItemClickListener(mDeviceClickListener);
 
-        scanLeDevice(true);
+        scanLeDevice();
     }
 
     private AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
@@ -134,45 +149,26 @@ public class DeviceList extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             vibrator.vibrate(100);
             device = deviceList.get(position);
+            //noinspection deprecation
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
-            Log.e(TAG,"position = " + position);
+            Log.e(TAG, "position = " + position);
 
+            ConnectThread connectThread = new ConnectThread(connectHandler);
             connectThread.run();
         }
     };
 
-    private void scanLeDevice(final boolean enable) {
-        if (enable) {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                }
-            }, SCAN_PERIOD);
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
-        } else {
+    private void scanLeDevice() {
+        mHandler.postDelayed(() -> {
+            //noinspection deprecation
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
-        }
+        }, SCAN_PERIOD);
+        //noinspection deprecation
+        mBluetoothAdapter.startLeScan(mLeScanCallback);
     }
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
-            new BluetoothAdapter.LeScanCallback() {
-                @Override
-                public void onLeScan(final BluetoothDevice device, final int rssi,
-                                     final byte[] scanRecord) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    addDevice(device);
-                                }
-                            });
-                        }
-                    });
-                }
-            };
+            (device, rssi, scanRecord) -> runOnUiThread(() -> runOnUiThread(() -> addDevice(device)));
 
     private void addDevice(BluetoothDevice device) {
         boolean deviceFound = false;
@@ -186,51 +182,42 @@ public class DeviceList extends AppCompatActivity {
         if (!deviceFound) {
             deviceList.add(device);
             no_device.setVisibility(View.GONE);
-            list_device.setVisibility( View.VISIBLE );
+            list_device.setVisibility(View.VISIBLE);
             deviceAdapter.notifyDataSetChanged();
         }
     }
 
-    @SuppressLint("HandlerLeak")
-    Handler handler_remote_connec = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            Remote_connec();
-        }
-    };
-
-    private void Remote_connec(){
-        BID = device.getAddress();
+    private void Remote_connec() {
+        Value.BID = device.getAddress();
+        Value.BName = device.getName();
+        Log.e(TAG, "BID = " + Value.BID);
         Intent gattServiceIntent = new Intent(DeviceList.this, BluetoothLeService.class);
-        s_connect = bindService(gattServiceIntent, mServiceConnection, DeviceList.this.BIND_AUTO_CREATE);
-        if(s_connect == true){
-            if(connect_flag != 3 && connect_flag != 4) {
-                progressDialog = writeDialog(DeviceList.this, false, getString(R.string.connecting));
-                progressDialog.show();
-                progressDialog.setCanceledOnTouchOutside(false);
-            }
+        s_connect = bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        if (s_connect) {
+            progressDialog = writeDialog(DeviceList.this, getString(R.string.connecting));
+            progressDialog.show();
+            progressDialog.setCanceledOnTouchOutside(false);
             registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        }
-        else {
-            Log.e(TAG,"服務綁訂狀態  = " + s_connect );
+        } else {
+            Log.e(TAG, "服務綁訂狀態  = " + false);
         }
     }
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName componentName, IBinder service) {
-            Log.e(TAG,"連線中" );
+            Log.e(TAG, "連線中");
             //https://github.com/googlesamples/android-BluetoothLeGatt/tree/master/Application/src/main/java/com/example/android/bluetoothlegatt
             mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
             if (!mBluetoothLeService.initialize()) {
-                Log.e(TAG,"初始化失敗");
+                Log.e(TAG, "初始化失敗");
             }
-            mBluetoothLeService.connect(BID);
-            Log.e(TAG,"進入連線");
+            mBluetoothLeService.connect(Value.BID);
+            Log.e(TAG, "進入連線");
         }
+
         public void onServiceDisconnected(ComponentName componentName) {
             mBluetoothLeService = null;
-            Log.e(TAG,"失去連線端");
+            Log.e(TAG, "失去連線端");
         }
     };
 
@@ -254,305 +241,231 @@ public class DeviceList extends AppCompatActivity {
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 s_connect = false;
                 progressDialog.dismiss();
-                if (connect_flag == 1) {
-                    Log.e(TAG, "連線中斷" + connect_flag);
-                    Toast.makeText(DeviceList.this, getString(R.string.connect_err), Toast.LENGTH_SHORT).show();
-                    new Thread(connectfail).start();
-                }
-                else if(connect_flag == 2){
-                    Log.e(TAG, "連線中斷" + connect_flag);
-                    Toast.makeText(DeviceList.this, getString(R.string.disconnect), Toast.LENGTH_SHORT).show();
-                    new Thread(connectfail).start();
-                }
-                else if(connect_flag == 3){
-                    Log.e(TAG, "連線中斷" + connect_flag);
+                if (mBluetoothLeService != null)
+                    unbindService(mServiceConnection);
+                Log.e(TAG, "連線中斷" + Value.connected);
+                //Toast.makeText(DeviceList.this, getString(R.string.connect_err), Toast.LENGTH_SHORT).show();
+                if (Value.connected) {
                     try {
-                        sleep(500);
-                        new Thread(connectfail).start();
+                        //new Thread(connectfail).start();
+                        Service_close();
                         sleep(2000);
-                        connectThread = new ConnectThread();
-                        connectThread.run();
+                        ConnectThread newThread = new ConnectThread(connectHandler);
+                        newThread.run();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                }
-                else if(connect_flag == 4){
-                    Log.e(TAG, "連線中斷" + connect_flag);
-                    try {
-                        Toast.makeText(DeviceList.this, getString(R.string.reconnecting), Toast.LENGTH_SHORT).show();
-                        new Thread(connectfail).start();
-                        sleep(2000);
-                        connectThread = new ConnectThread();
-                        connectThread.run();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
                 }
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
                 //displayGattServices(mBluetoothLeService.getSupportedGattServices());
-                Log.e(TAG,"連線狀態改變");
+                Log.e(TAG, "連線狀態改變");
                 mBluetoothLeService.enableTXNotification();
-                new Thread(sendcheck).start();
+                if (!Value.connected)
+                    new Thread(sendcheck).start();
+                else {
+                    DataSave.clear();
+                    return_RX.clear();
+                    SelectItem.clear();
+                    try {
+                        sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    sendValue = new SendValue(mBluetoothLeService);
+                    login();
+                }
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            txValue = intents.getByteArrayExtra(mBluetoothLeService.EXTRA_DATA);
-                            text = new String(txValue, "UTF-8");
-                            Log.e(TAG,"send = " + send);
-                            Log.e(TAG,"text = " + text);
-                            Log.e(TAG,"check = " + check);
-                            if (text.startsWith("OK")) {
-                                if(connect_flag != 3) {
-                                    SQLdata.clear();
-                                    DataSave.clear();
-                                    return_RX.clear();
-                                    SelectItem.clear();
-                                    Logdata.clear();
-                                    new Thread(sendpassword).start();
-                                }
-                                else {
-                                }
-                            } else if (text.startsWith("ENGE")) {
-                                E_word = text.substring(4, text.length());
-                                Log.e(TAG, "管理者密碼 = " + E_word);
-                            } else if (text.startsWith("PASS")) {
-                                P_word = text.substring(4, text.length());
-                                Log.e(TAG, "客戶密碼 = " + P_word);
-                            } else if (text.startsWith("GUES")) {
-                                G_word = text.substring(4, text.length());
-                                if(connect_flag == 3){
-                                }
-                                else if (connect_flag == 4) {
-                                    login();
-                                }
-                                else
-                                    check();
-                                Log.e(TAG, "訪客密碼 = " + G_word);
+                runOnUiThread(() -> {
+                    try {
+                        txValue = intents.getByteArrayExtra(BluetoothLeService.EXTRA_DATA);
+                        text = new String(txValue, "UTF-8");
+                        Log.e(TAG, "text = " + text);
+                        if (text.startsWith("OK")) {
+                            DataSave.clear();
+                            return_RX.clear();
+                            SelectItem.clear();
+                            Jsonlist.clear();
+                            new Thread(checkmodel).start();
+                            for (; !Value.modelList; ) {
+                                sleep(100);
                             }
-                            else {
-                                if (send == 0 || send == 1) {
-                                    if (text.matches("OVER")) {
-                                        //check = check + 1;
-                                        Log.e(TAG, "checkOVER = " + text);
-                                        Log.e(TAG, "check = " + check);
-                                        Log.e(TAG, "return_RX = " + return_RX);
-                                        if (checkDeviceName(text).matches(check_arr[check])) {
-                                            if (return_RX.size() != 8) {
-                                                Log.e(TAG, "RX = " + return_RX);
-                                                device_function();
-                                                progressDialog2.dismiss();
-                                            }
-                                        }
-                                    } else {
-                                        if (text.startsWith("DPP") && text.substring(text.indexOf("+") + 1, text.length()).replaceFirst("^0*", "").matches("1.0")) {
-                                            setdpp = true;
-                                            if (checkDeviceName(text).matches(check_arr[check])) {
-                                                SelectItem.add(checkDeviceName(text));
-                                                return_RX.add(getString(R.string.DPP_status_on));
-                                                DataSave.add(getString(R.string.DPP_status_on));
-                                            } else {
-                                            }
-                                        } else if (text.startsWith("DPP") && text.substring(text.indexOf("+") + 1, text.length()).matches("0000.0")) {
-                                            setdpp = false;
-                                            if (checkDeviceName(text).matches(check_arr[check])) {
-                                                SelectItem.add(checkDeviceName(text));
-                                                return_RX.add(getString(R.string.DPP_status_off));
-                                                DataSave.add(getString(R.string.DPP_status_off));
-                                            } else {
-                                            }
-                                        } else {
-                                            if (checkDeviceName(text).matches(check_arr[check])) {
-                                                if (SelectItem != null && SelectItem.size() > 0 && return_RX != null && DataSave != null) {
-                                                    SelectItem.add(checkDeviceName(text));
-                                                    return_RX.add(text);
-                                                    DataSave.add(text);
-                                                    Log.e(TAG, "check = " + check_arr[check]);
-                                                    check = check + 1;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                            new Thread(sendpassword).start();
+                            /*sendLog = new SendLog();
+                            sendLog.set_over(true);
+                            sendLog.set_Service(mBluetoothLeService);*/
+                        } else if (text.startsWith("BT")) {
+                            Jsonlist.clear();
+                            Value.model = true;
+                            Value.deviceModel = text;
+                            modelJSON = modelSQL.getJSON(text);
+                            for (int i = 0; i < modelJSON.length(); i++) {
+                                Jsonlist.add(modelJSON.get(i).toString());
                             }
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            Value.Jsonlist = Jsonlist;
+                            Log.e(TAG, "Jsonlist = " + Jsonlist);
+                        } else if (text.startsWith("ENGE")) {
+                            Value.E_word = text.substring(4, text.length());
+                            Log.e(TAG, "管理者密碼 = " + Value.E_word);
+                        } else if (text.startsWith("PASS")) {
+                            Value.P_word = text.substring(4, text.length());
+                            Log.e(TAG, "客戶密碼 = " + Value.P_word);
+                        } else if (text.startsWith("INIT")) {
+                            Value.I_word = text.substring(4, text.length());
+                            Log.e(TAG, "初始化密碼 = " + Value.I_word);
+                        } else if (text.startsWith("Delay")) {
+                            Log.e(TAG, "Delay時間 = " + text);
+                        } else if (text.startsWith("GUES")) {
+                            Value.G_word = text.substring(4, text.length());
+                            Log.e(TAG, "訪客密碼 = " + Value.G_word);
+                            Value.connected = true;
+                            flag = 1;
+                            check();
+                        } else {
+                            if (!text.startsWith("OVER") && !text.matches("LOG")) {
+                                if (!(text.startsWith("COUNT") || text.startsWith("DATE") ||
+                                        text.startsWith("TIME") || text.startsWith("LOG"))) {
+                                    Log.e(TAG, "check = " + Value.Jsonlist.get(check));
+                                    SelectItem.add(checkDeviceName.setName(text));
+                                    return_RX.add(text);
+                                    DataSave.add(text);
+                                    check = check + 1;
+                                } else {
+                                    setString.set(text, check);
+                                    check = check + 1;
+                                    Log.e(TAG, "check = " + Value.Jsonlist.get(check));
+                                }
+                            } else if (text.matches("OVER") && !text.matches("LOG")) {
+                                //check = check + 1;
+                                Log.e(TAG, "checkOVER = " + text);
+                                Log.e(TAG, "check = " + check);
+                                Log.e(TAG, "RX = " + return_RX);
+                                Log.e(TAG, "SelectItem = " + SelectItem);
+                                Log.e(TAG, "型號 = " + Value.deviceModel);
+                                if (Value.Jsonlist.get(check).matches("OVER")) {
+                                    Value.SelectItem = SelectItem;
+                                    Value.DataSave = DataSave;
+                                    Value.return_RX = return_RX;
+                                    //sendLog.interrupt();
+                                    device_function();
+                                    progressDialog2.dismiss();
+                                }
+                            } else {
+                                Log.e(TAG, "Loging = " + text);
+                            }
                         }
+                    } catch (UnsupportedEncodingException | InterruptedException | JSONException e) {
+                        e.printStackTrace();
                     }
                 });
             }
         }
     };
 
-    private Runnable connectfail = new Runnable() {
-        @Override
-        public void run() {
-            mState = UART_PROFILE_DISCONNECTED;
-            unbindService(mServiceConnection);
-        }
-    };
-
-    private Runnable sendcheck = new Runnable() {
+    private Runnable checkmodel = new Runnable() {
         @Override
         public void run() {
             try {
-                sleep(500);
-                Log.e(TAG, "sends = " + Jetec);
-                if(s_connect)
-                    sending(Jetec);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
-    private Runnable sendpassword = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                sleep(100);
-                Log.e(TAG, "log delay時間");
-                sending("Delay+00015.0");
-                sleep(100);
-                Log.e(TAG, "管理者密碼確認");
-                sending("ENGEWD");  //ENGEWD = 管理者密碼確認
-                sleep(100);
-                Log.e(TAG, "客戶密碼確認");
-                sending("PASSWD");  //PASSWD = 客戶密碼確認(只有此密碼可以修改)
-                sleep(100);
-                Log.e(TAG, "訪客密碼確認");
-                sending("GUESWD");  //GUESWD = 訪客密碼確認
-                sleep(100);
-                if(connect_flag == 3) {
-                    send = 4;
-                    sending(log);
+                sleep(200);
+                if (!Value.model) {
+                    for (int i = 1; i < modelJSON.length(); i++) {
+                        Jsonlist.add(modelJSON.get(i).toString());
+                    }
+                    Value.Jsonlist = Jsonlist;
+                    Value.deviceModel = modelJSON.get(0).toString();
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
+                Value.modelList = true;
+                Log.e(TAG, "Jsonlist = " + Jsonlist);
+                Log.e(TAG, "modelList = " + Value.modelList);
+            } catch (InterruptedException | JSONException e) {
                 e.printStackTrace();
             }
         }
     };
 
-    private void sending(String value) throws UnsupportedEncodingException {
-        byte[] sends;
-        sends = value.getBytes("UTF-8");
-        mBluetoothLeService.writeRXCharacteristic(sends);
-    }
+    //private Runnable connectfail = () -> unbindService(mServiceConnection);
 
-    private void login() throws UnsupportedEncodingException, InterruptedException {
+    private Runnable sendcheck = () -> {
+        try {
+            sleep(500);
+            Log.e(TAG, "sends = " + Jetec);
+            if (s_connect) {
+                //Value.bluetoothLeService = mBluetoothLeService;
+                sendValue = new SendValue(mBluetoothLeService);
+                sendValue.send(Jetec);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    };
+
+    private Runnable sendpassword = () -> {
+        try {
+            sleep(100);
+            Log.e(TAG, "log delay時間");
+            sendValue.send("Delay00015");
+            sleep(100);
+            Log.e(TAG, "管理者密碼確認");
+            sendValue.send("ENGEWD");  //ENGEWD = 管理者密碼確認
+            sleep(100);
+            Log.e(TAG, "客戶密碼確認");
+            sendValue.send("PASSWD");  //PASSWD = 客戶密碼確認(只有此密碼可以修改)
+            sleep(100);
+            Log.e(TAG, "初始化密碼確認");
+            sendValue.send("INITWD");
+            sleep(100);
+            Log.e(TAG, "訪客密碼確認");
+            sendValue.send("GUESWD");  //GUESWD = 訪客密碼確認
+            sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    };
+
+    private void login() {
         check = 0;
         SelectItem.add("NAME");
         DataSave.add(device.getName());
-        sending(get_fun);
-        if(connect_flag != 3 && connect_flag != 4) {
-            progressDialog2 = writeDialog(DeviceList.this, false, getString(R.string.login));
-            progressDialog2.show();
-            progressDialog2.setCanceledOnTouchOutside(false);
-        }
+        sendValue.send("get");
+        progressDialog2 = writeDialog(DeviceList.this, getString(R.string.login));
+        progressDialog2.show();
+        progressDialog2.setCanceledOnTouchOutside(false);
         new Thread(timedelay).start();
-    }
-
-    private String checkDeviceName(String name){
-
-        String rename = "";
-        //String sub = name.substring(0, name.indexOf("+"));
-
-        if(name.startsWith("PV1")){
-            rename = "PV1";
-        }
-        if(name.startsWith("PV2")){
-            rename = "PV2";
-        }
-        if(name.startsWith("PV3")){
-            rename = "PV3";
-        }
-        if(name.startsWith("EH1")){
-            rename = "EH1";
-        }
-        if(name.startsWith("EH2")){
-            rename = "EH2";
-        }
-        if(name.startsWith("EH3")){
-            rename = "EH3";
-        }
-        if(name.startsWith("EL1")){
-            rename = "EL1";
-        }
-        if(name.startsWith("EL2")){
-            rename = "EL2";
-        }
-        if(name.startsWith("EL3")){
-            rename = "EL3";
-        }
-        if(name.startsWith("CR1")){
-            rename = "CR1";
-        }
-        if(name.startsWith("CR2")){
-            rename = "CR2";
-        }
-        if(name.startsWith("CR3")){
-            rename = "CR3";
-        }
-        if(name.startsWith("ADR")){
-            rename = "ADR";
-        }
-        if(name.startsWith("DPP")){
-            rename = "DPP";
-        }
-        if(name.startsWith("OVER")){
-            rename = "OVER";
-        }
-        return rename;
     }
 
     private Runnable timedelay = new Runnable() {
         @Override
         public void run() {
             try {
-                sleep(1500);
-                Log.e(TAG,"check = " + check);
-                Log.e(TAG,"check = " + check_arr[check]);
-                if(check_arr[check].matches("OVER")) {
-                }
-                else {
-                    connect_flag = 4;
-                    sending("STOP");
+                sleep(2000);
+                Log.e(TAG, "check = " + check);
+                Log.e(TAG, "getitem = " + Value.Jsonlist.get(check));
+                //noinspection StatementWithEmptyBody
+                if (Value.Jsonlist.get(check).matches("OVER")) {
+                } else {
+                    //noinspection deprecation
                     mBluetoothAdapter.stopLeScan(mLeScanCallback);
                     Service_close();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
             }
         }
     };
 
-    private Dialog writeDialog(Context context, boolean isAlpha, String message) {
+    private Dialog writeDialog(Context context, String message) {
         final Dialog progressDialog = new Dialog(context);
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        if (isAlpha) {
-            WindowManager.LayoutParams lp = progressDialog.getWindow().getAttributes();
-            lp.alpha = 0.8f;
-            progressDialog.getWindow().setAttributes(lp);
-        } else {
-            progressDialog.dismiss();
-        }
+        progressDialog.dismiss();
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.running, null);
-        LinearLayout layout = (LinearLayout) v.findViewById(R.id.ll_dialog);
-        ProgressBar pb_progress_bar = (ProgressBar) v.findViewById(R.id.pb_progress_bar);
+        @SuppressLint("InflateParams") View v = inflater.inflate(R.layout.running, null);
+        LinearLayout layout = v.findViewById(R.id.ll_dialog);
+        ProgressBar pb_progress_bar = v.findViewById(R.id.pb_progress_bar);
         pb_progress_bar.setVisibility(View.VISIBLE);
-        TextView tv = (TextView) v.findViewById(R.id.tv_loading);
+        TextView tv = v.findViewById(R.id.tv_loading);
 
         if (message == null || message.equals("")) {
             tv.setVisibility(View.GONE);
@@ -561,99 +474,82 @@ public class DeviceList extends AppCompatActivity {
             tv.setTextColor(context.getResources().getColor(R.color.colorDialog));
         }
 
-        progressDialog.setContentView(layout, new LinearLayout.LayoutParams((int)(all_Width / 2),
-                (int)(all_Height / 5)));
+        progressDialog.setContentView(layout, new LinearLayout.LayoutParams((int) (Value.all_Width / 2),
+                (int) (Value.all_Height / 5)));
 
         return progressDialog;
     }
 
+    @SuppressLint("SetTextI18n")
     private void check() throws InterruptedException {
 
         setContentView(R.layout.checkpassword);
 
-        connect_flag = 2;
-        flag = 1;
-
-        Button by = (Button)findViewById(R.id.button2);
-        Button bn = (Button)findViewById(R.id.button1);
-        TextView t1 = (TextView)findViewById(R.id.textView3);
-        EditText e1 = (EditText)findViewById(R.id.editText1);
+        Button by = findViewById(R.id.button2);
+        Button bn = findViewById(R.id.button1);
+        TextView t1 = findViewById(R.id.textView3);
+        EditText e1 = findViewById(R.id.editText1);
 
         progressDialog.dismiss();
         sleep(30);
 
         t1.setText(getString(R.string.device_name) + "： " + device.getName());
-
-        by.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                vibrator.vibrate(100);
-                if(e1.getText().toString().length() == 6) {
-                    if (e1.getText().toString().trim().matches(E_word) || e1.getText().toString().trim().matches(P_word)) {
-                        try {
-                            send = 0;
-                            Log.e(TAG, "管理者/客戶 登入");
-                            login();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (e1.getText().toString().trim().matches(G_word)) {
-                        try {
-                            send = 1;
-                            Log.e(TAG, "訪客 登入");
-                            login();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+        e1.setKeyListener(DigitsKeyListener.getInstance(".,$%&^!()-_=+';:|}{[]*→←↘↖、，。?~～#€￠" +
+                "￡￥abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@>/<"));
+        //e1.setKeyListener(DigitsKeyListener.getInstance("abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789."));
+        e1.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        by.setOnClickListener(v -> {
+            vibrator.vibrate(100);
+            if (e1.getText().toString().length() == 6) {
+                if (e1.getText().toString().trim().matches(Value.E_word)) {
+                    Value.passwordFlag = 1;
+                    Log.e(TAG, "管理者 登入");
+                    login();
+                } else if (e1.getText().toString().trim().matches(Value.P_word)) {
+                    Value.passwordFlag = 2;
+                    Log.e(TAG, "客戶 登入");
+                    login();
+                } else if (e1.getText().toString().trim().matches(Value.I_word)) {
+                    Toast.makeText(DeviceList.this, getString(R.string.initialization), Toast.LENGTH_SHORT).show();
+                    initialization = new Initialization(Value.deviceModel, mBluetoothLeService);
+                    try {
+                        initialization.start();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    else {
-                        Toast.makeText(DeviceList.this, getString(R.string.passworderror), Toast.LENGTH_SHORT).show();
-                    }
+                    Value.passwordFlag = 3;
+                    Log.e(TAG, "初始化 原廠設定");
+                    login();
+                } else if (e1.getText().toString().trim().matches(Value.G_word)) {
+                    Value.passwordFlag = 4;
+                    Log.e(TAG, "訪客 登入");
+                    login();
+                } else {
+                    Toast.makeText(DeviceList.this, getString(R.string.passworderror), Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    Toast.makeText(DeviceList.this, getString(R.string.inputerror), Toast.LENGTH_SHORT).show();
-                }
+            } else {
+                Toast.makeText(DeviceList.this, getString(R.string.inputerror), Toast.LENGTH_SHORT).show();
             }
         });
 
-        bn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                vibrator.vibrate(100);
-                if (mBluetoothAdapter != null && mBluetoothLeService != null) {
-                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                    Service_close();
+        bn.setOnClickListener(v -> {
+            vibrator.vibrate(100);
+            if (mBluetoothAdapter != null && mBluetoothLeService != null) {
+                //noinspection deprecation
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                Value.connected = false;
+                Service_close();
+                if (s_connect) {
+                    s_connect = false;
                 }
-                show_device();
             }
+            show_device();
         });
     }
 
-    private void device_function(){
+    private void device_function() {
 
         Intent intent = new Intent(DeviceList.this, DeviceFunction.class);
-        intent.putExtra("device_name", device.getName());
-        intent.putExtra("device_address", device.getAddress());
-        intent.putExtra("E_word", E_word);
-        intent.putExtra("P_word", P_word);
-        intent.putExtra("G_word", G_word);
-        intent.putExtra("all_Width", all_Width);
-        intent.putExtra("all_Height", all_Height);
-        intent.putExtra("jsonflag", jsonflag);
-        intent.putExtra("send", send);
-        intent.putExtra("connect_flag", connect_flag);
-        intent.putExtra("check", check);
-        intent.putExtra("s_connect", s_connect);
-        intent.putExtra("setdpp", setdpp);
-        intent.putStringArrayListExtra("return_RX", return_RX);
-        intent.putStringArrayListExtra("SelectItem", SelectItem);
-        intent.putStringArrayListExtra("DataSave", DataSave);
-        intent.putStringArrayListExtra("SQLdata", SQLdata);
-        intent.putStringArrayListExtra("Logdata", Logdata);
 
         startActivity(intent);
         finish();
@@ -661,7 +557,7 @@ public class DeviceList extends AppCompatActivity {
 
     private void Service_close() {
         if (mBluetoothLeService == null) {
-            Log.e(TAG,"masaga");
+            Log.e(TAG, "service close!");
             return;
         }
         mBluetoothLeService.disconnect();
@@ -671,15 +567,7 @@ public class DeviceList extends AppCompatActivity {
         return (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
     }
 
-    private class ConnectThread extends Thread {
-        public void run() {
-            Message message = new Message();
-            message.obj=(Integer)2;
-            handler_remote_connec.sendMessage(message);
-        }
-    }
-
-    private void backtofirst(){
+    private void backtofirst() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
@@ -690,13 +578,13 @@ public class DeviceList extends AppCompatActivity {
             case KeyEvent.KEYCODE_SEARCH:
                 break;
             case KeyEvent.KEYCODE_BACK:
-                if(flag == 0){
+                if (flag == 0) {
                     vibrator.vibrate(100);
                     backtofirst();
-                }
-                else if(flag == 1){
+                } else if (flag == 1) {
                     vibrator.vibrate(100);
-                    if(mBluetoothAdapter != null)
+                    if (mBluetoothAdapter != null)
+                        //noinspection deprecation
                         mBluetoothAdapter.stopLeScan(mLeScanCallback);
                     Service_close();
                     show_device();
@@ -715,7 +603,7 @@ public class DeviceList extends AppCompatActivity {
         super.onDestroy();
         Log.e(TAG, "onDestroy()");
         if (mBluetoothLeService != null) {
-            if(s_connect) {
+            if (s_connect) {
                 unbindService(mServiceConnection);
                 s_connect = false;
             }
@@ -725,17 +613,17 @@ public class DeviceList extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(s_connect) {
+        if (s_connect) {
             registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
             if (mBluetoothLeService != null) {
-                final boolean result = mBluetoothLeService.connect(BID);
+                final boolean result = mBluetoothLeService.connect(Value.BID);
                 Log.d(TAG, "Connect request result=" + result);
             }
         }
@@ -744,7 +632,36 @@ public class DeviceList extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(s_connect)
+        if (s_connect)
             unregisterReceiver(mGattUpdateReceiver);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.e(TAG, "flag = " + flag);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // land do nothing is ok
+            if (flag == 0) {
+                show_device();
+            } else if (flag == 1) {
+                try {
+                    check();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // port do nothing is ok
+            if (flag == 0) {
+                show_device();
+            } else if (flag == 1) {
+                try {
+                    check();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

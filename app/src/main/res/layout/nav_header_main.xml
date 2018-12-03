@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_header_height"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:background="@drawable/side_nav_bar"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:gravity="center"
+        app:srcCompat="@drawable/icon"
+        tools:ignore="RtlSymmetry" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+            android:paddingTop="?android:attr/listPreferredItemPaddingStart"
+            android:layout_gravity="bottom"
+            android:textColor="@color/colorBackground"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:text="@string/showremote"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/colorBackground"
+            android:gravity="center_vertical"
+            android:textSize="13sp"
+            android:text="@string/showjetec"
+            tools:ignore="RtlSymmetry" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -17,6 +17,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="25sp"
+                android:layout_marginStart="?android:attr/listPreferredItemPaddingStart"
                 android:textAppearance="?attr/textAppearanceListItem"/>
 
             <TextView
@@ -24,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
+                android:layout_marginStart="?android:attr/listPreferredItemPaddingStart"
                 android:textAppearance="?attr/textAppearanceListItemSecondary" />
         </LinearLayout>
 
