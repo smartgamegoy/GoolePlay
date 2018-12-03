@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
             "TIME", "LOG", "OVER"};
     private static final String[] BT_2_II = {"BT-2-II", "IH1", "IL1", "IH2", "IL2", "PV1", "PV2",
             "EH1", "EL1", "EH2", "EL2", "CR1", "CR2", "SPK", "DP1", "DP2", "OVER"};
-    private static final String[] BT_2_TH = {"BT-2-TH", "PV1", "PV2", "EH1", "EL1", "EL1", "EH2",
-            "EL2", "CR1", "CR2", "OVER"};
+    private static final String[] BT_2_TH = {"BT-2-TH", "PV1", "PV2", "EH1", "EL1", "EH2", "EL2",
+            "CR1", "CR2", "SPK", "OVER"};
     private String[][] All_model = {default_model, BT_2_IIL, BT_2_II, BT_2_TH};
 
     @Override

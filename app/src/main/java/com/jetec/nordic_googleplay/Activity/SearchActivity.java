@@ -225,34 +225,21 @@ public class SearchActivity extends AppCompatActivity {
                 else {
                     s2.setEnabled(true);
                     e1.setVisibility(View.VISIBLE);
-                    e1.setInputType(InputType.TYPE_CLASS_TEXT);
+                    e1.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     if(position == 3){
-                        e1.setHint(" - 10 ~ 65");
-                        e1.addTextChangedListener(new TextWatcher() {
-                            int l = 0;    //記錄字串删除字元之前，字串的長度
-                            int location = 0; //記錄光標位置
-                            @Override
-                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                l = s.length();
-                                location = e1.getSelectionStart();
-                            }
+                        if(Value.name.get(0).toString().matches("T")){
+                            e1.setHint(" - 10 ~ 65");
+                        }
+                        else if(Value.name.get(0).toString().matches("H")){
+                            e1.setHint(" 0 ~ 99");
+                        }
+                        else if(Value.name.get(0).toString().matches("C")){
 
-                            @Override
-                            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                Pattern p = Pattern.compile("^[-]?\\d{1,4}([.]\\d)?$");    //^\-?[0-5](.[0-9])?$
-                                Matcher m = p.matcher(s.toString());
-                                if(m.find() || ("").equals(s.toString())){
-                                    c = true;
-                                }else{
-                                    c = false;
-                                }
-                            }
+                        }
+                        else if(Value.name.get(0).toString().matches("I")){
 
-                            @Override
-                            public void afterTextChanged(Editable s) {
-
-                            }
-                        });
+                        }
                     }
                     else if(position == 4){
                         e1.setKeyListener(DigitsKeyListener.getInstance(".0123456789"));
