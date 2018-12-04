@@ -11,6 +11,8 @@ import com.jetec.nordic_googleplay.Service.BluetoothLeService;
 import com.jetec.nordic_googleplay.Value;
 import com.jetec.nordic_googleplay.ViewAdapter.Function;
 
+import static java.lang.Thread.sleep;
+
 public class IL {
 
     private Context context;
@@ -22,7 +24,7 @@ public class IL {
     }
 
     public void todo(Float t, String name, Dialog inDialog, BluetoothLeService bluetoothLeService,
-                     String gets, Float Max){
+                     String gets, Float Max) throws InterruptedException {
         SendValue sendValue = new SendValue(bluetoothLeService);
         String TAG = "IL";
         Float Min;
@@ -34,12 +36,18 @@ public class IL {
                     Min = t;
                     if (Min < Max) {
                         if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -54,6 +62,9 @@ public class IL {
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -79,12 +90,18 @@ public class IL {
                     Min = t;
                     if (Min < Max) {
                         if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -99,6 +116,9 @@ public class IL {
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -127,12 +147,18 @@ public class IL {
                         Min = t;
                         if (Min < Max) {
                             if (t == 0.0) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 String out = name + "+" + "0000.0";
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
                                 inDialog.dismiss();
                             } else {
                                 if (gets.startsWith("-")) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
                                     gets = String.valueOf(t);
                                     int i = gets.indexOf(".");
                                     Log.e(TAG, "gets = " + gets);
@@ -153,6 +179,9 @@ public class IL {
                                     function.notifyDataSetChanged();
                                     inDialog.dismiss();
                                 } else {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
                                     gets = String.valueOf(t);
                                     int i = gets.indexOf(".");
                                     Log.e(TAG, "gets = " + gets);
@@ -185,12 +214,18 @@ public class IL {
                         Min = t;
                         if (Min < Max) {
                             if (t == 0.0) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 String out = name + "+" + "0000.0";
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
                                 inDialog.dismiss();
                             } else {
                                 if (gets.startsWith("-")) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
                                     gets = String.valueOf(t);
                                     int i = gets.indexOf(".");
                                     Log.e(TAG, "gets = " + gets);
@@ -211,6 +246,9 @@ public class IL {
                                     function.notifyDataSetChanged();
                                     inDialog.dismiss();
                                 } else {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
                                     gets = String.valueOf(t);
                                     int i = gets.indexOf(".");
                                     Log.e(TAG, "gets = " + gets);
@@ -247,12 +285,18 @@ public class IL {
                     Min = t;
                     if (Min < Max) {
                         if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -267,6 +311,9 @@ public class IL {
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -292,12 +339,18 @@ public class IL {
                     Min = t;
                     if (Min < Max) {
                         if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -312,6 +365,9 @@ public class IL {
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -340,12 +396,18 @@ public class IL {
                         Min = t;
                         if (Min < Max) {
                             if (t == 0.0) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 String out = name + "+" + "0000.0";
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
                                 inDialog.dismiss();
                             } else {
                                 if (gets.startsWith("-")) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
                                     gets = String.valueOf(t);
                                     int i = gets.indexOf(".");
                                     Log.e(TAG, "gets = " + gets);
@@ -366,6 +428,9 @@ public class IL {
                                     function.notifyDataSetChanged();
                                     inDialog.dismiss();
                                 } else {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
                                     gets = String.valueOf(t);
                                     int i = gets.indexOf(".");
                                     Log.e(TAG, "gets = " + gets);
@@ -398,12 +463,18 @@ public class IL {
                         Min = t;
                         if (Min < Max) {
                             if (t == 0.0) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 String out = name + "+" + "0000.0";
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
                                 inDialog.dismiss();
                             } else {
                                 if (gets.startsWith("-")) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
                                     gets = String.valueOf(t);
                                     int i = gets.indexOf(".");
                                     Log.e(TAG, "gets = " + gets);
@@ -424,6 +495,9 @@ public class IL {
                                     function.notifyDataSetChanged();
                                     inDialog.dismiss();
                                 } else {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
                                     gets = String.valueOf(t);
                                     int i = gets.indexOf(".");
                                     Log.e(TAG, "gets = " + gets);
@@ -460,12 +534,18 @@ public class IL {
                     Min = t;
                     if (Min < Max) {
                         if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -480,6 +560,9 @@ public class IL {
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -505,12 +588,18 @@ public class IL {
                     Min = t;
                     if (Min < Max) {
                         if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -525,6 +614,9 @@ public class IL {
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -553,12 +645,18 @@ public class IL {
                         Min = t;
                         if (Min < Max) {
                             if (t == 0.0) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 String out = name + "+" + "0000.0";
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
                                 inDialog.dismiss();
                             } else {
                                 if (gets.startsWith("-")) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
                                     gets = String.valueOf(t);
                                     int i = gets.indexOf(".");
                                     Log.e(TAG, "gets = " + gets);
@@ -579,6 +677,9 @@ public class IL {
                                     function.notifyDataSetChanged();
                                     inDialog.dismiss();
                                 } else {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
                                     gets = String.valueOf(t);
                                     int i = gets.indexOf(".");
                                     Log.e(TAG, "gets = " + gets);
@@ -611,12 +712,18 @@ public class IL {
                         Min = t;
                         if (Min < Max) {
                             if (t == 0.0) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
                                 String out = name + "+" + "0000.0";
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
                                 inDialog.dismiss();
                             } else {
                                 if (gets.startsWith("-")) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
                                     gets = String.valueOf(t);
                                     int i = gets.indexOf(".");
                                     Log.e(TAG, "gets = " + gets);
@@ -637,6 +744,9 @@ public class IL {
                                     function.notifyDataSetChanged();
                                     inDialog.dismiss();
                                 } else {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
                                     gets = String.valueOf(t);
                                     int i = gets.indexOf(".");
                                     Log.e(TAG, "gets = " + gets);

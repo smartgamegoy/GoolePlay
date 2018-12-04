@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import com.jetec.nordic_googleplay.R;
+import com.jetec.nordic_googleplay.Value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,14 +62,14 @@ public class DataList extends BaseAdapter {
             view = (ViewGroup) inflater.inflate(R.layout.show_datalist, null);
         }
 
-        for (HashMap<String, String> map : list){
+        TextView show_name = (TextView) view.findViewById(R.id.show_name);
+
+        for (HashMap<String, String> map : list) {
             name.add(map.get("num"));
-            Log.e("myLog", "id = " + map.get("id"));
         }
 
         String show = name.get(position);
-        final TextView show_name = ((TextView) view.findViewById(R.id.show_name));
-        show_name.setPadding((int)(all_Width/8),0,0,0);
+        show_name.setPadding((int) (all_Width / 8), 0, 0, 0);
         show_name.setVisibility(View.VISIBLE);
         show_name.setText(show);
         return view;

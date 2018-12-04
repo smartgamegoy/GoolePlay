@@ -1,8 +1,11 @@
 package com.jetec.nordic_googleplay;
 
 import android.util.Log;
+import static android.support.constraint.Constraints.TAG;
 
 public class GetDeviceNum {
+
+    private String TAG = "GetDeviceNum";
 
     public GetDeviceNum(){
         super();
@@ -116,31 +119,121 @@ public class GetDeviceNum {
                     }
                 }
                 else {
-                    if (str.contains("+")) {
-                        if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
-                            renum = "0";
-                        }
-                        else {
-                            String newStr = str.substring(str.indexOf("+") + 1, str.indexOf("."))
-                                    .replaceFirst("^0*", "");
-                            if (newStr.matches("")) {
+                    if(Value.name.get(0).toString().matches("T")) {
+                        if (str.contains("+")) {
+                            if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
                                 renum = "0";
                             } else {
-                                renum = newStr;
+                                String newStr = str.substring(str.indexOf("+") + 1, str.length())
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = newStr;
+                                    Log.e(TAG, "renum = " + renum);
+                                }
+                            }
+                        } else {
+                            if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            } else {
+                                String newStr = str.substring(str.indexOf("-") + 1, str.length())
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = "-" + newStr;
+                                }
                             }
                         }
                     }
-                    else {
-                        if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
-                            renum = "0";
+                    else if(Value.name.get(0).toString().matches("H")){
+                        if (str.contains("+")) {
+                            if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            }
+                            else {
+                                String newStr = str.substring(str.indexOf("+") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = newStr;
+                                }
+                            }
                         }
                         else {
-                            String newStr = str.substring(str.indexOf("-") + 1, str.indexOf("."))
-                                    .replaceFirst("^0*", "");
-                            if (newStr.matches("")) {
+                            if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
                                 renum = "0";
-                            } else {
-                                renum = "-" + newStr;
+                            }
+                            else {
+                                String newStr = str.substring(str.indexOf("-") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = "-" + newStr;
+                                }
+                            }
+                        }
+                    }
+                    else if(Value.name.get(0).toString().matches("C")){
+                        if (str.contains("+")) {
+                            if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            }
+                            else {
+                                String newStr = str.substring(str.indexOf("+") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = newStr;
+                                }
+                            }
+                        }
+                        else {
+                            if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            }
+                            else {
+                                String newStr = str.substring(str.indexOf("-") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = "-" + newStr;
+                                }
+                            }
+                        }
+                    }
+                    else if(Value.name.get(0).toString().matches("I")){
+                        if (str.contains("+")) {
+                            if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            }
+                            else {
+                                String newStr = str.substring(str.indexOf("+") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = newStr;
+                                }
+                            }
+                        }
+                        else {
+                            if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            }
+                            else {
+                                String newStr = str.substring(str.indexOf("-") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = "-" + newStr;
+                                }
                             }
                         }
                     }
@@ -179,31 +272,115 @@ public class GetDeviceNum {
                     }
                 }
                 else {
-                    if (str.contains("+")) {
-                        if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
-                            renum = "0";
-                        }
-                        else {
-                            String newStr = str.substring(str.indexOf("+") + 1, str.indexOf("."))
-                                    .replaceFirst("^0*", "");
-                            if (newStr.matches("")) {
+                    if(Value.name.get(1).toString().matches("T")){
+                        if (str.contains("+")) {
+                            if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
                                 renum = "0";
                             } else {
-                                renum = newStr;
+                                String newStr = str.substring(str.indexOf("+") + 1, str.length())
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = newStr;
+                                    Log.e(TAG, "renum = " + renum);
+                                }
+                            }
+                        } else {
+                            if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            } else {
+                                String newStr = str.substring(str.indexOf("-") + 1, str.length())
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = "-" + newStr;
+                                }
                             }
                         }
                     }
-                    else {
-                        if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
-                            renum = "0";
-                        }
-                        else {
-                            String newStr = str.substring(str.indexOf("-") + 1, str.indexOf("."))
-                                    .replaceFirst("^0*", "");
-                            if (newStr.matches("")) {
+                    else if(Value.name.get(1).toString().matches("H")) {
+                        if (str.contains("+")) {
+                            if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
                                 renum = "0";
                             } else {
-                                renum = "-" + newStr;
+                                String newStr = str.substring(str.indexOf("+") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = newStr;
+                                }
+                            }
+                        } else {
+                            if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            } else {
+                                String newStr = str.substring(str.indexOf("-") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = "-" + newStr;
+                                }
+                            }
+                        }
+                    }
+                    else if(Value.name.get(1).toString().matches("C")){
+                        if (str.contains("+")) {
+                            if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            } else {
+                                String newStr = str.substring(str.indexOf("+") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = newStr;
+                                }
+                            }
+                        } else {
+                            if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            } else {
+                                String newStr = str.substring(str.indexOf("-") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = "-" + newStr;
+                                }
+                            }
+                        }
+                    }
+                    else if(Value.name.get(0).toString().matches("I")){
+                        if (str.contains("+")) {
+                            if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            }
+                            else {
+                                String newStr = str.substring(str.indexOf("+") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = newStr;
+                                }
+                            }
+                        }
+                        else {
+                            if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            }
+                            else {
+                                String newStr = str.substring(str.indexOf("-") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = "-" + newStr;
+                                }
                             }
                         }
                     }
@@ -242,31 +419,115 @@ public class GetDeviceNum {
                     }
                 }
                 else {
-                    if (str.contains("+")) {
-                        if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
-                            renum = "0";
-                        }
-                        else {
-                            String newStr = str.substring(str.indexOf("+") + 1, str.indexOf("."))
-                                    .replaceFirst("^0*", "");
-                            if (newStr.matches("")) {
+                    if(Value.name.get(2).toString().matches("T")) {
+                        if (str.contains("+")) {
+                            if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
                                 renum = "0";
                             } else {
-                                renum = newStr;
+                                String newStr = str.substring(str.indexOf("+") + 1, str.length())
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = newStr;
+                                    Log.e(TAG, "renum = " + renum);
+                                }
+                            }
+                        } else {
+                            if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            } else {
+                                String newStr = str.substring(str.indexOf("-") + 1, str.length())
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = "-" + newStr;
+                                }
                             }
                         }
                     }
-                    else {
-                        if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
-                            renum = "0";
-                        }
-                        else {
-                            String newStr = str.substring(str.indexOf("-") + 1, str.indexOf("."))
-                                    .replaceFirst("^0*", "");
-                            if (newStr.matches("")) {
+                    else if(Value.name.get(2).toString().matches("H")) {
+                        if (str.contains("+")) {
+                            if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
                                 renum = "0";
                             } else {
-                                renum = "-" + newStr;
+                                String newStr = str.substring(str.indexOf("+") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = newStr;
+                                }
+                            }
+                        } else {
+                            if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            } else {
+                                String newStr = str.substring(str.indexOf("-") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = "-" + newStr;
+                                }
+                            }
+                        }
+                    }
+                    else if(Value.name.get(2).toString().matches("C")){
+                        if (str.contains("+")) {
+                            if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            } else {
+                                String newStr = str.substring(str.indexOf("+") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = newStr;
+                                }
+                            }
+                        } else {
+                            if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            } else {
+                                String newStr = str.substring(str.indexOf("-") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = "-" + newStr;
+                                }
+                            }
+                        }
+                    }
+                    else if(Value.name.get(0).toString().matches("I")){
+                        if (str.contains("+")) {
+                            if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            }
+                            else {
+                                String newStr = str.substring(str.indexOf("+") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = newStr;
+                                }
+                            }
+                        }
+                        else {
+                            if (str.substring(str.indexOf("-") + 1, str.length()).matches("0000.0")) {
+                                renum = "0";
+                            }
+                            else {
+                                String newStr = str.substring(str.indexOf("-") + 1, str.indexOf("."))
+                                        .replaceFirst("^0*", "");
+                                if (newStr.matches("")) {
+                                    renum = "0";
+                                } else {
+                                    renum = "-" + newStr;
+                                }
                             }
                         }
                     }

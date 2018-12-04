@@ -471,26 +471,28 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
     private AdapterView.OnItemClickListener mSelectClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            vibrator.vibrate(100);
-            String select = Value.SelectItem.get(position);
-            //noinspection deprecation
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-            Log.e(TAG, "名稱 = " + List_d_function.get(position) + "輸出 = " + select);
-            //String output = switch_dialog(select, List_d_function.get(position));
-            if (select.startsWith("INTER")) {
-                String description = getString(R.string.description);
-                interval = new Interval(DeviceFunction.this, Value.all_Width, Value.all_Height, mBluetoothLeService, description);
-                interval.showDialog();
-            } else if (select.startsWith("DP") || select.startsWith("SPK")) {
-                switchDialog = new SwitchDialog(DeviceFunction.this, mBluetoothLeService);
-                choseDialog = switchDialog.chose(select, List_d_num.get(position), List_d_function.get(position), vibrator);
-                switchDialog.setDialog(choseDialog);
-                choseDialog.show();
-                choseDialog.setCanceledOnTouchOutside(false);
-            } else {
-                inDialog = inputDialog(DeviceFunction.this, List_d_function.get(position), select);
-                inDialog.show();
-                inDialog.setCanceledOnTouchOutside(false);
+            if (Value.passwordFlag != 4) {
+                vibrator.vibrate(100);
+                String select = Value.SelectItem.get(position);
+                //noinspection deprecation
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                Log.e(TAG, "名稱 = " + List_d_function.get(position) + "輸出 = " + select);
+                //String output = switch_dialog(select, List_d_function.get(position));
+                if (select.startsWith("INTER")) {
+                    String description = getString(R.string.description);
+                    interval = new Interval(DeviceFunction.this, Value.all_Width, Value.all_Height, mBluetoothLeService, description);
+                    interval.showDialog();
+                } else if (select.startsWith("DP") || select.startsWith("SPK")) {
+                    switchDialog = new SwitchDialog(DeviceFunction.this, mBluetoothLeService);
+                    choseDialog = switchDialog.chose(select, List_d_num.get(position), List_d_function.get(position), vibrator);
+                    switchDialog.setDialog(choseDialog);
+                    choseDialog.show();
+                    choseDialog.setCanceledOnTouchOutside(false);
+                } else {
+                    inDialog = inputDialog(DeviceFunction.this, List_d_function.get(position), select);
+                    inDialog.show();
+                    inDialog.setCanceledOnTouchOutside(false);
+                }
             }
         }
     };
@@ -513,170 +515,186 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         by.setOnClickListener(v12 -> {
             vibrator.vibrate(100);
             if (c) {
-                String gets = editText.getText().toString().trim();
-                Log.e(TAG, "gets = " + gets);
-                Log.e(TAG, "case = " + name);
-                switch (name) {
-                    case "NAME": {
-                        String out = "NAME" + gets;
-                        sendValue.send(out);
-                        inDialog.dismiss();
-                    }
-                    break;
-                    case "PV1": {
-                        float t = Float.valueOf(gets);
-                        pv = new PV(this, function);
-                        pv.todo(t, name, inDialog, mBluetoothLeService, gets);
-                    }
-                    break;
-                    case "PV2": {
-                        float t = Float.valueOf(gets);
-                        pv = new PV(this, function);
-                        pv.todo(t, name, inDialog, mBluetoothLeService, gets);
-                    }
-                    break;
-                    case "PV3": {
-                        float t = Float.valueOf(gets);
-                        pv = new PV(this, function);
-                        pv.todo(t, name, inDialog, mBluetoothLeService, gets);
-                    }
-                    break;
-                    case "EH1": {
-                        float t = Float.valueOf(gets);
-                        Log.e(TAG, "Text = " + t);
-                        eh = new EH(this, function);
-                        eh.todo(t, name, inDialog, mBluetoothLeService, gets, MinEL1);
-                    }
-                    break;
-                    case "EH2": {
-                        float t = Float.valueOf(gets);
-                        eh = new EH(this, function);
-                        eh.todo(t, name, inDialog, mBluetoothLeService, gets, MinEL2);
-                    }
-                    break;
-                    case "EH3": {
-                        float t = Float.valueOf(gets);
-                        eh = new EH(this, function);
-                        eh.todo(t, name, inDialog, mBluetoothLeService, gets, MinEL3);
-                    }
-                    break;
-                    case "EL1": {
-                        float t = Float.valueOf(gets);
-                        el = new EL(this, function);
-                        el.todo(t, name, inDialog, mBluetoothLeService, gets, MaxEH1);
-                    }
-                    break;
-                    case "EL2": {
-                        float t = Float.valueOf(gets);
-                        el = new EL(this, function);
-                        el.todo(t, name, inDialog, mBluetoothLeService, gets, MaxEH2);
-                    }
-                    break;
-                    case "EL3": {
-                        float t = Float.valueOf(gets);
-                        el = new EL(this, function);
-                        el.todo(t, name, inDialog, mBluetoothLeService, gets, MaxEH3);
-                    }
-                    break;
-                    case "CR1": {
-                        float t = Float.valueOf(gets);
-                        cr = new CR(this, function);
-                        cr.todo(t, name, inDialog, mBluetoothLeService, gets);
-                    }
-                    break;
-                    case "CR2": {
-                        float t = Float.valueOf(gets);
-                        cr = new CR(this, function);
-                        cr.todo(t, name, inDialog, mBluetoothLeService, gets);
-                    }
-                    break;
-                    case "CR3": {
-                        float t = Float.valueOf(gets);
-                        cr = new CR(this, function);
-                        cr.todo(t, name, inDialog, mBluetoothLeService, gets);
-                    }
-                    break;
-                    case "IH1": {
-                        float t = Float.valueOf(gets);
-                        ih = new IH(this, function);
-                        ih.todo(t, name, inDialog, mBluetoothLeService, gets, MinIL1);
-                    }
-                    break;
-                    case "IH2": {
-                        float t = Float.valueOf(gets);
-                        ih = new IH(this, function);
-                        ih.todo(t, name, inDialog, mBluetoothLeService, gets, MinIL2);
-                    }
-                    break;
-                    case "IH3": {
-                        float t = Float.valueOf(gets);
-                        ih = new IH(this, function);
-                        ih.todo(t, name, inDialog, mBluetoothLeService, gets, MinIL3);
-                    }
-                    break;
-                    case "IL1": {
-                        float t = Float.valueOf(gets);
-                        il = new IL(this, function);
-                        il.todo(t, name, inDialog, mBluetoothLeService, gets, MaxIH1);
-                    }
-                    break;
-                    case "IL2": {
-                        float t = Float.valueOf(gets);
-                        il = new IL(this, function);
-                        il.todo(t, name, inDialog, mBluetoothLeService, gets, MaxIH2);
-                    }
-                    break;
-                    case "IL3": {
-                        float t = Float.valueOf(gets);
-                        il = new IL(this, function);
-                        il.todo(t, name, inDialog, mBluetoothLeService, gets, MaxIH3);
-                    }
-                    break;
-                    case "ADR": {
-                        float t = Float.valueOf(gets);
-                        if (t > 255.0 || t < 1.0) {
-                            Toast.makeText(DeviceFunction.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
-                        } else {
-                            if (t == 0.0) {
-                                String out = name + "+" + "0000.0";
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
-                                inDialog.dismiss();
+                try {
+                    String gets = editText.getText().toString().trim();
+                    Log.e(TAG, "gets = " + gets);
+                    Log.e(TAG, "case = " + name);
+                    switch (name) {
+                        case "NAME": {
+                            String out = "NAME" + gets;
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                            sendValue.send(out);
+                            inDialog.dismiss();
+                        }
+                        break;
+                        case "PV1": {
+                            float t = Float.valueOf(gets);
+                            pv = new PV(this, function);
+                            pv.todo(t, name, inDialog, mBluetoothLeService, gets);
+                        }
+                        break;
+                        case "PV2": {
+                            float t = Float.valueOf(gets);
+                            pv = new PV(this, function);
+                            pv.todo(t, name, inDialog, mBluetoothLeService, gets);
+                        }
+                        break;
+                        case "PV3": {
+                            float t = Float.valueOf(gets);
+                            pv = new PV(this, function);
+                            pv.todo(t, name, inDialog, mBluetoothLeService, gets);
+                        }
+                        break;
+                        case "EH1": {
+                            float t = Float.valueOf(gets);
+                            Log.e(TAG, "Text = " + t);
+                            eh = new EH(this, function);
+                            eh.todo(t, name, inDialog, mBluetoothLeService, gets, MinEL1);
+                        }
+                        break;
+                        case "EH2": {
+                            float t = Float.valueOf(gets);
+                            eh = new EH(this, function);
+                            eh.todo(t, name, inDialog, mBluetoothLeService, gets, MinEL2);
+                        }
+                        break;
+                        case "EH3": {
+                            float t = Float.valueOf(gets);
+                            eh = new EH(this, function);
+                            eh.todo(t, name, inDialog, mBluetoothLeService, gets, MinEL3);
+                        }
+                        break;
+                        case "EL1": {
+                            float t = Float.valueOf(gets);
+                            el = new EL(this, function);
+                            el.todo(t, name, inDialog, mBluetoothLeService, gets, MaxEH1);
+                        }
+                        break;
+                        case "EL2": {
+                            float t = Float.valueOf(gets);
+                            el = new EL(this, function);
+                            el.todo(t, name, inDialog, mBluetoothLeService, gets, MaxEH2);
+                        }
+                        break;
+                        case "EL3": {
+                            float t = Float.valueOf(gets);
+                            el = new EL(this, function);
+                            el.todo(t, name, inDialog, mBluetoothLeService, gets, MaxEH3);
+                        }
+                        break;
+                        case "CR1": {
+                            float t = Float.valueOf(gets);
+                            cr = new CR(this, function);
+                            cr.todo(t, name, inDialog, mBluetoothLeService, gets);
+                        }
+                        break;
+                        case "CR2": {
+                            float t = Float.valueOf(gets);
+                            cr = new CR(this, function);
+                            cr.todo(t, name, inDialog, mBluetoothLeService, gets);
+                        }
+                        break;
+                        case "CR3": {
+                            float t = Float.valueOf(gets);
+                            cr = new CR(this, function);
+                            cr.todo(t, name, inDialog, mBluetoothLeService, gets);
+                        }
+                        break;
+                        case "IH1": {
+                            float t = Float.valueOf(gets);
+                            ih = new IH(this, function);
+                            ih.todo(t, name, inDialog, mBluetoothLeService, gets, MinIL1);
+                        }
+                        break;
+                        case "IH2": {
+                            float t = Float.valueOf(gets);
+                            ih = new IH(this, function);
+                            ih.todo(t, name, inDialog, mBluetoothLeService, gets, MinIL2);
+                        }
+                        break;
+                        case "IH3": {
+                            float t = Float.valueOf(gets);
+                            ih = new IH(this, function);
+                            ih.todo(t, name, inDialog, mBluetoothLeService, gets, MinIL3);
+                        }
+                        break;
+                        case "IL1": {
+                            float t = Float.valueOf(gets);
+                            il = new IL(this, function);
+                            il.todo(t, name, inDialog, mBluetoothLeService, gets, MaxIH1);
+                        }
+                        break;
+                        case "IL2": {
+                            float t = Float.valueOf(gets);
+                            il = new IL(this, function);
+                            il.todo(t, name, inDialog, mBluetoothLeService, gets, MaxIH2);
+                        }
+                        break;
+                        case "IL3": {
+                            float t = Float.valueOf(gets);
+                            il = new IL(this, function);
+                            il.todo(t, name, inDialog, mBluetoothLeService, gets, MaxIH3);
+                        }
+                        break;
+                        case "ADR": {
+                            float t = Float.valueOf(gets);
+                            if (t > 255.0 || t < 1.0) {
+                                Toast.makeText(DeviceFunction.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                             } else {
-                                if (gets.startsWith("-")) {
-                                    gets = String.valueOf(t);
-                                    int i = gets.indexOf(".");
-                                    Log.e(TAG, "gets = " + gets);
-                                    String num1 = gets.substring(1, gets.indexOf("."));
-                                    String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
-                                    StringBuilder set = new StringBuilder("0");
-                                    for (int j = 0; j < (4 - i); j++)
-                                        set.append("0");
-                                    String out = name + "-" + set + num1 + num2;
+                                if (t == 0.0) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                    String out = name + "+" + "0000.0";
                                     Log.e(TAG, "out = " + out);
                                     sendValue.send(out);
-                                    function.notifyDataSetChanged();
                                     inDialog.dismiss();
                                 } else {
-                                    gets = String.valueOf(t);
-                                    int i = gets.indexOf(".");
-                                    Log.e(TAG, "gets = " + gets);
-                                    String num1 = gets.substring(0, gets.indexOf("."));
-                                    String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
-                                    StringBuilder set = new StringBuilder("0");
-                                    for (int j = 1; j < (4 - i); j++)
-                                        set.append("0");
-                                    String out = name + "+" + set + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
-                                    inDialog.dismiss();
+                                    if (gets.startsWith("-")) {
+                                        sendValue.send("END");
+                                        sleep(100);
+                                        Value.downlog = false;
+                                        gets = String.valueOf(t);
+                                        int i = gets.indexOf(".");
+                                        Log.e(TAG, "gets = " + gets);
+                                        String num1 = gets.substring(1, gets.indexOf("."));
+                                        String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                        StringBuilder set = new StringBuilder("0");
+                                        for (int j = 0; j < (4 - i); j++)
+                                            set.append("0");
+                                        String out = name + "-" + set + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                        function.notifyDataSetChanged();
+                                        inDialog.dismiss();
+                                    } else {
+                                        sendValue.send("END");
+                                        sleep(100);
+                                        Value.downlog = false;
+                                        gets = String.valueOf(t);
+                                        int i = gets.indexOf(".");
+                                        Log.e(TAG, "gets = " + gets);
+                                        String num1 = gets.substring(0, gets.indexOf("."));
+                                        String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                        StringBuilder set = new StringBuilder("0");
+                                        for (int j = 1; j < (4 - i); j++)
+                                            set.append("0");
+                                        String out = name + "+" + set + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                        inDialog.dismiss();
+                                    }
                                 }
                             }
                         }
+                        break;
+                        default:
+                            Log.e(TAG, "Error");
                     }
-                    break;
-                    default:
-                        Log.e(TAG, "Error");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             } else {
                 Toast.makeText(DeviceFunction.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
@@ -1932,7 +1950,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     test = 0;
                     sendValue.send("END");
                     sleep(100);
-                    sendValue.send("Delay00010");
+                    sendValue.send("Delay00009");
                     sleep(100);
                     if (data_Json.getCount() > 0) {
                         data_Json.delete(Value.BID);
@@ -2369,8 +2387,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                     Log.e(TAG, "DataSave = " + Value.DataSave);
                                     getM();
                                     function.notifyDataSetChanged();
-                                }
-                                else if (text.startsWith("COUNT")) {
+                                } else if (text.startsWith("COUNT")) {
                                     Log.e(TAG, "停止紀錄 = " + text);
                                     Value.downlog = false;
                                     if (!Value.downlog) {
@@ -2955,6 +2972,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
     }
 
     private void getM() {
+        Log.e(TAG,"List_d_num = " + List_d_num);
         if (Value.SelectItem.indexOf("EH1") != -1) {
             MaxEH1 = Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH1")));
             Log.e(TAG, "MaxEH1 = " + MaxEH1);
@@ -3101,22 +3119,16 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             new AlertDialog.Builder(DeviceFunction.this)
                     .setTitle(R.string.warning)
                     .setMessage(R.string.stoprecord)
-                    .setPositiveButton(R.string.butoon_yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Value.downloading = true;
-                            sendValue.send("END");
-                            ask_Dialog = askDialog(DeviceFunction.this);
-                            ask_Dialog.show();
-                            ask_Dialog.setCanceledOnTouchOutside(false);
-                        }
+                    .setPositiveButton(R.string.butoon_yes, (dialog, which) -> {
+                        Value.downloading = true;
+                        sendValue.send("END");
+                        ask_Dialog = askDialog(DeviceFunction.this);
+                        ask_Dialog.show();
+                        ask_Dialog.setCanceledOnTouchOutside(false);
                     })
-                    .setNegativeButton(R.string.butoon_no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Value.downloading = false;
-                            Log.e(TAG, "取消下載");
-                        }
+                    .setNegativeButton(R.string.butoon_no, (dialog, which) -> {
+                        Value.downloading = false;
+                        Log.e(TAG, "取消下載");
                     })
                     .show();
 
