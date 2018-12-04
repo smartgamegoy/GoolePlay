@@ -3,7 +3,10 @@ package com.jetec.nordic_googleplay.Dialog;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Vibrator;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
@@ -16,10 +19,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.jetec.nordic_googleplay.R;
+import com.jetec.nordic_googleplay.SendValue;
 import com.jetec.nordic_googleplay.Service.BluetoothLeService;
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import static android.content.Context.VIBRATOR_SERVICE;
+import static java.lang.Thread.sleep;
 
 public class Interval {
 
@@ -29,6 +35,8 @@ public class Interval {
     private BluetoothLeService bluetoothLeService;
     private boolean c = false;
     private String description;
+    private Vibrator vibrator;
+    private SendValue sendValue;
 
     public Interval(Context context, double all_Width, double all_Height,
                     BluetoothLeService bluetoothLeService, String description){
@@ -38,6 +46,7 @@ public class Interval {
         this.all_Height = all_Height;
         this.bluetoothLeService = bluetoothLeService;
         this.description = description;
+        sendValue = new SendValue(bluetoothLeService);
     }
 
     public void showDialog() {
@@ -45,6 +54,7 @@ public class Interval {
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         progressDialog.show();
 
+        vibrator = (Vibrator) this.context.getSystemService(VIBRATOR_SERVICE);
         @SuppressLint("InflateParams") View v = inflater.inflate(R.layout.interval, null);
         ConstraintLayout constraint = v.findViewById(R.id.constraint);
         EditText e1 = v.findViewById(R.id.editText1);
@@ -54,41 +64,68 @@ public class Interval {
         Button bn = v.findViewById(R.id.button1);
 
         by.setOnClickListener(v1 -> {
-            String hour, minute, second;
-            int ihour = 0, iminute = 0, isecond = 0, sum;
-            Log.e("btn", "c = " + c);
-            if(c) {
-                if (!e1.getText().toString().trim().matches("")) {
-                    hour = e1.getText().toString().trim();
-                    ihour = Integer.valueOf(hour);
-                }
-                if (!e2.getText().toString().trim().matches("")) {
-                    minute = e2.getText().toString().trim();
-                    iminute = Integer.valueOf(minute);
-                }
-                if (!e3.getText().toString().trim().matches("")) {
-                    second = e3.getText().toString().trim();
-                    isecond = Integer.valueOf(second);
-                }
-                sum = ihour * 3600 + iminute * 60 + isecond;
-                try {
-                    if(sum <= 3600 /*&& sum >= 30*/) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(R.string.warning)
+                    .setMessage(R.string.reinterval)
+                    .setPositiveButton(R.string.butoon_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            vibrator.vibrate(100);
+                            String hour, minute, second;
+                            int ihour = 0, iminute = 0, isecond = 0, sum;
+                            Log.e("btn", "c = " + c);
+                            if(c) {
+                                if (!e1.getText().toString().trim().matches("")) {
+                                    hour = e1.getText().toString().trim();
+                                    ihour = Integer.valueOf(hour);
+                                }
+                                if (!e2.getText().toString().trim().matches("")) {
+                                    minute = e2.getText().toString().trim();
+                                    iminute = Integer.valueOf(minute);
+                                }
+                                if (!e3.getText().toString().trim().matches("")) {
+                                    second = e3.getText().toString().trim();
+                                    isecond = Integer.valueOf(second);
+                                }
+                                sum = ihour * 3600 + iminute * 60 + isecond;
+                                try {
+                                    if(sum <= 3600 && sum >= 30) {
+                                        Toast.makeText(context, context.getString(R.string.intervalset), Toast.LENGTH_SHORT).show();
+                                        try {
+                                            sendValue.send("END");
+                                            sleep(500);
+                                            sending(String.valueOf(sum));
+                                            sleep(500);
+                                            sendValue.send("START");
+                                            sleep(2000);
+                                            sendValue.send("END");
+                                            progressDialog.dismiss();
+                                        }catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    else {
+                                        Toast.makeText(context, description, Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            else {
+                                Toast.makeText(context, description, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.butoon_no, (dialog, which) -> {
+                        vibrator.vibrate(100);
                         progressDialog.dismiss();
-                        sending(String.valueOf(sum));
-                    }
-                    else {
-                        Toast.makeText(context, description, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
-                Toast.makeText(context, description, Toast.LENGTH_SHORT).show();
-            }
+                    })
+                    .show();
         });
-
-        bn.setOnClickListener(v12 -> progressDialog.dismiss());
+        bn.setOnClickListener(v12 -> {
+            vibrator.vibrate(100);
+            progressDialog.dismiss();
+        });
 
         e1.setKeyListener(DigitsKeyListener.getInstance("01"));
         e1.setHint("0 or 1");
@@ -178,6 +215,8 @@ public class Interval {
             String change = "INTER" + value;
             byte[] sends;
             sends = change.getBytes("UTF-8");
+            String TAG = "Interval";
+            Log.e(TAG,"sends = " + change);
             bluetoothLeService.writeRXCharacteristic(sends);
         }
     }

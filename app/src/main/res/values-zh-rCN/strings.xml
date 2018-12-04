@@ -141,4 +141,6 @@
     <string name="I3row">第三排数值</string>
     <string name="UL">上限</string>
     <string name="LL">下限</string>
+    <string name="intervalset">设定中…</string>
+    <string name="reinterval">即将停止纪录,并清除全部纪录资料</string>
 </resources>

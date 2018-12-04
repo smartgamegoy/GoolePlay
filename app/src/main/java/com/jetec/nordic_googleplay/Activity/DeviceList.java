@@ -194,9 +194,12 @@ public class DeviceList extends AppCompatActivity {
         Intent gattServiceIntent = new Intent(DeviceList.this, BluetoothLeService.class);
         s_connect = bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
         if (s_connect) {
-            progressDialog = writeDialog(DeviceList.this, getString(R.string.connecting));
-            progressDialog.show();
-            progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog = writeDialog(DeviceList.this, getString(R.string.connecting));
+            if(!progressDialog.isShowing()) {
+                Log.e(TAG,"Dialog");
+                progressDialog.show();
+                progressDialog.setCanceledOnTouchOutside(false);
+            }
             registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         } else {
             Log.e(TAG, "服務綁訂狀態  = " + false);
@@ -240,11 +243,14 @@ public class DeviceList extends AppCompatActivity {
                 Log.e(TAG, "連線成功");
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 s_connect = false;
-                progressDialog.dismiss();
                 if (mBluetoothLeService != null)
                     unbindService(mServiceConnection);
                 Log.e(TAG, "連線中斷" + Value.connected);
                 //Toast.makeText(DeviceList.this, getString(R.string.connect_err), Toast.LENGTH_SHORT).show();
+                if(progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                    Log.e(TAG,"Dialog.dismiss");
+                }
                 if (Value.connected) {
                     try {
                         //new Thread(connectfail).start();
@@ -323,20 +329,25 @@ public class DeviceList extends AppCompatActivity {
                             flag = 1;
                             check();
                         } else {
-                            if (!text.startsWith("OVER") && !text.matches("LOG")) {
+                            if (!text.startsWith("OVER")) {
                                 if (!(text.startsWith("COUNT") || text.startsWith("DATE") ||
-                                        text.startsWith("TIME") || text.startsWith("LOG"))) {
+                                        text.startsWith("TIME") || text.matches("LOGON") ||
+                                        text.matches("LOGOFF") || text.startsWith("LOG"))) {
                                     Log.e(TAG, "check = " + Value.Jsonlist.get(check));
                                     SelectItem.add(checkDeviceName.setName(text));
                                     return_RX.add(text);
                                     DataSave.add(text);
                                     check = check + 1;
-                                } else {
+                                } else if((text.startsWith("COUNT") || text.startsWith("DATE") ||
+                                        text.startsWith("TIME") || text.matches("LOGON") ||
+                                        text.matches("LOGOFF"))){
                                     setString.set(text, check);
                                     check = check + 1;
                                     Log.e(TAG, "check = " + Value.Jsonlist.get(check));
+                                }else {
+                                    Log.e(TAG, "Loging = " + text);
                                 }
-                            } else if (text.matches("OVER") && !text.matches("LOG")) {
+                            } else if (text.matches("OVER") && !text.startsWith("LOG")) {
                                 //check = check + 1;
                                 Log.e(TAG, "checkOVER = " + text);
                                 Log.e(TAG, "check = " + check);
@@ -348,8 +359,9 @@ public class DeviceList extends AppCompatActivity {
                                     Value.DataSave = DataSave;
                                     Value.return_RX = return_RX;
                                     //sendLog.interrupt();
+                                    Log.e(TAG,"Dialog.dismiss");
+                                    Log.e(TAG,"Dialog.dismiss2");
                                     device_function();
-                                    progressDialog2.dismiss();
                                 }
                             } else {
                                 Log.e(TAG, "Loging = " + text);
@@ -424,13 +436,20 @@ public class DeviceList extends AppCompatActivity {
     };
 
     private void login() {
+        if(progressDialog2 != null && progressDialog2.isShowing()){
+            Log.e(TAG,"Dialog.dismiss2");
+            progressDialog2.dismiss();
+        }
         check = 0;
         SelectItem.add("NAME");
         DataSave.add(device.getName());
         sendValue.send("get");
         progressDialog2 = writeDialog(DeviceList.this, getString(R.string.login));
-        progressDialog2.show();
-        progressDialog2.setCanceledOnTouchOutside(false);
+        if(!progressDialog2.isShowing()) {
+            Log.e(TAG,"Dialog2");
+            progressDialog2.show();
+            progressDialog2.setCanceledOnTouchOutside(false);
+        }
         new Thread(timedelay).start();
     }
 
@@ -457,8 +476,6 @@ public class DeviceList extends AppCompatActivity {
     private Dialog writeDialog(Context context, String message) {
         final Dialog progressDialog = new Dialog(context);
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        progressDialog.dismiss();
 
         LayoutInflater inflater = LayoutInflater.from(context);
         @SuppressLint("InflateParams") View v = inflater.inflate(R.layout.running, null);
@@ -490,6 +507,7 @@ public class DeviceList extends AppCompatActivity {
         TextView t1 = findViewById(R.id.textView3);
         EditText e1 = findViewById(R.id.editText1);
 
+        Log.e(TAG,"Dialog.dismiss");
         progressDialog.dismiss();
         sleep(30);
 
@@ -552,6 +570,8 @@ public class DeviceList extends AppCompatActivity {
         Intent intent = new Intent(DeviceList.this, DeviceFunction.class);
 
         startActivity(intent);
+        progressDialog.dismiss();
+        progressDialog2.dismiss();
         finish();
     }
 

@@ -81,8 +81,10 @@ import com.jetec.nordic_googleplay.Thread.ConnectThread;
 import com.jetec.nordic_googleplay.Value;
 import com.jetec.nordic_googleplay.ViewAdapter.DataList;
 import com.jetec.nordic_googleplay.ViewAdapter.Function;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -94,6 +96,7 @@ import java.util.Objects;
 import java.util.concurrent.Delayed;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import static com.jetec.nordic_googleplay.Activity.DeviceList.getManager;
 import static java.lang.Thread.sleep;
 
@@ -2320,17 +2323,16 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                         e.printStackTrace();
                     }
                     sendValue = new SendValue(mBluetoothLeService);
-                    if(!Value.downloading){
+                    if (!Value.downloading) {
                         ConnectThread reThread = new ConnectThread(connectHandler);
                         reThread.run();
-                        if(ask_Dialog != null){
+                        if (ask_Dialog != null) {
                             ask_Dialog.dismiss();
                         }
-                    }
-                    else {
+                    } else {
                         Value.connected = false;
                         new Thread(connectfail).start();
-                        Log.e(TAG,"走到這");
+                        Log.e(TAG, "走到這");
                         try {
                             sleep(2000);
                         } catch (InterruptedException e) {
@@ -2347,31 +2349,36 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                         text = new String(txValue, "UTF-8");
                         Log.e(TAG, "text = " + text);
                         if (!Value.downloading) {
-                            if (!Value.loading) {
-                                if (text.startsWith("NAME")) {    //Nordic_UART
-                                    List_d_num.set(0, text.substring(4));
-                                    Value.DataSave.set(0, text.substring(4));
+                            if (text.startsWith("NAME")) {    //Nordic_UART
+                                List_d_num.set(0, text.substring(4));
+                                Value.DataSave.set(0, text.substring(4));
+                                function.notifyDataSetChanged();
+                            } else if (!text.matches("OVER") && !text.startsWith("END") &&
+                                    !text.startsWith("START")) {
+                                if (!(text.startsWith("COUNT") || text.startsWith("DATE") ||
+                                        text.startsWith("TIME") || text.matches("LOGON") ||
+                                        text.matches("LOGOFF") || text.startsWith("LOG"))) {
+
+                                    int i = Value.SelectItem.indexOf(checkDeviceName.setName(text));
+                                    Value.return_RX.set((i - 1), text);
+                                    Value.DataSave.set(i, text);
+                                    List_d_num.set(i, getDeviceNum.get(Value.return_RX.get(i - 1)));
+                                    Log.e(TAG, "i = " + i);
+                                    Log.e(TAG, "return_RX= " + Value.return_RX);
+                                    Log.e(TAG, "List_d_num = " + List_d_num);
+                                    Log.e(TAG, "DataSave = " + Value.DataSave);
+                                    getM();
                                     function.notifyDataSetChanged();
-                                } else if (!text.matches("LOG") && !text.startsWith("END")) {
-                                    if (!text.matches("OVER")) {
-                                        int i = Value.SelectItem.indexOf(checkDeviceName.setName(text));
-                                        Value.return_RX.set((i - 1), text);
-                                        Value.DataSave.set(i, text);
-                                        List_d_num.set(i, getDeviceNum.get(Value.return_RX.get(i - 1)));
-                                        Log.e(TAG, "i = " + i);
-                                        Log.e(TAG, "return_RX= " + Value.return_RX);
-                                        Log.e(TAG, "List_d_num = " + List_d_num);
-                                        Log.e(TAG, "DataSave = " + Value.DataSave);
-                                        getM();
-                                        function.notifyDataSetChanged();
-                                    }
-                                } else {
-                                    Log.e(TAG, "Loging = " + text);
-                                    sendValue.send("STOP");
                                 }
-                            } else {
-                                Log.e(TAG, "Value.loading = " + Value.loading);
-                                Log.e(TAG, "Value.downlog = " + Value.downlog);
+                                else if (text.startsWith("COUNT")) {
+                                    Log.e(TAG, "停止紀錄 = " + text);
+                                    Value.downlog = false;
+                                    if (!Value.downlog) {
+                                        navigationView.getMenu().findItem(R.id.nav_share).setTitle(getString(R.string.start) + getString(R.string.LOG));
+                                    } else {
+                                        navigationView.getMenu().findItem(R.id.nav_share).setTitle(getString(R.string.end) + getString(R.string.LOG));
+                                    }
+                                }
                             }
                         } else {
                             if (text.startsWith("OK")) {
@@ -2386,7 +2393,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 showtext = String.valueOf((test)) + " / " + String.valueOf(totle);
                             } else if (text.startsWith("OVER")) {
                                 //sendLog.interrupt();
-                                Log.e(TAG,"Logdata.size() = " + Logdata.size());
+                                Log.e(TAG, "Logdata.size() = " + Logdata.size());
                                 if (Logdata.size() == totle) {
                                     Value.downloading = false;
                                     jsonflag = 0;
@@ -2740,7 +2747,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                         Firstlist.add(String.valueOf(num));
                     }
                     if (secondrow.startsWith("+")) {
-                        Log.e(TAG,"secondrow = " + secondrow);
+                        Log.e(TAG, "secondrow = " + secondrow);
                         secondrow = secondrow.substring(1, 5);
                         Float num = Float.valueOf(secondrow) / math2;
                         Secondlist.add(String.valueOf(num));
@@ -2800,10 +2807,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                 String formattime;
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat log_date = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
                 String d_date = Value.Date;
-                d_date = d_date.substring(0,2) + "-" +
+                d_date = d_date.substring(0, 2) + "-" +
                         d_date.substring(2, 4) + "-" + d_date.substring(4, 6);
                 String d_time = Value.Time;
-                d_time = d_time.substring(0,2) + ":" +
+                d_time = d_time.substring(0, 2) + ":" +
                         d_time.substring(2, 4) + ":" + d_time.substring(4, 6);
                 String all_date = d_date + " " + d_time;
                 Date date = log_date.parse(all_date);
@@ -2815,8 +2822,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                             formattime.substring(formattime.indexOf(" ") + 1, formattime.length() - 3);
                     timelist.add(formattime);
                 }
-                Log.e(TAG,"timelist.size() = " + timelist.size());
-                Log.e(TAG,"timelist = " + timelist);
+                Log.e(TAG, "timelist.size() = " + timelist.size());
+                Log.e(TAG, "timelist = " + timelist);
                 jsonflag = 2;
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -2841,7 +2848,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                 sleep(30);
                 //}
                 //if(Thirdlist.size() != 0){
-                Log.e(TAG,"Thirdlist = " + Thirdlist.size());
+                Log.e(TAG, "Thirdlist = " + Thirdlist.size());
                 Thirdjson = new JSONArray(Thirdlist);
                 sleep(30);
                 //}
@@ -2914,11 +2921,11 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         Value.Secondlist = Secondlist;
         Value.Thirdlist = Thirdlist;
 
-        Log.e(TAG,"Firstlist = " + Firstlist);
-        Log.e(TAG,"Secondlist = " + Secondlist);
-        Log.e(TAG,"Thirdlist = " + Thirdlist);
-        Log.e(TAG,"List_d_num = " + List_d_num);
-        Log.e(TAG,"SelectItem = " + Value.SelectItem);
+        Log.e(TAG, "Firstlist = " + Firstlist);
+        Log.e(TAG, "Secondlist = " + Secondlist);
+        Log.e(TAG, "Thirdlist = " + Thirdlist);
+        Log.e(TAG, "List_d_num = " + List_d_num);
+        Log.e(TAG, "SelectItem = " + Value.SelectItem);
 
         startActivity(intent);
     }
@@ -3156,15 +3163,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                 }
             } else {
                 Value.loading = false;
-                Value.downlog = false;
-                if (!Value.downlog) {
-                    navigationView.getMenu().findItem(R.id.nav_share).setTitle(getString(R.string.start) + getString(R.string.LOG));
-                } else {
-                    navigationView.getMenu().findItem(R.id.nav_share).setTitle(getString(R.string.end) + getString(R.string.LOG));
-                }
                 sendValue.send("END");
             }
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

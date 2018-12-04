@@ -24,6 +24,12 @@ public class GetString {
         }
         if(text.startsWith("LOG")){
             Value.GetLog = text.substring(text.indexOf(Value.Jsonlist.get(check)) + 3, text.length());
+            if(Value.GetLog.matches("ON")){
+                Value.downlog = true;
+            }
+            else if(Value.GetLog.matches("OFF")){
+                Value.downlog = false;
+            }
             Log.e(TAG, "LOG = " + Value.GetLog);
         }
     }
