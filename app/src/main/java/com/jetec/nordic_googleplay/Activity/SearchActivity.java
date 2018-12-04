@@ -238,46 +238,43 @@ public class SearchActivity extends AppCompatActivity {
 
                         }
                         else if(Value.name.get(0).toString().matches("I")){
-
+                            e1.setHint(" 9999 ~ -999");
                         }
                     }
                     else if(position == 4){
-                        e1.setKeyListener(DigitsKeyListener.getInstance(".0123456789"));
-                        e1.setHint(" 0 ~ 99");
-                        e1.addTextChangedListener(new TextWatcher() {
-                            int l = 0;    //記錄字串删除字元之前，字串的長度
-                            int location = 0; //記錄光標位置
-                            @Override
-                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                l = s.length();
-                                location = e1.getSelectionStart();
-                            }
+                        if(Value.name.get(0).toString().matches("T")){
+                            e1.setHint(" - 10 ~ 65");
+                        }
+                        else if(Value.name.get(0).toString().matches("H")){
+                            e1.setHint(" 0 ~ 99");
+                        }
+                        else if(Value.name.get(0).toString().matches("C")){
 
-                            @Override
-                            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                Pattern p = Pattern.compile("^?\\d{1,4}([.]\\d)?$");    //^\-?[0-5](.[0-9])?$
-                                Matcher m = p.matcher(s.toString());
-                                if(m.find() || ("").equals(s.toString())){
-                                    c = true;
-                                }else{
-                                    c = false;
-                                }
-                            }
-
-                            @Override
-                            public void afterTextChanged(Editable s) {
-
-                            }
-                        });
+                        }
+                        else if(Value.name.get(0).toString().matches("I")){
+                            e1.setHint(" 9999 ~ -999");
+                        }
                     }
                     else {
+                        if(Value.name.get(0).toString().matches("T")){
+                            e1.setHint(" - 10 ~ 65");
+                        }
+                        else if(Value.name.get(0).toString().matches("H")){
+                            e1.setHint(" 0 ~ 99");
+                        }
+                        else if(Value.name.get(0).toString().matches("C")){
 
+                        }
+                        else if(Value.name.get(0).toString().matches("I")){
+                            e1.setHint(" 9999 ~ -999");
+                        }
                     }
                     t3.setVisibility(View.GONE);
                     b1.setVisibility(View.GONE);
                     b2.setVisibility(View.GONE);
                     l1.setVisibility(View.GONE);
                     chose1 = condition1.get(position);
+                    Log.e(TAG,"chose1 = " + chose1);
                 }
             }
 
@@ -334,8 +331,8 @@ public class SearchActivity extends AppCompatActivity {
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(chose1.matches(date) && !chose2.matches("") && !getdate.matches("yyyy-mm-dd")){
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                if(chose1.matches(date) && !chose2.matches("") && !getdate.matches("yy-mm-dd")){
+                    SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
                     String timecomparison = getdate + " " + gettime + ":00";
                     try {
                         if(chose2.matches("＞")) {
@@ -454,20 +451,59 @@ public class SearchActivity extends AppCompatActivity {
                 else if(chose1.matches(record) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")){
                     calculate(chose1, chose2, e1.getText().toString().trim());
                 }
-                else if(chose1.matches(Temperature) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("") && c){
-                    if(Float.valueOf(e1.getText().toString().trim()) > -10 && Float.valueOf(e1.getText().toString().trim()) < 65)
-                        calculate(chose1, chose2, e1.getText().toString().trim());
-                    else
-                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                if(Value.name.get(0).toString().matches("T") || Value.name.get(0).toString().matches("H") ||
+                        Value.name.get(0).toString().matches("C") || Value.name.get(0).toString().matches("I")) {
+                    if (chose1.matches(Temperature) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("") && c) {
+                        if (Value.name.get(0).toString().matches("T")) {
+                            if (Float.valueOf(e1.getText().toString().trim()) >= -10 && Float.valueOf(e1.getText().toString().trim()) <= 65)
+                                calculate(chose1, chose2, e1.getText().toString().trim());
+                        } else if (Value.name.get(0).toString().matches("H")) {
+                            if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 99)
+                                calculate(chose1, chose2, e1.getText().toString().trim());
+                        } else if (Value.name.get(0).toString().matches("C")) {
+
+                        } else if (Value.name.get(0).toString().matches("I")) {
+                            if (Float.valueOf(e1.getText().toString().trim()) >= -999 && Float.valueOf(e1.getText().toString().trim()) <= 9999)
+                                calculate(chose1, chose2, e1.getText().toString().trim());
+                        } else
+                            Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else if(chose1.matches(Humidity) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("") && c){
-                    if(Float.valueOf(e1.getText().toString().trim()) > 0 && Float.valueOf(e1.getText().toString().trim()) < 99)
-                        calculate(chose1, chose2, e1.getText().toString().trim());
-                    else
-                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                if(Value.name.get(1).toString().matches("T") || Value.name.get(1).toString().matches("H") ||
+                        Value.name.get(1).toString().matches("C") || Value.name.get(1).toString().matches("I")) {
+                    if (chose1.matches(Humidity) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("") && c) {
+                        if (Value.name.get(1).toString().matches("T")) {
+                            if (Float.valueOf(e1.getText().toString().trim()) >= -10 && Float.valueOf(e1.getText().toString().trim()) <= 65)
+                                calculate(chose1, chose2, e1.getText().toString().trim());
+                        } else if (Value.name.get(1).toString().matches("H")) {
+                            if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 99)
+                                calculate(chose1, chose2, e1.getText().toString().trim());
+                        } else if (Value.name.get(1).toString().matches("C")) {
+
+                        } else if (Value.name.get(1).toString().matches("I")) {
+                            if (Float.valueOf(e1.getText().toString().trim()) >= -999 && Float.valueOf(e1.getText().toString().trim()) <= 9999)
+                                calculate(chose1, chose2, e1.getText().toString().trim());
+                        } else
+                            Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else if(chose1.matches(CO2) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")){
-                    calculate(chose1, chose2, e1.getText().toString().trim());
+                if(Value.name.get(2).toString().matches("T") || Value.name.get(2).toString().matches("H") ||
+                        Value.name.get(2).toString().matches("C") || Value.name.get(2).toString().matches("I")) {
+                    if (chose1.matches(CO2) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")) {
+                        if (Value.name.get(2).toString().matches("T")) {
+                            if (Float.valueOf(e1.getText().toString().trim()) >= -10 && Float.valueOf(e1.getText().toString().trim()) <= 65)
+                                calculate(chose1, chose2, e1.getText().toString().trim());
+                        } else if (Value.name.get(2).toString().matches("H")) {
+                            if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 99)
+                                calculate(chose1, chose2, e1.getText().toString().trim());
+                        } else if (Value.name.get(2).toString().matches("C")) {
+
+                        } else if (Value.name.get(2).toString().matches("I")) {
+                            if (Float.valueOf(e1.getText().toString().trim()) >= -999 && Float.valueOf(e1.getText().toString().trim()) <= 9999)
+                                calculate(chose1, chose2, e1.getText().toString().trim());
+                        }
+                        calculate(chose1, chose2, e1.getText().toString().trim());
+                    }
                 }
                 else {
                     Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
