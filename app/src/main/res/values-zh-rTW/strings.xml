@@ -143,4 +143,5 @@
     <string name="LL">下限</string>
     <string name="intervalset">設定中…</string>
     <string name="reinterval">即將停止紀錄,並清除全部紀錄資料</string>
+    <string name="restart">重新開始紀錄,並清除全部紀錄資料</string>
 </resources>

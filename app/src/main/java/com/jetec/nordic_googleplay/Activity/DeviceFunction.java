@@ -2972,7 +2972,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
     }
 
     private void getM() {
-        Log.e(TAG,"List_d_num = " + List_d_num);
+        Log.e(TAG, "List_d_num = " + List_d_num);
         if (Value.SelectItem.indexOf("EH1") != -1) {
             MaxEH1 = Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH1")));
             Log.e(TAG, "MaxEH1 = " + MaxEH1);
@@ -3149,30 +3149,44 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             modifyPassword.modifyDialog(vibrator);
         } else if (id == R.id.nav_share) {
             if (!Value.downlog) {
-                try {
-                    Value.loading = true;
-                    Value.downlog = true;
-                    if (!Value.downlog) {
-                        navigationView.getMenu().findItem(R.id.nav_share).setTitle(getString(R.string.start) + getString(R.string.LOG));
-                    } else {
-                        navigationView.getMenu().findItem(R.id.nav_share).setTitle(getString(R.string.end) + getString(R.string.LOG));
-                    }
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat get_date = new SimpleDateFormat("yyMMdd");
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat get_time = new SimpleDateFormat("hhmmss");
-                    Date date = new Date();
-                    String strDate = get_date.format(date);
-                    String strtime = get_time.format(date);
-                    sendValue.send(strDate);
-                    sleep(100);
-                    sendValue.send(strtime);
-                    sleep(100);
-                    Log.e(TAG, "Value.return_RX = " + Value.return_RX.get(Value.SelectItem.indexOf("INTER") - 1));
-                    sendValue.send(Value.return_RX.get(Value.SelectItem.indexOf("INTER") - 1));
-                    sleep(100);
-                    sendValue.send("START");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.warning)
+                        .setMessage(R.string.restart)
+                        .setPositiveButton(R.string.butoon_yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    Value.loading = true;
+                                    Value.downlog = true;
+                                    if (!Value.downlog) {
+                                        navigationView.getMenu().findItem(R.id.nav_share).setTitle(getString(R.string.start) + getString(R.string.LOG));
+                                    } else {
+                                        navigationView.getMenu().findItem(R.id.nav_share).setTitle(getString(R.string.end) + getString(R.string.LOG));
+                                    }
+                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat get_date = new SimpleDateFormat("yyMMdd");
+                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat get_time = new SimpleDateFormat("hhmmss");
+                                    Date date = new Date();
+                                    String strDate = get_date.format(date);
+                                    String strtime = get_time.format(date);
+                                    sendValue.send(strDate);
+                                    sleep(100);
+                                    sendValue.send(strtime);
+                                    sleep(100);
+                                    Log.e(TAG, "Value.return_RX = " + Value.return_RX.get(Value.SelectItem.indexOf("INTER") - 1));
+                                    sendValue.send(Value.return_RX.get(Value.SelectItem.indexOf("INTER") - 1));
+                                    sleep(100);
+                                    sendValue.send("START");
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        })
+                        .setNegativeButton(R.string.butoon_no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .show();
             } else {
                 Value.loading = false;
                 sendValue.send("END");
