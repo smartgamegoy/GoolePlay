@@ -144,4 +144,11 @@
     <string name="intervalset">Setting…</string>
     <string name="reinterval">It will stop records and clean all records data.</string>
     <string name="restart">It will restart records and clean all records data.</string>
+    <string name="pdftime">Time</string>
+    <string name="pdf1st">1st</string>
+    <string name="pdf2nd">2nd</string>
+    <string name="pdf3rd">3rd</string>
+    <string name="pdfT">T</string>
+    <string name="pdfH">H</string>
+    <string name="pdfC">CO2</string>
 </resources>

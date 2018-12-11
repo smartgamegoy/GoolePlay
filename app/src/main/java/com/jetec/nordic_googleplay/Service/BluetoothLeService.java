@@ -1,5 +1,6 @@
 package com.jetec.nordic_googleplay.Service;
 
+import android.annotation.TargetApi;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -13,6 +14,7 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -53,7 +55,10 @@ public class BluetoothLeService extends Service {
     public static String HEART_RATE_MEASUREMENT = "00002a37-0000-1000-8000-00805f9b34fb";
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
 
+    public int flag = 0, MTU;
+
     public void enableTXNotification() {
+        //Log.e(TAG,"高速藍牙");
         BluetoothGattService RxService = mBluetoothGatt.getService(UUID.fromString(Service_uuid));
         if (RxService == null) {
             showMessage("Rx service not found on enable!");
@@ -100,8 +105,14 @@ public class BluetoothLeService extends Service {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
-                gatt.discoverServices();
+                //gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+                //gatt.discoverServices();
+                if (gatt.requestMtu(512)) {
+                    Log.e(TAG, "Requested MTU successfully");
+                    onMtuChanged(gatt, 512, status);
+                } else {
+                    Log.e(TAG, "Failed to request MTU");
+                }
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
                 broadcastUpdate(intentAction);
@@ -123,7 +134,7 @@ public class BluetoothLeService extends Service {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+                //gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
@@ -133,7 +144,7 @@ public class BluetoothLeService extends Service {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+                //gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             }
         }
@@ -141,10 +152,21 @@ public class BluetoothLeService extends Service {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+            //flag = 1;
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
         }
 
-
+        @Override
+        public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
+            //super.onMtuChanged(gatt, mtu, status);
+            if (gatt != null) {
+                if (gatt.discoverServices()) {
+                    Log.e(TAG, "Started discovering services && MTU = " + mtu);
+                } else {
+                    Log.e(TAG, "Failed to start discovering services");
+                }
+            }
+        }
     };
 
     private void broadcastUpdate(final String action) {
@@ -161,6 +183,7 @@ public class BluetoothLeService extends Service {
             Intent intent = new Intent(action);
             intent.putExtra(EXTRA_DATA, characteristic.getValue());
             this.sendBroadcast(intent);
+            //flag = 0;
         } else {
         }
     }

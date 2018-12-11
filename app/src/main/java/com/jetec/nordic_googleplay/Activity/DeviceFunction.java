@@ -526,6 +526,9 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                             sleep(100);
                             Value.downlog = false;
                             sendValue.send(out);
+                            if(mBluetoothLeService != null){
+                                Value.BName = gets;
+                            }
                             inDialog.dismiss();
                         }
                         break;
@@ -1950,7 +1953,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     test = 0;
                     sendValue.send("END");
                     sleep(100);
-                    sendValue.send("Delay00009");
+                    sendValue.send("Delay0000");
                     sleep(100);
                     if (data_Json.getCount() > 0) {
                         data_Json.delete(Value.BID);
@@ -2376,7 +2379,6 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 if (!(text.startsWith("COUNT") || text.startsWith("DATE") ||
                                         text.startsWith("TIME") || text.matches("LOGON") ||
                                         text.matches("LOGOFF") || text.startsWith("LOG"))) {
-
                                     int i = Value.SelectItem.indexOf(checkDeviceName.setName(text));
                                     Value.return_RX.set((i - 1), text);
                                     Value.DataSave.set(i, text);
@@ -2403,7 +2405,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 sendValue.send("DOWNLOAD");
                                 /*sendLog = new SendLog();
                                 sendLog.set_over(true);
-                                sendLog.set_Service(mBluetoothLeService);*/
+                                sendLog.set_Service(mBluetoothLeService);
+                                sendLog.start();*/
                             } else if (text.startsWith("COUNT")) {
                                 Value.Count = text.substring(text.indexOf(Value.Jsonlist.get(check)) + 6, text.length());
                                 totle = Integer.valueOf(Value.Count);
@@ -2412,6 +2415,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 //sendLog.interrupt();
                                 Log.e(TAG, "Logdata.size() = " + Logdata.size());
                                 if (Logdata.size() == totle) {
+                                    //sendLog.interrupt();
                                     Value.downloading = false;
                                     jsonflag = 0;
                                     new Thread(analysislog).start();

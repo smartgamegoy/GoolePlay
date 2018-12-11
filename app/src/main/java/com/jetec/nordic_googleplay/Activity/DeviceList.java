@@ -300,7 +300,8 @@ public class DeviceList extends AppCompatActivity {
                             new Thread(sendpassword).start();
                             /*sendLog = new SendLog();
                             sendLog.set_over(true);
-                            sendLog.set_Service(mBluetoothLeService);*/
+                            sendLog.set_Service(mBluetoothLeService);
+                            sendLog.start();*/
                         } else if (text.startsWith("BT")) {
                             Jsonlist.clear();
                             Value.model = true;

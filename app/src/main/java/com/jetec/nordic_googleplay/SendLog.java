@@ -9,35 +9,31 @@ public class SendLog extends Thread {
     BluetoothLeService mBluetoothLeService;
     private boolean over;
 
-    public SendLog(){
+    public SendLog() {
         super();
     }
-    public void set_Service(BluetoothLeService mBluetoothLeService){
+
+    public void set_Service(BluetoothLeService mBluetoothLeService) {
         this.mBluetoothLeService = mBluetoothLeService;
     }
-    public void set_over(Boolean over){
+
+    public void set_over(Boolean over) {
         this.over = over;
     }
-    public void run(BluetoothLeService mBluetoothLeService, Boolean over){
-        for (; over ; ) {
-            try {
-                sleep(20);
-                if(mBluetoothLeService.mConnectionState==0) {
+
+    public void run(BluetoothLeService mBluetoothLeService, Boolean over) {
+        //noinspection LoopConditionNotUpdatedInsideLoop
+        for (; over; ) {
+            //sleep(5);
+            if (mBluetoothLeService.flag == 1) {
+                if (mBluetoothLeService.mConnectionState == 0) {
                     this.over = false;
                     //mBluetoothLeService.mBluetoothGatt.close();
-                }else{
-                mBluetoothLeService.mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
-                //mBluetoothLeService.mBluetoothGatt.discoverServices();
+                } else {
+                    mBluetoothLeService.mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+                    //mBluetoothLeService.mBluetoothGatt.discoverServices();
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
-
-
-
     }
-
-
-
 }

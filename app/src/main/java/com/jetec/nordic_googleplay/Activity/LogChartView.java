@@ -1,5 +1,6 @@
 package com.jetec.nordic_googleplay.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.Vibrator;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -21,6 +21,22 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.itextpdf.io.font.FontConstants;
+import com.itextpdf.kernel.events.PdfDocumentEvent;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.TextAlignment;
+import com.jetec.nordic_googleplay.CreatPDF.FooterHandler;
+import com.jetec.nordic_googleplay.CreatPDF.HeaderHandler;
 import com.jetec.nordic_googleplay.R;
 import com.jetec.nordic_googleplay.Value;
 import com.jetec.nordic_googleplay.ViewAdapter.ChartList;
@@ -41,11 +57,15 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.opencsv.CSVWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import static java.lang.Thread.sleep;
 
 public class LogChartView extends AppCompatActivity {
 
@@ -56,7 +76,7 @@ public class LogChartView extends AppCompatActivity {
     private int dialogflag, select_item = -1;
     private View view1;
     private Uri csvuri;
-    private File file;
+    private File file, pdffile;
     private ArrayList<String> Firstlist, Secondlist, Thirdlist, charttime, timelist, List_d_num;
     private double all_Width, all_Height;
     private String device, TAG = "Logview";
@@ -66,7 +86,7 @@ public class LogChartView extends AppCompatActivity {
     private ChartList chartList;
     private FileWriter mFileWriter;
     private CSVWriter writer;
-
+    private FileOutputStream fOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,10 +111,11 @@ public class LogChartView extends AppCompatActivity {
         Firstlist = Value.Firstlist;
         List_d_num = Value.List_d_num;
 
+        new Thread(makepdf).start();
         logview();
     }
 
-    private void list(){
+    private void list() {
         Firstlist = new ArrayList<String>();
         Secondlist = new ArrayList<String>();
         Thirdlist = new ArrayList<String>();
@@ -117,9 +138,9 @@ public class LogChartView extends AppCompatActivity {
             //一開始未選擇任何一個item所以為-1
             //======================
             //點選某個item並呈現被選取的狀態
-            if ((select_item == -1) || (select_item==position)){
+            if ((select_item == -1) || (select_item == position)) {
                 view.setBackgroundColor(Color.YELLOW); //為View加上選取效果
-            }else{
+            } else {
                 view1.setBackgroundDrawable(null); //將上一次點選的View保存在view1
                 view.setBackgroundColor(Color.YELLOW); //為View加上選取效果
             }
@@ -132,7 +153,7 @@ public class LogChartView extends AppCompatActivity {
         }
     };
 
-    private void logview(){
+    private void logview() {
 
         dialogflag = 0;
 
@@ -184,8 +205,8 @@ public class LogChartView extends AppCompatActivity {
     }
 
     private void initData() {
-        lc.setExtraOffsets((int)(2 * all_Width / 100),(int)(3 * all_Height / 100),
-                (int)(4 * all_Width / 100),(int)(all_Height / 100));
+        lc.setExtraOffsets((int) (2 * all_Width / 100), (int) (3 * all_Height / 100),
+                (int) (4 * all_Width / 100), (int) (all_Height / 100));
         setDescription(device);
         lc.animateXY(800, 800);   //繪製延遲動畫
         setLegend();
@@ -199,8 +220,8 @@ public class LogChartView extends AppCompatActivity {
         description.setText(descriptionStr);
         Paint paint = new Paint();
         paint.setTextSize(20);
-        float x = (float)(all_Width - all_Width / 100);
-        float y =  (float)(2 * all_Height / 100);
+        float x = (float) (all_Width - all_Width / 100);
+        float y = (float) (2 * all_Height / 100);
         description.setPosition(x, y);
         lc.setDescription(description);
     }
@@ -215,8 +236,8 @@ public class LogChartView extends AppCompatActivity {
 
     private void setYAxis() {
         final YAxis yAxisLeft = lc.getAxisLeft();
-        if(dialogflag == 0){
-            if(leftAxis != null) {
+        if (dialogflag == 0) {
+            if (leftAxis != null) {
                 leftAxis.removeLimitLine(yLimitLinedown);
                 leftAxis.removeLimitLine(yLimitLineup);
             }
@@ -228,21 +249,20 @@ public class LogChartView extends AppCompatActivity {
             float maxIndex = Float.valueOf(Mm.get(0));
             float minIndex = Float.valueOf(Mm.get(0));
             for (int i = 0; i < Mm.size(); i++) {
-                if(maxIndex < Float.valueOf(Mm.get(i))){
+                if (maxIndex < Float.valueOf(Mm.get(i))) {
                     maxIndex = Float.valueOf(Mm.get(i));
                 }
-                if(minIndex > Float.valueOf(Mm.get(i))){
+                if (minIndex > Float.valueOf(Mm.get(i))) {
                     minIndex = Float.valueOf(Mm.get(i));
                 }
             }
-            if(minIndex > 0){
+            if (minIndex > 0) {
                 maxIndex = maxIndex + minIndex;
-            }
-            else {
+            } else {
                 maxIndex = maxIndex - minIndex;
             }
-            Log.e(TAG,"maxIndex = " + maxIndex);
-            Log.e(TAG,"minIndex = " + minIndex);
+            Log.e(TAG, "maxIndex = " + maxIndex);
+            Log.e(TAG, "minIndex = " + minIndex);
 
             yAxisLeft.setAxisMaximum(maxIndex);
             yAxisLeft.setAxisMinimum(minIndex);
@@ -252,55 +272,54 @@ public class LogChartView extends AppCompatActivity {
             yAxisLeft.setValueFormatter(new IAxisValueFormatter() {
                 @Override
                 public String getFormattedValue(float value, AxisBase axis) {
-                    return String.valueOf((int)value);
+                    return String.valueOf((int) value);
                 }
             });
-        }
-        else if(dialogflag == 1){   //第一排
-            if(leftAxis != null) {
+        } else if (dialogflag == 1) {   //第一排
+            if (leftAxis != null) {
                 leftAxis.removeLimitLine(yLimitLinedown);
                 leftAxis.removeLimitLine(yLimitLineup);
             }
-            if(Value.name.get(0).toString().matches("T")) {
+            if (Value.name.get(0).toString().matches("T")) {
                 yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH1"))),
                         getString(R.string.Temperature) + getString(R.string.UL));  //上限線
             }
-            if(Value.name.get(0).toString().matches("H")) {
+            if (Value.name.get(0).toString().matches("H")) {
                 yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH1"))),
                         getString(R.string.Humidity) + getString(R.string.UL));  //上限線
             }
-            if(Value.name.get(0).toString().matches("C")) {
+            if (Value.name.get(0).toString().matches("C")) {
                 yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH1"))),
                         getString(R.string.Co2) + getString(R.string.UL));  //上限線
             }
-            if(Value.name.get(0).toString().matches("I")) {
+            if (Value.name.get(0).toString().matches("I")) {
                 yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH1"))),
                         getString(R.string.I1) + getString(R.string.UL));  //上限線
             }
-            yLimitLinedown.enableDashedLine((float) all_Width / 100,(float) all_Width / 100,1);
+            yLimitLinedown.enableDashedLine((float) all_Width / 100, (float) all_Width / 100, 1);
             yLimitLinedown.setTextSize(14);
             yLimitLinedown.setLineColor(Color.RED);
             yLimitLinedown.setTextColor(Color.RED);
             leftAxis = lc.getAxisLeft();
             leftAxis.addLimitLine(yLimitLinedown);
 
-            if(Value.name.get(0).toString().matches("T")) {
+            if (Value.name.get(0).toString().matches("T")) {
                 yLimitLineup = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EL1"))),
                         getString(R.string.Temperature) + getString(R.string.LL));  //下限線
             }
-            if(Value.name.get(0).toString().matches("H")) {
+            if (Value.name.get(0).toString().matches("H")) {
                 yLimitLineup = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EL1"))),
                         getString(R.string.Humidity) + getString(R.string.LL));  //下限線
             }
-            if(Value.name.get(0).toString().matches("C")) {
+            if (Value.name.get(0).toString().matches("C")) {
                 yLimitLineup = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EL1"))),
                         getString(R.string.Co2) + getString(R.string.LL));  //下限線
             }
-            if(Value.name.get(0).toString().matches("I")) {
+            if (Value.name.get(0).toString().matches("I")) {
                 yLimitLineup = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EL1"))),
                         getString(R.string.I1) + getString(R.string.LL));  //下限線
             }
-            yLimitLineup.enableDashedLine((float) all_Width / 100,(float) all_Width / 100,1);
+            yLimitLineup.enableDashedLine((float) all_Width / 100, (float) all_Width / 100, 1);
             yLimitLineup.setTextSize(14);
             yLimitLineup.setLineColor(Color.CYAN);
             yLimitLineup.setTextColor(Color.CYAN);
@@ -313,21 +332,20 @@ public class LogChartView extends AppCompatActivity {
             float maxIndex = Float.valueOf(Mm.get(0));
             float minIndex = Float.valueOf(Mm.get(0));
             for (int i = 0; i < Mm.size(); i++) {
-                if(maxIndex < Float.valueOf(Mm.get(i))){
+                if (maxIndex < Float.valueOf(Mm.get(i))) {
                     maxIndex = Float.valueOf(Mm.get(i));
                 }
-                if(minIndex > Float.valueOf(Mm.get(i))){
+                if (minIndex > Float.valueOf(Mm.get(i))) {
                     minIndex = Float.valueOf(Mm.get(i));
                 }
             }
-            if(minIndex > 0){
+            if (minIndex > 0) {
                 maxIndex = maxIndex + minIndex;
-            }
-            else {
+            } else {
                 maxIndex = maxIndex - minIndex;
             }
-            Log.e(TAG,"maxIndex = " + maxIndex);
-            Log.e(TAG,"minIndex = " + minIndex);
+            Log.e(TAG, "maxIndex = " + maxIndex);
+            Log.e(TAG, "minIndex = " + minIndex);
 
             yAxisLeft.setAxisMaximum(maxIndex);
             yAxisLeft.setAxisMinimum(minIndex);
@@ -337,56 +355,55 @@ public class LogChartView extends AppCompatActivity {
             yAxisLeft.setValueFormatter(new IAxisValueFormatter() {
                 @Override
                 public String getFormattedValue(float value, AxisBase axis) {
-                    return String.valueOf((int)value);
+                    return String.valueOf((int) value);
                 }
             });
-        }
-        else if(dialogflag == 2){   //第二排
-            if(leftAxis != null) {
+        } else if (dialogflag == 2) {   //第二排
+            if (leftAxis != null) {
                 leftAxis.removeLimitLine(yLimitLinedown);
                 leftAxis.removeLimitLine(yLimitLineup);
             }
-            if(Value.name.get(1).toString().matches("T")) {
+            if (Value.name.get(1).toString().matches("T")) {
                 yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH2"))),
                         getString(R.string.Temperature) + getString(R.string.UL));  //上限線
             }
-            if(Value.name.get(1).toString().matches("H")) {
+            if (Value.name.get(1).toString().matches("H")) {
                 yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH2"))),
                         getString(R.string.Humidity) + getString(R.string.UL));  //上限線
             }
-            if(Value.name.get(1).toString().matches("C")) {
+            if (Value.name.get(1).toString().matches("C")) {
                 yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH2"))),
                         getString(R.string.Co2) + getString(R.string.UL));  //上限線
             }
-            if(Value.name.get(1).toString().matches("I")) {
+            if (Value.name.get(1).toString().matches("I")) {
                 yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH2"))),
                         getString(R.string.I2) + getString(R.string.UL));  //上限線
             }
-            yLimitLinedown.enableDashedLine((float) all_Width / 100,(float) all_Width / 100,1);
+            yLimitLinedown.enableDashedLine((float) all_Width / 100, (float) all_Width / 100, 1);
             yLimitLinedown.setTextSize(14);
             yLimitLinedown.setLineColor(Color.RED);
             yLimitLinedown.setTextColor(Color.RED);
             leftAxis = lc.getAxisLeft();
             leftAxis.addLimitLine(yLimitLinedown);
 
-            if(Value.name.get(1).toString().matches("T")) {
+            if (Value.name.get(1).toString().matches("T")) {
                 yLimitLineup = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EL2"))),
                         getString(R.string.Temperature) + getString(R.string.LL));  //下限線
             }
-            if(Value.name.get(1).toString().matches("H")) {
+            if (Value.name.get(1).toString().matches("H")) {
                 yLimitLineup = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EL2"))),
                         getString(R.string.Humidity) + getString(R.string.LL));  //下限線
             }
-            if(Value.name.get(1).toString().matches("C")) {
+            if (Value.name.get(1).toString().matches("C")) {
                 yLimitLineup = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EL2"))),
                         getString(R.string.Co2) + getString(R.string.LL));  //下限線
             }
-            if(Value.name.get(1).toString().matches("I")) {
+            if (Value.name.get(1).toString().matches("I")) {
                 yLimitLineup = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EL2"))),
                         getString(R.string.I2) + getString(R.string.LL));  //下限線
             }
 
-            yLimitLineup.enableDashedLine((float) all_Width / 100,(float) all_Width / 100,1);
+            yLimitLineup.enableDashedLine((float) all_Width / 100, (float) all_Width / 100, 1);
             yLimitLineup.setTextSize(14);
             yLimitLineup.setLineColor(Color.CYAN);
             yLimitLineup.setTextColor(Color.CYAN);
@@ -399,21 +416,20 @@ public class LogChartView extends AppCompatActivity {
             float maxIndex = Float.valueOf(Mm.get(0));
             float minIndex = Float.valueOf(Mm.get(0));
             for (int i = 0; i < Mm.size(); i++) {
-                if(maxIndex < Float.valueOf(Mm.get(i))){
+                if (maxIndex < Float.valueOf(Mm.get(i))) {
                     maxIndex = Float.valueOf(Mm.get(i));
                 }
-                if(minIndex > Float.valueOf(Mm.get(i))){
+                if (minIndex > Float.valueOf(Mm.get(i))) {
                     minIndex = Float.valueOf(Mm.get(i));
                 }
             }
-            if(minIndex > 0){
+            if (minIndex > 0) {
                 maxIndex = maxIndex + minIndex;
-            }
-            else {
+            } else {
                 maxIndex = maxIndex - minIndex;
             }
-            Log.e(TAG,"maxIndex = " + maxIndex);
-            Log.e(TAG,"minIndex = " + minIndex);
+            Log.e(TAG, "maxIndex = " + maxIndex);
+            Log.e(TAG, "minIndex = " + minIndex);
 
             yAxisLeft.setAxisMaximum(maxIndex);
             yAxisLeft.setAxisMinimum(minIndex);
@@ -426,8 +442,7 @@ public class LogChartView extends AppCompatActivity {
                     return String.valueOf(value);
                 }
             });
-        }
-        else {  //CO2
+        } else {  //CO2
 
         }
 
@@ -446,11 +461,10 @@ public class LogChartView extends AppCompatActivity {
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                if(value == 0) {
+                if (value == 0) {
                     return "";
-                }
-                else {
-                    return timelist.get(((int)value) - 1);
+                } else {
+                    return timelist.get(((int) value) - 1);
                 }
             }
         });
@@ -463,93 +477,72 @@ public class LogChartView extends AppCompatActivity {
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
 
-        if(dialogflag == 0) {
-            if(Firstlist.size() != 0){
-                if(Value.name.get(0).toString().matches("I")){
+        if (dialogflag == 0) {
+            if (Firstlist.size() != 0) {
+                if (Value.name.get(0).toString().matches("I")) {
                     dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.I1row), Color.GREEN));
-                }
-                else if(Value.name.get(0).toString().matches("T")){
+                } else if (Value.name.get(0).toString().matches("T")) {
                     dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.temperature), Color.GREEN));
-                }
-                else if(Value.name.get(0).toString().matches("H")){
+                } else if (Value.name.get(0).toString().matches("H")) {
                     dataSets.add(lineDataSet(ChartData(Secondlist), getString(R.string.humidity), Color.BLUE));
-                }
-                else if(Value.name.get(0).toString().matches("C")){
-                    Log.e(TAG,"待增加");
+                } else if (Value.name.get(0).toString().matches("C")) {
+                    Log.e(TAG, "待增加");
                 }
             }
-            if(Secondlist.size() != 0){
-                if(Value.name.get(1).toString().matches("I")){
+            if (Secondlist.size() != 0) {
+                if (Value.name.get(1).toString().matches("I")) {
                     dataSets.add(lineDataSet(ChartData(Secondlist), getString(R.string.I2row), Color.BLUE));
-                }
-                else if(Value.name.get(1).toString().matches("T")){
+                } else if (Value.name.get(1).toString().matches("T")) {
                     dataSets.add(lineDataSet(ChartData(Secondlist), getString(R.string.temperature), Color.GREEN));
-                }
-                else if(Value.name.get(1).toString().matches("H")){
+                } else if (Value.name.get(1).toString().matches("H")) {
                     dataSets.add(lineDataSet(ChartData(Secondlist), getString(R.string.humidity), Color.BLUE));
-                }
-                else if(Value.name.get(1).toString().matches("C")){
-                    Log.e(TAG,"待增加");
+                } else if (Value.name.get(1).toString().matches("C")) {
+                    Log.e(TAG, "待增加");
                 }
             }
-            if(Thirdlist.size() != 0){
-                if(Value.name.get(2).toString().matches("I")){
+            if (Thirdlist.size() != 0) {
+                if (Value.name.get(2).toString().matches("I")) {
                     dataSets.add(lineDataSet(ChartData(Thirdlist), getString(R.string.I3row), Color.MAGENTA));
-                }
-                else if(Value.name.get(2).toString().matches("T")){
+                } else if (Value.name.get(2).toString().matches("T")) {
                     dataSets.add(lineDataSet(ChartData(Thirdlist), getString(R.string.temperature), Color.GREEN));
-                }
-                else if(Value.name.get(2).toString().matches("H")){
+                } else if (Value.name.get(2).toString().matches("H")) {
                     dataSets.add(lineDataSet(ChartData(Thirdlist), getString(R.string.humidity), Color.BLUE));
-                }
-                else if(Value.name.get(2).toString().matches("C")){
-                    Log.e(TAG,"待增加");
+                } else if (Value.name.get(2).toString().matches("C")) {
+                    Log.e(TAG, "待增加");
                 }
             }
-        }
-        else if(dialogflag == 1){
-            if(Value.name.get(0).toString().matches("I")){
+        } else if (dialogflag == 1) {
+            if (Value.name.get(0).toString().matches("I")) {
                 dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.I1row), Color.GREEN));
-            }
-            else if(Value.name.get(0).toString().matches("T")){
+            } else if (Value.name.get(0).toString().matches("T")) {
                 dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.temperature), Color.GREEN));
-            }
-            else if(Value.name.get(0).toString().matches("H")){
+            } else if (Value.name.get(0).toString().matches("H")) {
                 dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.humidity), Color.BLUE));
+            } else if (Value.name.get(0).toString().matches("C")) {
+                Log.e(TAG, "待增加");
             }
-            else if(Value.name.get(0).toString().matches("C")){
-                Log.e(TAG,"待增加");
-            }
-        }
-        else if(dialogflag == 2){
-            if(Secondlist.size() != 0){
-                if(Value.name.get(1).toString().matches("I")){
+        } else if (dialogflag == 2) {
+            if (Secondlist.size() != 0) {
+                if (Value.name.get(1).toString().matches("I")) {
                     dataSets.add(lineDataSet(ChartData(Secondlist), getString(R.string.I2row), Color.BLUE));
-                }
-                else if(Value.name.get(1).toString().matches("T")){
+                } else if (Value.name.get(1).toString().matches("T")) {
                     dataSets.add(lineDataSet(ChartData(Secondlist), getString(R.string.temperature), Color.GREEN));
-                }
-                else if(Value.name.get(1).toString().matches("H")){
+                } else if (Value.name.get(1).toString().matches("H")) {
                     dataSets.add(lineDataSet(ChartData(Secondlist), getString(R.string.humidity), Color.BLUE));
-                }
-                else if(Value.name.get(1).toString().matches("C")){
-                    Log.e(TAG,"待增加");
+                } else if (Value.name.get(1).toString().matches("C")) {
+                    Log.e(TAG, "待增加");
                 }
             }
-        }
-        else {
-            if(Thirdlist.size() != 0){
-                if(Value.name.get(2).toString().matches("I")){
+        } else {
+            if (Thirdlist.size() != 0) {
+                if (Value.name.get(2).toString().matches("I")) {
                     dataSets.add(lineDataSet(ChartData(Thirdlist), getString(R.string.I3row), Color.MAGENTA));
-                }
-                else if(Value.name.get(2).toString().matches("T")){
+                } else if (Value.name.get(2).toString().matches("T")) {
                     dataSets.add(lineDataSet(ChartData(Thirdlist), getString(R.string.temperature), Color.GREEN));
-                }
-                else if(Value.name.get(2).toString().matches("H")){
+                } else if (Value.name.get(2).toString().matches("H")) {
                     dataSets.add(lineDataSet(ChartData(Thirdlist), getString(R.string.humidity), Color.BLUE));
-                }
-                else if(Value.name.get(2).toString().matches("C")){
-                    Log.e(TAG,"待增加");
+                } else if (Value.name.get(2).toString().matches("C")) {
+                    Log.e(TAG, "待增加");
                 }
             }
         }
@@ -562,7 +555,7 @@ public class LogChartView extends AppCompatActivity {
         lc.setData(lineData);
     }
 
-    private LineDataSet lineDataSet(List<Entry> ChartData, String getname, int color){
+    private LineDataSet lineDataSet(List<Entry> ChartData, String getname, int color) {
         LineDataSet lineDataSet = new LineDataSet(ChartData, getname);
         lineDataSet.setDrawCircleHole(true);   //空心圓點
         lineDataSet.setColor(color); //線的顏色green
@@ -582,21 +575,21 @@ public class LogChartView extends AppCompatActivity {
         return lineDataSet;
     }
 
-    private List<Entry> ChartData(List<String> list){
+    private List<Entry> ChartData(List<String> list) {
         List<Entry> data = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             float getdata = (Float.valueOf(list.get(i)) / 10);
-            data.add(new Entry((i + 1 ),getdata));
+            data.add(new Entry((i + 1), getdata));
         }
         return data;
     }
 
-    private Dialog Dialogview(Context context){
+    private Dialog Dialogview(Context context) {
         Dialog progressDialog = new Dialog(context);
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         LayoutInflater inflater = LayoutInflater.from(LogChartView.this);
-        View v = inflater.inflate(R.layout.chosedialog,null);
+        View v = inflater.inflate(R.layout.chosedialog, null);
         LinearLayout chart = v.findViewById(R.id.chart);
         ListView chart_list = v.findViewById(R.id.datalist1);
         Button b1 = v.findViewById(R.id.button1);
@@ -606,45 +599,36 @@ public class LogChartView extends AppCompatActivity {
         chartview.clear();
         chartview.add(getString(R.string.Combine));
 
-        if(Firstlist.size() != 0){
-            if(Value.name.get(0).toString().matches("I")){
+        if (Firstlist.size() != 0) {
+            if (Value.name.get(0).toString().matches("I")) {
                 chartview.add(getString(R.string.I1row));
-            }
-            else if(Value.name.get(0).toString().matches("T")){
+            } else if (Value.name.get(0).toString().matches("T")) {
                 chartview.add(getString(R.string.Temperature));
-            }
-            else if(Value.name.get(0).toString().matches("H")){
+            } else if (Value.name.get(0).toString().matches("H")) {
                 chartview.add(getString(R.string.Humidity));
-            }
-            else if(Value.name.get(0).toString().matches("C")){
+            } else if (Value.name.get(0).toString().matches("C")) {
                 chartview.add(getString(R.string.Co2));
             }
         }
-        if(Secondlist.size() != 0){
-            if(Value.name.get(1).toString().matches("I")){
+        if (Secondlist.size() != 0) {
+            if (Value.name.get(1).toString().matches("I")) {
                 chartview.add(getString(R.string.I2row));
-            }
-            else if(Value.name.get(1).toString().matches("T")){
+            } else if (Value.name.get(1).toString().matches("T")) {
                 chartview.add(getString(R.string.Temperature));
-            }
-            else if(Value.name.get(1).toString().matches("H")){
+            } else if (Value.name.get(1).toString().matches("H")) {
                 chartview.add(getString(R.string.Humidity));
-            }
-            else if(Value.name.get(1).toString().matches("C")){
+            } else if (Value.name.get(1).toString().matches("C")) {
                 chartview.add(getString(R.string.Co2));
             }
         }
-        if(Thirdlist.size() != 0){
-            if(Value.name.get(2).toString().matches("I")){
+        if (Thirdlist.size() != 0) {
+            if (Value.name.get(2).toString().matches("I")) {
                 chartview.add(getString(R.string.I3row));
-            }
-            else if(Value.name.get(2).toString().matches("T")){
+            } else if (Value.name.get(2).toString().matches("T")) {
                 chartview.add(getString(R.string.Temperature));
-            }
-            else if(Value.name.get(2).toString().matches("H")){
+            } else if (Value.name.get(2).toString().matches("H")) {
                 chartview.add(getString(R.string.Humidity));
-            }
-            else if(Value.name.get(2).toString().matches("C")){
+            } else if (Value.name.get(2).toString().matches("C")) {
                 chartview.add(getString(R.string.Co2));
             }
         }
@@ -673,169 +657,473 @@ public class LogChartView extends AppCompatActivity {
             }
         });
 
-        progressDialog.setContentView(chart, new LinearLayout.LayoutParams((int)(3 * all_Width / 5),
-                (int)(2 * all_Height / 5)));
+        progressDialog.setContentView(chart, new LinearLayout.LayoutParams((int) (3 * all_Width / 5),
+                (int) (2 * all_Height / 5)));
 
         return progressDialog;
     }
 
-    private Runnable packagecsv = new Runnable() {
+    private Runnable makepdf = new Runnable() {
         @Override
         public void run() {
+            String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+            // SD卡位置getApplicationContext().getFilesDir().getAbsolutePath();
+            // 系統位置android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+            String fileName = Value.BName + ".pdf";
+            String filePath = baseDir + File.separator + fileName;
+            file = new File(filePath);
             try {
-                ArrayList<String> data = new ArrayList<>();
-                data.clear();
-                data.add("id");
-                data.add("dateTime");
-                if(Firstlist.size() != 0){
-                    if(Value.name.get(0).toString().matches("I")){
-                        data.add("Analog1");
-                    }
-                    else if(Value.name.get(0).toString().matches("T")){
-                        data.add("Temperature/C");
-                    }
-                    else if(Value.name.get(0).toString().matches("H")){
-                        data.add("Humidity/%");
-                    }
-                    else if(Value.name.get(0).toString().matches("C")){
-                        Log.e(TAG,"待增加");
-                    }
+                fOut = new FileOutputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            /*if (file.exists() && !file.isDirectory()) {
+
+            } else {
+                try {
+                    fOut = new FileOutputStream(file);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                if(Secondlist.size() != 0){
-                    if(Value.name.get(1).toString().matches("I")){
-                        data.add("Analog2");
-                    }
-                    else if(Value.name.get(1).toString().matches("T")){
-                        data.add("Temperature/C");
-                    }
-                    else if(Value.name.get(1).toString().matches("H")){
-                        data.add("Humidity/%");
-                    }
-                    else if(Value.name.get(1).toString().matches("C")){
-                        Log.e(TAG,"待增加");
-                    }
-                }
-                if(Thirdlist.size() != 0){
-                    if(Value.name.get(2).toString().matches("I")){
-                        data.add("Analog3");
-                    }
-                    else if(Value.name.get(2).toString().matches("T")){
-                        data.add("Temperature/C");
-                    }
-                    else if(Value.name.get(2).toString().matches("H")){
-                        data.add("Humidity/%");
-                    }
-                    else if(Value.name.get(2).toString().matches("C")){
-                        Log.e(TAG,"待增加");
-                    }
-                }
-                String[] data_array = new String[data.size()];
-                for(int i = 0; i < data.size(); i++){
-                    data_array[i] = data.get(i);
-                    Log.e(TAG, "data_array[i] = " + data_array[i]);
-                }
-                Log.e(TAG, "data_array = " + data_array);
-                Log.e(TAG,"Firstlist = " + Firstlist);
-                Log.e(TAG,"Secondlist = " + Secondlist);
-                Log.e(TAG,"Thirdlist = " + Thirdlist);
-                String[] data2;
-                String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-                // SD卡位置getApplicationContext().getFilesDir().getAbsolutePath();
-                // 系統位置android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-                Log.e(TAG, "baseDir = " + baseDir);
-                String fileName = "log.csv";
-                String filePath = baseDir + File.separator + fileName;
-                Log.e(TAG, "filePath = " + filePath);
-                file = new File(filePath);
-                Log.e(TAG, "overthere?");
-                if (file.exists() && !file.isDirectory()) {
-                    mFileWriter = new FileWriter(filePath, false);
-                    writer = new CSVWriter(mFileWriter);
-                    writer.writeNext(data_array);
-                    for (int i = 0; i < charttime.size(); i++) {
-                        data2 = new String[]{String.valueOf(i), charttime.get(i),
-                                String.valueOf(Float.valueOf(Firstlist.get(i))),
-                                String.valueOf(Float.valueOf(Secondlist.get(i)))};
-                        writer.writeNext(data2);
-                    }
-                    Log.e(TAG,"writer = " + writer);
-                    writer.close();
-                    Log.e(TAG, "there?");
+            }*/
+            Log.e(TAG,"file = " + file);
+            try {
+                PdfFont simpleEn = PdfFontFactory.createFont(FontConstants.COURIER);
+                PdfWriter pdfWriter = new PdfWriter(filePath);
+                PdfDocument pdfDoc = new PdfDocument(pdfWriter);
+
+                Document document = new Document(pdfDoc, PageSize.A4);
+                document.setMargins(40, 20, 40, 20);
+
+                HeaderHandler headerHandler = new HeaderHandler(document, Value.BName);
+                Log.e(TAG,"BName = " + Value.BName);
+                FooterHandler footerHandler = new FooterHandler(document);
+                pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, headerHandler);
+                pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, footerHandler);
+
+                int count = Value.modelsign, alldata = Value.charttime.size(), page;
+                if (alldata % 260 == 0) {
+                    page = alldata / 260;
                 } else {
-                    writer = new CSVWriter(new FileWriter(filePath));
-                    writer.writeNext(data_array);
-                    for (int i = 0; i < charttime.size(); i++) {
-                        data2 = new String[]{String.valueOf(i), charttime.get(i),
-                                String.valueOf(Float.valueOf(Firstlist.get(i))),
-                                String.valueOf(Float.valueOf(Secondlist.get(i)))};
-                        Log.e(TAG, "data2 = " + data2);
-                        writer.writeNext(data2);
-                    }
-                    writer.close();
-                    Log.e(TAG, "here?");
+                    page = (alldata / 260) + 1;
                 }
-            }catch (IOException e){
-                Log.e(TAG, "Wrong = " + e);
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat log_date = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+                if (count == 1) {
+                    //noinspection deprecation
+                    Table table = new Table((count + 2) * 4);
+                    for (int i = 0; i < page; i++) {
+                        for(int j = 0; j < 4; j++){
+                            Paragraph a = new Paragraph(getString(R.string.pdftime)).setFont(simpleEn).setFontSize(6.3f);
+                            Paragraph b = new Paragraph(""), c = new Paragraph(""), d = new Paragraph("");
+                            Cell cell = new Cell(1, 2).add(a)
+                                    .setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
+                            cell.setHeight(7f);
+                            table.addCell(cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+
+                            if(Value.name.get(0).toString().matches("I")) {
+                                b = new Paragraph(getString(R.string.pdf1st)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(0).toString().matches("T")) {
+                                b = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(0).toString().matches("H")) {
+                                b = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(0).toString().matches("C")) {
+                                b = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            Cell cell2 = new Cell(1, 1).add(b);
+                            cell2.setHeight(7f);
+                            table.addCell(cell2.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+                        }
+                        for (int k = (260 * i); k < 65 + (260 * i); k++) {
+                            for (int l = 0; l < 4; l++) {
+                                Paragraph s1list, s2list, s3list, s4list;
+                                ArrayList<String> date = Value.charttime;
+                                Date setdate;
+                                if (k % 65 == 0) {
+                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("yyyy-MM-dd");
+                                    if((k + (l * 65)) < date.size()) {
+                                        setdate = log_date.parse(date.get((k + (l * 65))));
+                                        s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
+                                    }
+                                    else {
+                                        s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
+                                    }
+                                } else {
+                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("HH:mm:ss");
+                                    if((k + (l * 65)) < date.size()) {
+                                        setdate = log_date.parse(date.get((k + (l * 65))));
+                                        s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
+                                    }
+                                    else {
+                                        s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
+                                    }
+                                }
+                                if((k + (l * 65)) < date.size()) {
+                                    s2list = new Paragraph(Firstlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
+                                }
+                                else {
+                                    s2list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
+                                }
+                                Cell s1cell = new Cell(1, 2).add(s1list).setHeight(7f).setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
+                                Cell s2cell = new Cell(1, 1).add(s2list).setHeight(7f);
+                                table.addCell(s1cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+                                table.addCell(s2cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+                            }
+                        }
+                    }
+                    document.add(table);
+                } else if (count == 2) {
+                    //noinspection deprecation
+                    Table table = new Table((count + 2) * 4);
+                    for (int i = 0; i < page; i++) {
+                        for(int j = 0; j < 4; j++){
+                            Paragraph a = new Paragraph(getString(R.string.pdftime)).setFont(simpleEn).setFontSize(6.3f);
+                            Paragraph b = new Paragraph(""), c = new Paragraph(""), d = new Paragraph("");
+                            Cell cell = new Cell(1, 2).add(a)
+                                    .setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
+                            cell.setHeight(7f);
+                            table.addCell(cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+
+                            if(Value.name.get(0).toString().matches("I")) {
+                                b = new Paragraph(getString(R.string.pdf1st)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(0).toString().matches("T")) {
+                                b = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(0).toString().matches("H")) {
+                                b = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(0).toString().matches("C")) {
+                                b = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            Cell cell2 = new Cell(1, 1).add(b);
+                            cell2.setHeight(7f);
+                            table.addCell(cell2.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+
+                            if(Value.name.get(1).toString().matches("I")) {
+                                c = new Paragraph(getString(R.string.pdf2nd)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(1).toString().matches("T")) {
+                                c = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(1).toString().matches("H")) {
+                                c = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(1).toString().matches("C")) {
+                                c = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            Cell cell3 = new Cell(1, 1).add(c);
+                            cell3.setHeight(7f);
+                            table.addCell(cell3.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+                        }
+                        for (int k = (260 * i); k < 65 + (260 * i); k++) {
+                            for (int l = 0; l < 4; l++) {
+                                Paragraph s1list, s2list, s3list, s4list;
+                                ArrayList<String> date = Value.charttime;
+                                Date setdate;
+                                if (k % 65 == 0) {
+                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("yyyy-MM-dd");
+                                    if((k + (l * 65)) < date.size()) {
+                                        setdate = log_date.parse(date.get((k + (l * 65))));
+                                        s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
+                                    }
+                                    else {
+                                        s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
+                                    }
+                                } else {
+                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("HH:mm:ss");
+                                    if((k + (l * 65)) < date.size()) {
+                                        setdate = log_date.parse(date.get((k + (l * 65))));
+                                        s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
+                                    }
+                                    else {
+                                        s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
+                                    }
+                                }
+                                if((k + (l * 65)) < date.size()) {
+                                    s2list = new Paragraph(Firstlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
+                                    s3list = new Paragraph(Secondlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
+                                }
+                                else {
+                                    s2list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
+                                    s3list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
+                                }
+                                Cell s1cell = new Cell(1, 2).add(s1list).setHeight(7f).setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
+                                Cell s2cell = new Cell(1, 1).add(s2list).setHeight(7f);
+                                Cell s3cell = new Cell(1, 1).add(s3list).setHeight(7f);
+                                table.addCell(s1cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+                                table.addCell(s2cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+                                table.addCell(s3cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+                            }
+                        }
+                    }
+                    document.add(table);
+                } else if (count == 3) {
+                    //noinspection deprecation
+                    Table table = new Table((count + 2) * 4);
+                    for (int i = 0; i < page; i++) {
+                        for(int j = 0; j < 4; j++){
+                            Paragraph a = new Paragraph(getString(R.string.pdftime)).setFont(simpleEn).setFontSize(6.3f);
+                            Paragraph b = new Paragraph(""), c = new Paragraph(""), d = new Paragraph("");
+                            Cell cell = new Cell(1, 2).add(a)
+                                    .setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
+                            cell.setHeight(7f);
+                            table.addCell(cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+
+                            if(Value.name.get(0).toString().matches("I")) {
+                                b = new Paragraph(getString(R.string.pdf1st)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(0).toString().matches("T")) {
+                                b = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(0).toString().matches("H")) {
+                                b = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(0).toString().matches("C")) {
+                                b = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            Cell cell2 = new Cell(1, 1).add(b);
+                            cell2.setHeight(7f);
+                            table.addCell(cell2.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+
+                            if(Value.name.get(1).toString().matches("I")) {
+                                c = new Paragraph(getString(R.string.pdf2nd)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(1).toString().matches("T")) {
+                                c = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(1).toString().matches("H")) {
+                                c = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(1).toString().matches("C")) {
+                                c = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            Cell cell3 = new Cell(1, 1).add(c);
+                            cell3.setHeight(7f);
+                            table.addCell(cell3.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+
+                            if(Value.name.get(2).toString().matches("I")) {
+                                d = new Paragraph(getString(R.string.pdf3rd)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(2).toString().matches("T")) {
+                                d = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(2).toString().matches("H")) {
+                                d = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            else if(Value.name.get(2).toString().matches("C")) {
+                                d = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
+                            }
+                            Cell cell4 = new Cell(1, 1).add(d);
+                            cell4.setHeight(7f);
+                            table.addCell(cell4.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+                        }
+                        for (int k = (260 * i); k < 65 + (260 * i); k++) {
+                            for (int l = 0; l < 4; l++) {
+                                Paragraph s1list, s2list, s3list, s4list;
+                                ArrayList<String> date = Value.charttime;
+                                Date setdate;
+                                if (k % 65 == 0) {
+                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("yyyy-MM-dd");
+                                    if((k + (l * 65)) < date.size()) {
+                                        setdate = log_date.parse(date.get((k + (l * 65))));
+                                        s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
+                                    }
+                                    else {
+                                        s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
+                                    }
+                                } else {
+                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("HH:mm:ss");
+                                    if((k + (l * 65)) < date.size()) {
+                                        setdate = log_date.parse(date.get((k + (l * 65))));
+                                        s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
+                                    }
+                                    else {
+                                        s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
+                                    }
+                                }
+                                if((k + (l * 65)) < date.size()) {
+                                    s2list = new Paragraph(Firstlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
+                                    s3list = new Paragraph(Secondlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
+                                    s4list = new Paragraph(Thirdlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
+                                }
+                                else {
+                                    s2list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
+                                    s3list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
+                                    s4list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
+                                }
+                                Cell s1cell = new Cell(1, 2).add(s1list).setHeight(7f).setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
+                                Cell s2cell = new Cell(1, 1).add(s2list).setHeight(7f);
+                                Cell s3cell = new Cell(1, 1).add(s3list).setHeight(7f);
+                                Cell s4cell = new Cell(1, 1).add(s4list).setHeight(7f);
+                                table.addCell(s1cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+                                table.addCell(s2cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+                                table.addCell(s3cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+                                table.addCell(s4cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
+                            }
+                        }
+                    }
+                    document.add(table);
+                }
+                document.close();
+                Log.e(TAG,"已完成");
+                //Toast.makeText(LogChartView.this, "Complete！", Toast.LENGTH_SHORT).show();
+            } catch (IOException | ParseException e) {
+                e.printStackTrace();
             }
         }
     };
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // land do nothing is ok
-            setContentView(R.layout.logview);
-            logview();
-        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            // port do nothing is ok
-            setContentView(R.layout.logview);
-            logview();
-        }
-    }
-
-    private void back(){
-        Intent result = new Intent();
-        setResult(DeviceFunction.RESULT_OK, result);
-        finish();
-    }
-
-    public boolean onKeyDown(int key, KeyEvent event) {
-        switch (key) {
-            case KeyEvent.KEYCODE_SEARCH:
-                break;
-            case KeyEvent.KEYCODE_BACK: {
-                vibrator.vibrate(100);
-                back();
+        private Runnable packagecsv = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ArrayList<String> data = new ArrayList<>();
+                    data.clear();
+                    data.add("id");
+                    data.add("dateTime");
+                    if (Firstlist.size() != 0) {
+                        if (Value.name.get(0).toString().matches("I")) {
+                            data.add("Analog1");
+                        } else if (Value.name.get(0).toString().matches("T")) {
+                            data.add("Temperature/C");
+                        } else if (Value.name.get(0).toString().matches("H")) {
+                            data.add("Humidity/%");
+                        } else if (Value.name.get(0).toString().matches("C")) {
+                            Log.e(TAG, "待增加");
+                        }
+                    }
+                    if (Secondlist.size() != 0) {
+                        if (Value.name.get(1).toString().matches("I")) {
+                            data.add("Analog2");
+                        } else if (Value.name.get(1).toString().matches("T")) {
+                            data.add("Temperature/C");
+                        } else if (Value.name.get(1).toString().matches("H")) {
+                            data.add("Humidity/%");
+                        } else if (Value.name.get(1).toString().matches("C")) {
+                            Log.e(TAG, "待增加");
+                        }
+                    }
+                    if (Thirdlist.size() != 0) {
+                        if (Value.name.get(2).toString().matches("I")) {
+                            data.add("Analog3");
+                        } else if (Value.name.get(2).toString().matches("T")) {
+                            data.add("Temperature/C");
+                        } else if (Value.name.get(2).toString().matches("H")) {
+                            data.add("Humidity/%");
+                        } else if (Value.name.get(2).toString().matches("C")) {
+                            Log.e(TAG, "待增加");
+                        }
+                    }
+                    String[] data_array = new String[data.size()];
+                    for (int i = 0; i < data.size(); i++) {
+                        data_array[i] = data.get(i);
+                        Log.e(TAG, "data_array[i] = " + data_array[i]);
+                    }
+                    Log.e(TAG, "data_array = " + data_array);
+                    Log.e(TAG, "Firstlist = " + Firstlist);
+                    Log.e(TAG, "Secondlist = " + Secondlist);
+                    Log.e(TAG, "Thirdlist = " + Thirdlist);
+                    String[] data2;
+                    String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+                    // SD卡位置getApplicationContext().getFilesDir().getAbsolutePath();
+                    // 系統位置android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+                    Log.e(TAG, "baseDir = " + baseDir);
+                    String fileName = Value.BName + ".csv";
+                    String filePath = baseDir + File.separator + fileName;
+                    Log.e(TAG, "filePath = " + filePath);
+                    file = new File(filePath);
+                    Log.e(TAG, "overthere?");
+                    if (file.exists() && !file.isDirectory()) {
+                        mFileWriter = new FileWriter(filePath, false);
+                        writer = new CSVWriter(mFileWriter);
+                        writer.writeNext(data_array);
+                        for (int i = 0; i < charttime.size(); i++) {
+                            data2 = new String[]{String.valueOf(i), charttime.get(i),
+                                    String.valueOf(Float.valueOf(Firstlist.get(i))),
+                                    String.valueOf(Float.valueOf(Secondlist.get(i)))};
+                            writer.writeNext(data2);
+                        }
+                        Log.e(TAG, "writer = " + writer);
+                        writer.close();
+                        Log.e(TAG, "there?");
+                    } else {
+                        writer = new CSVWriter(new FileWriter(filePath));
+                        writer.writeNext(data_array);
+                        for (int i = 0; i < charttime.size(); i++) {
+                            data2 = new String[]{String.valueOf(i), charttime.get(i),
+                                    String.valueOf(Float.valueOf(Firstlist.get(i))),
+                                    String.valueOf(Float.valueOf(Secondlist.get(i)))};
+                            Log.e(TAG, "data2 = " + data2);
+                            writer.writeNext(data2);
+                        }
+                        writer.close();
+                        Log.e(TAG, "here?");
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "Wrong = " + e);
+                }
             }
-            break;
-            case KeyEvent.KEYCODE_DPAD_CENTER:
-                break;
-            default:
-                return false;
+        };
+
+        @Override
+        public void onConfigurationChanged(Configuration newConfig) {
+            super.onConfigurationChanged(newConfig);
+
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                // land do nothing is ok
+                setContentView(R.layout.logview);
+                logview();
+            } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                // port do nothing is ok
+                setContentView(R.layout.logview);
+                logview();
+            }
         }
-        return false;
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.e(TAG,"onDestroy()");
-    }
+        private void back() {
+            Intent result = new Intent();
+            setResult(DeviceFunction.RESULT_OK, result);
+            finish();
+        }
 
-    @Override
-    protected void onStop(){
-        super.onStop();
-    }
+        public boolean onKeyDown(int key, KeyEvent event) {
+            switch (key) {
+                case KeyEvent.KEYCODE_SEARCH:
+                    break;
+                case KeyEvent.KEYCODE_BACK: {
+                    vibrator.vibrate(100);
+                    back();
+                }
+                break;
+                case KeyEvent.KEYCODE_DPAD_CENTER:
+                    break;
+                default:
+                    return false;
+            }
+            return false;
+        }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            Log.e(TAG, "onDestroy()");
+        }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+        @Override
+        protected void onStop() {
+            super.onStop();
+        }
+
+        @Override
+        protected void onResume() {
+            super.onResume();
+        }
+
+        @Override
+        protected void onPause() {
+            super.onPause();
+        }
     }
-}
