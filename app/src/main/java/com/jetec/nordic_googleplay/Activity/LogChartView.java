@@ -3,6 +3,7 @@ package com.jetec.nordic_googleplay.Activity;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.Vibrator;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -21,7 +23,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
@@ -56,6 +59,7 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.opencsv.CSVWriter;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -67,12 +71,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 public class LogChartView extends AppCompatActivity {
 
-    private int orientation;
+    private int orientation, flag = 0;
     private LineChart lc;
     private Vibrator vibrator;
-    private Dialog chartdialog = null;
+    private Dialog chartdialog = null, running = null;
     private int dialogflag, select_item = -1;
     private View view1;
     private Uri csvuri;
@@ -111,7 +117,6 @@ public class LogChartView extends AppCompatActivity {
         Firstlist = Value.Firstlist;
         List_d_num = Value.List_d_num;
 
-        new Thread(makepdf).start();
         logview();
     }
 
@@ -160,8 +165,12 @@ public class LogChartView extends AppCompatActivity {
         Button b1 = findViewById(R.id.button1);
         Button b2 = findViewById(R.id.button2);
         Button b3 = findViewById(R.id.button3);
+        Button b4 = findViewById(R.id.button4);
+
+        running = writeDialog(this, getString(R.string.process));
 
         new Thread(packagecsv).start();
+        new Thread(makepdf).start();
 
         b1.setOnClickListener(v -> {
             vibrator.vibrate(100);
@@ -188,12 +197,52 @@ public class LogChartView extends AppCompatActivity {
 
         b3.setOnClickListener(v -> {
             vibrator.vibrate(100);
-            csvuri = Uri.fromFile(file);
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_STREAM, csvuri);
-            shareIntent.setType("text/*");
-            startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.report)
+                    .setMessage(R.string.choose)
+                    .setPositiveButton(R.string.CSV, (dialog, which) -> {
+                        vibrator.vibrate(100);
+                        csvuri = Uri.fromFile(file);
+                        Intent shareIntent = new Intent();
+                        shareIntent.setAction(Intent.ACTION_SEND);
+                        shareIntent.putExtra(Intent.EXTRA_STREAM, csvuri);
+                        shareIntent.setType("text/*");
+                        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+                    })
+                    .setNegativeButton(R.string.PDF, (dialog, which) -> {
+                        vibrator.vibrate(100);
+                        flag = 1;
+                        if(!setdpp){
+                            running.show();
+                            running.setCanceledOnTouchOutside(false);
+                        }
+                        else {
+                            Intent shareIntent = new Intent();
+                            shareIntent.setAction(Intent.ACTION_SEND);
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(pdffile));
+                            shareIntent.setType("text/*");
+                            startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+                        }
+                    })
+                    .setNeutralButton(R.string.mes_no, (dialog, which) -> vibrator.vibrate(100))
+                    .show();
+        });
+
+        b4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vibrator.vibrate(100);
+                flag = 2;
+                if(!setdpp){
+                    running.show();
+                    running.setCanceledOnTouchOutside(false);
+                }
+                else {
+                    Intent intent = new Intent(LogChartView.this, PDFView.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
         });
 
         initView();
@@ -663,30 +712,56 @@ public class LogChartView extends AppCompatActivity {
         return progressDialog;
     }
 
+    private Dialog writeDialog(Context context, String message) {
+        final Dialog progressDialog = new Dialog(context);
+        progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        progressDialog.dismiss();
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        @SuppressLint("InflateParams") View v = inflater.inflate(R.layout.running, null);
+        LinearLayout layout = v.findViewById(R.id.ll_dialog);
+        ProgressBar pb_progress_bar = v.findViewById(R.id.pb_progress_bar);
+        pb_progress_bar.setVisibility(View.VISIBLE);
+        TextView tv = v.findViewById(R.id.tv_loading);
+
+        if (message == null || message.equals("")) {
+            tv.setVisibility(View.GONE);
+        } else {
+            tv.setText(message);
+            tv.setTextColor(context.getResources().getColor(R.color.colorDialog));
+        }
+
+        progressDialog.setContentView(layout, new LinearLayout.LayoutParams((int) (Value.all_Width / 2),
+                (int) (Value.all_Height / 5)));
+
+        progressDialog.setOnKeyListener((dialog, keyCode, event) -> {
+            vibrator.vibrate(100);
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+                //noinspection deprecation
+                return false;
+            } else {
+                return false;
+            }
+        });
+        return progressDialog;
+    }
+
     private Runnable makepdf = new Runnable() {
         @Override
         public void run() {
             String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
             // SD卡位置getApplicationContext().getFilesDir().getAbsolutePath();
             // 系統位置android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-            String fileName = Value.BName + ".pdf";
+            String fileName = "JetecRemote" + ".pdf";
             String filePath = baseDir + File.separator + fileName;
-            file = new File(filePath);
+            pdffile = new File(filePath);
             try {
-                fOut = new FileOutputStream(file);
+                fOut = new FileOutputStream(pdffile);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            /*if (file.exists() && !file.isDirectory()) {
-
-            } else {
-                try {
-                    fOut = new FileOutputStream(file);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }*/
-            Log.e(TAG,"file = " + file);
+            Log.e(TAG, "file = " + pdffile);
             try {
                 PdfFont simpleEn = PdfFontFactory.createFont(FontConstants.COURIER);
                 PdfWriter pdfWriter = new PdfWriter(filePath);
@@ -695,24 +770,26 @@ public class LogChartView extends AppCompatActivity {
                 Document document = new Document(pdfDoc, PageSize.A4);
                 document.setMargins(40, 20, 40, 20);
 
-                HeaderHandler headerHandler = new HeaderHandler(document, Value.BName);
-                Log.e(TAG,"BName = " + Value.BName);
-                FooterHandler footerHandler = new FooterHandler(document);
-                pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, headerHandler);
-                pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, footerHandler);
-
                 int count = Value.modelsign, alldata = Value.charttime.size(), page;
                 if (alldata % 260 == 0) {
                     page = alldata / 260;
                 } else {
                     page = (alldata / 260) + 1;
                 }
+
+                HeaderHandler headerHandler = new HeaderHandler(document, Value.BName);
+                Log.e(TAG, "BName = " + Value.BName);
+                FooterHandler footerHandler = new FooterHandler(document, page);
+
+                pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, headerHandler);
+                pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, footerHandler);
+
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat log_date = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
                 if (count == 1) {
                     //noinspection deprecation
                     Table table = new Table((count + 2) * 4);
                     for (int i = 0; i < page; i++) {
-                        for(int j = 0; j < 4; j++){
+                        for (int j = 0; j < 4; j++) {
                             Paragraph a = new Paragraph(getString(R.string.pdftime)).setFont(simpleEn).setFontSize(6.3f);
                             Paragraph b = new Paragraph(""), c = new Paragraph(""), d = new Paragraph("");
                             Cell cell = new Cell(1, 2).add(a)
@@ -720,16 +797,13 @@ public class LogChartView extends AppCompatActivity {
                             cell.setHeight(7f);
                             table.addCell(cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
 
-                            if(Value.name.get(0).toString().matches("I")) {
+                            if (Value.name.get(0).toString().matches("I")) {
                                 b = new Paragraph(getString(R.string.pdf1st)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(0).toString().matches("T")) {
+                            } else if (Value.name.get(0).toString().matches("T")) {
                                 b = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(0).toString().matches("H")) {
+                            } else if (Value.name.get(0).toString().matches("H")) {
                                 b = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(0).toString().matches("C")) {
+                            } else if (Value.name.get(0).toString().matches("C")) {
                                 b = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
                             }
                             Cell cell2 = new Cell(1, 1).add(b);
@@ -743,27 +817,24 @@ public class LogChartView extends AppCompatActivity {
                                 Date setdate;
                                 if (k % 65 == 0) {
                                     @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("yyyy-MM-dd");
-                                    if((k + (l * 65)) < date.size()) {
+                                    if ((k + (l * 65)) < date.size()) {
                                         setdate = log_date.parse(date.get((k + (l * 65))));
                                         s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
-                                    }
-                                    else {
+                                    } else {
                                         s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
                                     }
                                 } else {
                                     @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("HH:mm:ss");
-                                    if((k + (l * 65)) < date.size()) {
+                                    if ((k + (l * 65)) < date.size()) {
                                         setdate = log_date.parse(date.get((k + (l * 65))));
                                         s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
-                                    }
-                                    else {
+                                    } else {
                                         s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
                                     }
                                 }
-                                if((k + (l * 65)) < date.size()) {
+                                if ((k + (l * 65)) < date.size()) {
                                     s2list = new Paragraph(Firstlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
-                                }
-                                else {
+                                } else {
                                     s2list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
                                 }
                                 Cell s1cell = new Cell(1, 2).add(s1list).setHeight(7f).setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
@@ -778,7 +849,7 @@ public class LogChartView extends AppCompatActivity {
                     //noinspection deprecation
                     Table table = new Table((count + 2) * 4);
                     for (int i = 0; i < page; i++) {
-                        for(int j = 0; j < 4; j++){
+                        for (int j = 0; j < 4; j++) {
                             Paragraph a = new Paragraph(getString(R.string.pdftime)).setFont(simpleEn).setFontSize(6.3f);
                             Paragraph b = new Paragraph(""), c = new Paragraph(""), d = new Paragraph("");
                             Cell cell = new Cell(1, 2).add(a)
@@ -786,32 +857,26 @@ public class LogChartView extends AppCompatActivity {
                             cell.setHeight(7f);
                             table.addCell(cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
 
-                            if(Value.name.get(0).toString().matches("I")) {
+                            if (Value.name.get(0).toString().matches("I")) {
                                 b = new Paragraph(getString(R.string.pdf1st)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(0).toString().matches("T")) {
+                            } else if (Value.name.get(0).toString().matches("T")) {
                                 b = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(0).toString().matches("H")) {
+                            } else if (Value.name.get(0).toString().matches("H")) {
                                 b = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(0).toString().matches("C")) {
+                            } else if (Value.name.get(0).toString().matches("C")) {
                                 b = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
                             }
                             Cell cell2 = new Cell(1, 1).add(b);
                             cell2.setHeight(7f);
                             table.addCell(cell2.clone(true)).setTextAlignment(TextAlignment.RIGHT);
 
-                            if(Value.name.get(1).toString().matches("I")) {
+                            if (Value.name.get(1).toString().matches("I")) {
                                 c = new Paragraph(getString(R.string.pdf2nd)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(1).toString().matches("T")) {
+                            } else if (Value.name.get(1).toString().matches("T")) {
                                 c = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(1).toString().matches("H")) {
+                            } else if (Value.name.get(1).toString().matches("H")) {
                                 c = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(1).toString().matches("C")) {
+                            } else if (Value.name.get(1).toString().matches("C")) {
                                 c = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
                             }
                             Cell cell3 = new Cell(1, 1).add(c);
@@ -825,28 +890,25 @@ public class LogChartView extends AppCompatActivity {
                                 Date setdate;
                                 if (k % 65 == 0) {
                                     @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("yyyy-MM-dd");
-                                    if((k + (l * 65)) < date.size()) {
+                                    if ((k + (l * 65)) < date.size()) {
                                         setdate = log_date.parse(date.get((k + (l * 65))));
                                         s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
-                                    }
-                                    else {
+                                    } else {
                                         s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
                                     }
                                 } else {
                                     @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("HH:mm:ss");
-                                    if((k + (l * 65)) < date.size()) {
+                                    if ((k + (l * 65)) < date.size()) {
                                         setdate = log_date.parse(date.get((k + (l * 65))));
                                         s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
-                                    }
-                                    else {
+                                    } else {
                                         s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
                                     }
                                 }
-                                if((k + (l * 65)) < date.size()) {
+                                if ((k + (l * 65)) < date.size()) {
                                     s2list = new Paragraph(Firstlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
                                     s3list = new Paragraph(Secondlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
-                                }
-                                else {
+                                } else {
                                     s2list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
                                     s3list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
                                 }
@@ -864,7 +926,7 @@ public class LogChartView extends AppCompatActivity {
                     //noinspection deprecation
                     Table table = new Table((count + 2) * 4);
                     for (int i = 0; i < page; i++) {
-                        for(int j = 0; j < 4; j++){
+                        for (int j = 0; j < 4; j++) {
                             Paragraph a = new Paragraph(getString(R.string.pdftime)).setFont(simpleEn).setFontSize(6.3f);
                             Paragraph b = new Paragraph(""), c = new Paragraph(""), d = new Paragraph("");
                             Cell cell = new Cell(1, 2).add(a)
@@ -872,48 +934,39 @@ public class LogChartView extends AppCompatActivity {
                             cell.setHeight(7f);
                             table.addCell(cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
 
-                            if(Value.name.get(0).toString().matches("I")) {
+                            if (Value.name.get(0).toString().matches("I")) {
                                 b = new Paragraph(getString(R.string.pdf1st)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(0).toString().matches("T")) {
+                            } else if (Value.name.get(0).toString().matches("T")) {
                                 b = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(0).toString().matches("H")) {
+                            } else if (Value.name.get(0).toString().matches("H")) {
                                 b = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(0).toString().matches("C")) {
+                            } else if (Value.name.get(0).toString().matches("C")) {
                                 b = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
                             }
                             Cell cell2 = new Cell(1, 1).add(b);
                             cell2.setHeight(7f);
                             table.addCell(cell2.clone(true)).setTextAlignment(TextAlignment.RIGHT);
 
-                            if(Value.name.get(1).toString().matches("I")) {
+                            if (Value.name.get(1).toString().matches("I")) {
                                 c = new Paragraph(getString(R.string.pdf2nd)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(1).toString().matches("T")) {
+                            } else if (Value.name.get(1).toString().matches("T")) {
                                 c = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(1).toString().matches("H")) {
+                            } else if (Value.name.get(1).toString().matches("H")) {
                                 c = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(1).toString().matches("C")) {
+                            } else if (Value.name.get(1).toString().matches("C")) {
                                 c = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
                             }
                             Cell cell3 = new Cell(1, 1).add(c);
                             cell3.setHeight(7f);
                             table.addCell(cell3.clone(true)).setTextAlignment(TextAlignment.RIGHT);
 
-                            if(Value.name.get(2).toString().matches("I")) {
+                            if (Value.name.get(2).toString().matches("I")) {
                                 d = new Paragraph(getString(R.string.pdf3rd)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(2).toString().matches("T")) {
+                            } else if (Value.name.get(2).toString().matches("T")) {
                                 d = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(2).toString().matches("H")) {
+                            } else if (Value.name.get(2).toString().matches("H")) {
                                 d = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            else if(Value.name.get(2).toString().matches("C")) {
+                            } else if (Value.name.get(2).toString().matches("C")) {
                                 d = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
                             }
                             Cell cell4 = new Cell(1, 1).add(d);
@@ -927,29 +980,26 @@ public class LogChartView extends AppCompatActivity {
                                 Date setdate;
                                 if (k % 65 == 0) {
                                     @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("yyyy-MM-dd");
-                                    if((k + (l * 65)) < date.size()) {
+                                    if ((k + (l * 65)) < date.size()) {
                                         setdate = log_date.parse(date.get((k + (l * 65))));
                                         s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
-                                    }
-                                    else {
+                                    } else {
                                         s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
                                     }
                                 } else {
                                     @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("HH:mm:ss");
-                                    if((k + (l * 65)) < date.size()) {
+                                    if ((k + (l * 65)) < date.size()) {
                                         setdate = log_date.parse(date.get((k + (l * 65))));
                                         s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
-                                    }
-                                    else {
+                                    } else {
                                         s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
                                     }
                                 }
-                                if((k + (l * 65)) < date.size()) {
+                                if ((k + (l * 65)) < date.size()) {
                                     s2list = new Paragraph(Firstlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
                                     s3list = new Paragraph(Secondlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
                                     s4list = new Paragraph(Thirdlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
-                                }
-                                else {
+                                } else {
                                     s2list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
                                     s3list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
                                     s4list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
@@ -968,7 +1018,23 @@ public class LogChartView extends AppCompatActivity {
                     document.add(table);
                 }
                 document.close();
-                Log.e(TAG,"已完成");
+                Log.e(TAG, "已完成");
+                setdpp = true;
+                if(running.isShowing()){
+                    running.dismiss();
+                    if(flag == 1){
+                        Intent shareIntent = new Intent();
+                        shareIntent.setAction(Intent.ACTION_SEND);
+                        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(pdffile));
+                        shareIntent.setType("text/*");
+                        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+                    }
+                    else if(flag == 2){
+                        Intent intent = new Intent(LogChartView.this, PDFView.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
                 //Toast.makeText(LogChartView.this, "Complete！", Toast.LENGTH_SHORT).show();
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
@@ -976,154 +1042,155 @@ public class LogChartView extends AppCompatActivity {
         }
     };
 
-        private Runnable packagecsv = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ArrayList<String> data = new ArrayList<>();
-                    data.clear();
-                    data.add("id");
-                    data.add("dateTime");
-                    if (Firstlist.size() != 0) {
-                        if (Value.name.get(0).toString().matches("I")) {
-                            data.add("Analog1");
-                        } else if (Value.name.get(0).toString().matches("T")) {
-                            data.add("Temperature/C");
-                        } else if (Value.name.get(0).toString().matches("H")) {
-                            data.add("Humidity/%");
-                        } else if (Value.name.get(0).toString().matches("C")) {
-                            Log.e(TAG, "待增加");
-                        }
+    private Runnable packagecsv = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                ArrayList<String> data = new ArrayList<>();
+                data.clear();
+                data.add("id");
+                data.add("dateTime");
+                if (Firstlist.size() != 0) {
+                    if (Value.name.get(0).toString().matches("I")) {
+                        data.add("Analog1");
+                    } else if (Value.name.get(0).toString().matches("T")) {
+                        data.add("Temperature/C");
+                    } else if (Value.name.get(0).toString().matches("H")) {
+                        data.add("Humidity/%");
+                    } else if (Value.name.get(0).toString().matches("C")) {
+                        Log.e(TAG, "待增加");
                     }
-                    if (Secondlist.size() != 0) {
-                        if (Value.name.get(1).toString().matches("I")) {
-                            data.add("Analog2");
-                        } else if (Value.name.get(1).toString().matches("T")) {
-                            data.add("Temperature/C");
-                        } else if (Value.name.get(1).toString().matches("H")) {
-                            data.add("Humidity/%");
-                        } else if (Value.name.get(1).toString().matches("C")) {
-                            Log.e(TAG, "待增加");
-                        }
-                    }
-                    if (Thirdlist.size() != 0) {
-                        if (Value.name.get(2).toString().matches("I")) {
-                            data.add("Analog3");
-                        } else if (Value.name.get(2).toString().matches("T")) {
-                            data.add("Temperature/C");
-                        } else if (Value.name.get(2).toString().matches("H")) {
-                            data.add("Humidity/%");
-                        } else if (Value.name.get(2).toString().matches("C")) {
-                            Log.e(TAG, "待增加");
-                        }
-                    }
-                    String[] data_array = new String[data.size()];
-                    for (int i = 0; i < data.size(); i++) {
-                        data_array[i] = data.get(i);
-                        Log.e(TAG, "data_array[i] = " + data_array[i]);
-                    }
-                    Log.e(TAG, "data_array = " + data_array);
-                    Log.e(TAG, "Firstlist = " + Firstlist);
-                    Log.e(TAG, "Secondlist = " + Secondlist);
-                    Log.e(TAG, "Thirdlist = " + Thirdlist);
-                    String[] data2;
-                    String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-                    // SD卡位置getApplicationContext().getFilesDir().getAbsolutePath();
-                    // 系統位置android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-                    Log.e(TAG, "baseDir = " + baseDir);
-                    String fileName = Value.BName + ".csv";
-                    String filePath = baseDir + File.separator + fileName;
-                    Log.e(TAG, "filePath = " + filePath);
-                    file = new File(filePath);
-                    Log.e(TAG, "overthere?");
-                    if (file.exists() && !file.isDirectory()) {
-                        mFileWriter = new FileWriter(filePath, false);
-                        writer = new CSVWriter(mFileWriter);
-                        writer.writeNext(data_array);
-                        for (int i = 0; i < charttime.size(); i++) {
-                            data2 = new String[]{String.valueOf(i), charttime.get(i),
-                                    String.valueOf(Float.valueOf(Firstlist.get(i))),
-                                    String.valueOf(Float.valueOf(Secondlist.get(i)))};
-                            writer.writeNext(data2);
-                        }
-                        Log.e(TAG, "writer = " + writer);
-                        writer.close();
-                        Log.e(TAG, "there?");
-                    } else {
-                        writer = new CSVWriter(new FileWriter(filePath));
-                        writer.writeNext(data_array);
-                        for (int i = 0; i < charttime.size(); i++) {
-                            data2 = new String[]{String.valueOf(i), charttime.get(i),
-                                    String.valueOf(Float.valueOf(Firstlist.get(i))),
-                                    String.valueOf(Float.valueOf(Secondlist.get(i)))};
-                            Log.e(TAG, "data2 = " + data2);
-                            writer.writeNext(data2);
-                        }
-                        writer.close();
-                        Log.e(TAG, "here?");
-                    }
-                } catch (IOException e) {
-                    Log.e(TAG, "Wrong = " + e);
                 }
-            }
-        };
-
-        @Override
-        public void onConfigurationChanged(Configuration newConfig) {
-            super.onConfigurationChanged(newConfig);
-
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                // land do nothing is ok
-                setContentView(R.layout.logview);
-                logview();
-            } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                // port do nothing is ok
-                setContentView(R.layout.logview);
-                logview();
-            }
-        }
-
-        private void back() {
-            Intent result = new Intent();
-            setResult(DeviceFunction.RESULT_OK, result);
-            finish();
-        }
-
-        public boolean onKeyDown(int key, KeyEvent event) {
-            switch (key) {
-                case KeyEvent.KEYCODE_SEARCH:
-                    break;
-                case KeyEvent.KEYCODE_BACK: {
-                    vibrator.vibrate(100);
-                    back();
+                if (Secondlist.size() != 0) {
+                    if (Value.name.get(1).toString().matches("I")) {
+                        data.add("Analog2");
+                    } else if (Value.name.get(1).toString().matches("T")) {
+                        data.add("Temperature/C");
+                    } else if (Value.name.get(1).toString().matches("H")) {
+                        data.add("Humidity/%");
+                    } else if (Value.name.get(1).toString().matches("C")) {
+                        Log.e(TAG, "待增加");
+                    }
                 }
-                break;
-                case KeyEvent.KEYCODE_DPAD_CENTER:
-                    break;
-                default:
-                    return false;
+                if (Thirdlist.size() != 0) {
+                    if (Value.name.get(2).toString().matches("I")) {
+                        data.add("Analog3");
+                    } else if (Value.name.get(2).toString().matches("T")) {
+                        data.add("Temperature/C");
+                    } else if (Value.name.get(2).toString().matches("H")) {
+                        data.add("Humidity/%");
+                    } else if (Value.name.get(2).toString().matches("C")) {
+                        Log.e(TAG, "待增加");
+                    }
+                }
+                String[] data_array = new String[data.size()];
+                for (int i = 0; i < data.size(); i++) {
+                    data_array[i] = data.get(i);
+                    Log.e(TAG, "data_array[i] = " + data_array[i]);
+                }
+                Log.e(TAG, "data_array = " + data_array);
+                Log.e(TAG, "Firstlist = " + Firstlist);
+                Log.e(TAG, "Secondlist = " + Secondlist);
+                Log.e(TAG, "Thirdlist = " + Thirdlist);
+                String[] data2;
+                String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+                // SD卡位置getApplicationContext().getFilesDir().getAbsolutePath();
+                // 系統位置android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+                Log.e(TAG, "baseDir = " + baseDir);
+                String fileName = "JetecRemote" + ".csv";
+                String filePath = baseDir + File.separator + fileName;
+                Log.e(TAG, "filePath = " + filePath);
+                file = new File(filePath);
+                Log.e(TAG, "overthere?");
+                if (file.exists() && !file.isDirectory()) {
+                    mFileWriter = new FileWriter(filePath, false);
+                    writer = new CSVWriter(mFileWriter);
+                    writer.writeNext(data_array);
+                    for (int i = 0; i < charttime.size(); i++) {
+                        data2 = new String[]{String.valueOf(i), charttime.get(i),
+                                String.valueOf(Float.valueOf(Firstlist.get(i))),
+                                String.valueOf(Float.valueOf(Secondlist.get(i)))};
+                        writer.writeNext(data2);
+                    }
+                    Log.e(TAG, "writer = " + writer);
+                    writer.close();
+                    Log.e(TAG, "there?");
+                } else {
+                    writer = new CSVWriter(new FileWriter(filePath));
+                    writer.writeNext(data_array);
+                    for (int i = 0; i < charttime.size(); i++) {
+                        data2 = new String[]{String.valueOf(i), charttime.get(i),
+                                String.valueOf(Float.valueOf(Firstlist.get(i))),
+                                String.valueOf(Float.valueOf(Secondlist.get(i)))};
+                        Log.e(TAG, "data2 = " + data2);
+                        writer.writeNext(data2);
+                    }
+                    writer.close();
+                    Log.e(TAG, "here?");
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Wrong = " + e);
             }
-            return false;
         }
+    };
 
-        @Override
-        protected void onDestroy() {
-            super.onDestroy();
-            Log.e(TAG, "onDestroy()");
-        }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
 
-        @Override
-        protected void onStop() {
-            super.onStop();
-        }
-
-        @Override
-        protected void onResume() {
-            super.onResume();
-        }
-
-        @Override
-        protected void onPause() {
-            super.onPause();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // land do nothing is ok
+            setContentView(R.layout.logview);
+            logview();
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // port do nothing is ok
+            setContentView(R.layout.logview);
+            logview();
         }
     }
+
+    private void back() {
+        //Intent result = new Intent();
+        Intent intent = new Intent(LogChartView.this, DeviceFunction.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public boolean onKeyDown(int key, KeyEvent event) {
+        switch (key) {
+            case KeyEvent.KEYCODE_SEARCH:
+                break;
+            case KeyEvent.KEYCODE_BACK: {
+                vibrator.vibrate(100);
+                back();
+            }
+            break;
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+                break;
+            default:
+                return false;
+        }
+        return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+}

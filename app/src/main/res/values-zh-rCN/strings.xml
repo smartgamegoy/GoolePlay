@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Remote</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -151,4 +151,12 @@
     <string name="pdfT">T</string>
     <string name="pdfH">H</string>
     <string name="pdfC">CO2</string>
+    <string name="report">资料报表</string>
+    <string name="choose">选择汇出方式</string>
+    <string name="CSV">CSV</string>
+    <string name="PDF" tools:ignore="ExtraTranslation">PDF</string>
+    <string name="view">查看报表</string>
+    <string name="PDFreport">PDF报表</string>
+    <string name="print">列印</string>
+    <string name="process">资料处理中</string>
 </resources>

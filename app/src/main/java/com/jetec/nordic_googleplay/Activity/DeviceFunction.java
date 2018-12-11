@@ -1953,7 +1953,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     test = 0;
                     sendValue.send("END");
                     sleep(100);
-                    sendValue.send("Delay0000");
+                    sendValue.send("Delay00004");
                     sleep(100);
                     if (data_Json.getCount() > 0) {
                         data_Json.delete(Value.BID);
@@ -2768,7 +2768,6 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                         Firstlist.add(String.valueOf(num));
                     }
                     if (secondrow.startsWith("+")) {
-                        Log.e(TAG, "secondrow = " + secondrow);
                         secondrow = secondrow.substring(1, 5);
                         Float num = Float.valueOf(secondrow) / math2;
                         Secondlist.add(String.valueOf(num));
@@ -2836,12 +2835,12 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                 String all_date = d_date + " " + d_time;
                 Date date = log_date.parse(all_date);
                 for (int i = Logdata.size(); i > 0; i--) {
-                    date.setTime(date.getTime() + (Integer.valueOf(Value.Inter) * 1000));
                     formattime = log_date.format(date);
                     charttime.add(formattime);
                     formattime = formattime.substring(3, formattime.indexOf(" ")) + " " +
                             formattime.substring(formattime.indexOf(" ") + 1, formattime.length() - 3);
                     timelist.add(formattime);
+                    date.setTime(date.getTime() + (Integer.valueOf(Value.Inter) * 1000));
                 }
                 Log.e(TAG, "timelist.size() = " + timelist.size());
                 Log.e(TAG, "timelist = " + timelist);
@@ -2949,6 +2948,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         Log.e(TAG, "SelectItem = " + Value.SelectItem);
 
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -3066,7 +3066,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

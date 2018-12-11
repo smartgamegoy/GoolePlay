@@ -48,6 +48,14 @@
             android:theme="@style/nordic_use"
             tools:ignore="InnerclassSeparator">
         </activity>
+        <activity android:name=".Activity.PDFView"
+            android:theme="@style/nordic_use"
+            android:permission="android.permission.BIND_PRINT_SERVICE"
+            tools:ignore="InnerclassSeparator">
+            <intent-filter>
+                <action android:name="android.printservice.PrintService" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activity.ChartActivity"
             android:theme="@style/nordic_use"

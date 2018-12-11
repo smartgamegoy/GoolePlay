@@ -15,10 +15,11 @@ public class FooterHandler implements IEventHandler {
 
     private Document doc;
     private PdfFont font;
-    private int i = 1;
+    private int i = 1, page;
 
-    public FooterHandler(Document doc) throws IOException {
+    public FooterHandler(Document doc, int page) throws IOException {
         this.doc = doc;
+        this.page = page;
         font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UTF16-H", true);
     }
 
@@ -28,9 +29,9 @@ public class FooterHandler implements IEventHandler {
         PdfCanvas canvas_footer = new PdfCanvas(docEvent.getPage());
         Rectangle pageSize = docEvent.getPage().getPageSize();
         canvas_footer.beginText();
-        canvas_footer.moveText((pageSize.getRight() - doc.getRightMargin() - (pageSize.getLeft() + doc.getLeftMargin())) / 2 + doc.getLeftMargin(), (pageSize.getBottom() + doc.getBottomMargin() - 5))
+        canvas_footer.moveText((pageSize.getRight() - doc.getRightMargin() - (pageSize.getLeft() + doc.getLeftMargin())) / 2 + doc.getLeftMargin() - 5, (pageSize.getBottom() + doc.getBottomMargin() - 5))
                 .setFontAndSize(font, 5)
-                .showText(String.valueOf(i))
+                .showText(String.valueOf(i) + " / " + String.valueOf(page))
                 .endText()
                 .release();
         this.i++;

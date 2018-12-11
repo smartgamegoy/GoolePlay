@@ -151,4 +151,12 @@
     <string name="pdfT">T</string>
     <string name="pdfH">H</string>
     <string name="pdfC">CO2</string>
+    <string name="report">資料報表</string>
+    <string name="choose">選擇匯出方式</string>
+    <string name="CSV">CSV</string>
+    <string name="PDF">PDF</string>
+    <string name="view">查看報表</string>
+    <string name="PDFreport">PDF報表</string>
+    <string name="print">列印</string>
+    <string name="process">資料處理中</string>
 </resources>
