@@ -20,11 +20,15 @@ public class Value {
     public static Boolean btn = false;
     public static Boolean get_noti = false;
     public static Boolean setdataview = false;
+    public static Boolean opendialog = false;
+    public static Boolean Engin = false;
+    public static Boolean startdown = false;
     public static String deviceModel = "default";   //型號
     public static ArrayList<String> Jsonlist, SelectItem, DataSave, return_RX;
-    public static int passwordFlag, modelsign;
+    public static int passwordFlag, modelsign, totle;
     public static String Count, Time, Date, GetLog, Inter;
     public static String E_word, P_word, G_word, I_word;
     public static ArrayList<Character> name;
     public static ArrayList<String> charttime, timelist, Firstlist, Secondlist, Thirdlist, List_d_num;
+    public static String phonename;
 }

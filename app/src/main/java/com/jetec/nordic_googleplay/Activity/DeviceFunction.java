@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -47,12 +48,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,6 +92,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -112,13 +116,13 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
     private boolean s_connect = false, c = false;
     private int connect_flag, send, check, test = 0, totle, jsonflag, select_item = -1;
     private Dialog progressDialog2 = null, ask_Dialog = null, checkpassword = null, saveDialog = null,
-            showDialog = null, inDialog = null, upDialog = null, choseDialog = null;
+            showDialog = null, inDialog = null, upDialog = null, choseDialog = null, modify = null;
     private BluetoothLeService mBluetoothLeService;
     private Intent intents;
     private ConnectThread connectThread;
     private byte[] txValue;
     private ArrayList<String> SQLdata, Logdata, Firstlist, Secondlist, Thirdlist,
-            timelist, charttime, List_d_num, List_d_function, Jsonlist;
+            timelist, charttime, List_d_num, List_d_function, Jsonlist, Countlist;
     private View header, engin, button;
     private Function function;
     private TextView showing;
@@ -150,6 +154,11 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+            setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
+
         BluetoothManager bluetoothManager = getManager(this);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         if (mBluetoothLeService == null) {
@@ -160,6 +169,11 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             else
                 Log.e(TAG, "連線失敗");
         }
+        ConfigurationChange();
+    }
+
+    private void ConfigurationChange() {
+        getW_H();
         all_list();
         get_intent();
     }
@@ -175,6 +189,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         Thirdlist = new ArrayList<>();
         charttime = new ArrayList<>();
         Jsonlist = new ArrayList<>();
+        Countlist = new ArrayList<>();
     }
 
     @SuppressLint("HandlerLeak")
@@ -350,56 +365,53 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
 
             String chart, time, t, h, c;
 
-            ArrayList<String> jsonlist = new ArrayList<>();
-            jsonlist.clear();
-            jsonlist = data_Json.getlist(Value.BID);
-            for (int i = 0; i < jsonlist.size(); i++) {
-                switch (i) {
-                    case 0: {
-                        charttime.clear();
-                        chart = jsonlist.get(i);
-                        JSONArray json = new JSONArray(chart);
-                        for (int j = 0; j < json.length(); j++) {
-                            charttime.add(String.valueOf(json.get(j)));
-                            Log.e(TAG, "補給你拉0");
+            if (data_Json.searchJson(Value.BID)) {
+                ArrayList<String> jsonlist = new ArrayList<>();
+                jsonlist.clear();
+                jsonlist = data_Json.getlist(Value.BID);
+                for (int i = 0; i < jsonlist.size(); i++) {
+                    switch (i) {
+                        case 0: {
+                            charttime.clear();
+                            chart = jsonlist.get(i);
+                            JSONArray json = new JSONArray(chart);
+                            for (int j = 0; j < json.length(); j++) {
+                                charttime.add(String.valueOf(json.get(j)));
+                            }
                         }
-                    }
-                    case 1: {
-                        timelist.clear();
-                        time = jsonlist.get(i);
-                        JSONArray json = new JSONArray(time);
-                        for (int j = 0; j < json.length(); j++) {
-                            timelist.add(String.valueOf(json.get(j)));
-                            Log.e(TAG, "補給你拉1");
+                        case 1: {
+                            timelist.clear();
+                            time = jsonlist.get(i);
+                            JSONArray json = new JSONArray(time);
+                            for (int j = 0; j < json.length(); j++) {
+                                timelist.add(String.valueOf(json.get(j)));
+                            }
                         }
-                    }
-                    break;
-                    case 2: {
-                        Firstlist.clear();
-                        t = jsonlist.get(i);
-                        JSONArray json = new JSONArray(t);
-                        for (int j = 0; j < json.length(); j++) {
-                            Firstlist.add(String.valueOf(json.get(j)));
-                            Log.e(TAG, "補給你拉2");
+                        break;
+                        case 2: {
+                            Firstlist.clear();
+                            t = jsonlist.get(i);
+                            JSONArray json = new JSONArray(t);
+                            for (int j = 0; j < json.length(); j++) {
+                                Firstlist.add(String.valueOf(json.get(j)));
+                            }
                         }
-                    }
-                    break;
-                    case 3: {
-                        Secondlist.clear();
-                        h = jsonlist.get(i);
-                        JSONArray json = new JSONArray(h);
-                        for (int j = 0; j < json.length(); j++) {
-                            Secondlist.add(String.valueOf(json.get(j)));
-                            Log.e(TAG, "補給你拉3");
+                        break;
+                        case 3: {
+                            Secondlist.clear();
+                            h = jsonlist.get(i);
+                            JSONArray json = new JSONArray(h);
+                            for (int j = 0; j < json.length(); j++) {
+                                Secondlist.add(String.valueOf(json.get(j)));
+                            }
                         }
-                    }
-                    case 4: {
-                        Thirdlist.clear();
-                        c = jsonlist.get(i);
-                        JSONArray json = new JSONArray(c);
-                        for (int j = 0; j < json.length(); j++) {
-                            Thirdlist.add(String.valueOf(json.get(j)));
-                            Log.e(TAG, "補給你拉4");
+                        case 4: {
+                            Thirdlist.clear();
+                            c = jsonlist.get(i);
+                            JSONArray json = new JSONArray(c);
+                            for (int j = 0; j < json.length(); j++) {
+                                Thirdlist.add(String.valueOf(json.get(j)));
+                            }
                         }
                     }
                 }
@@ -444,7 +456,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     Value.all_Height, Value.P_word,
                     Value.G_word, Value.E_word, Value.I_word, gettoast1, gettoast2, gettoast3, gettoast4,
                     gettoast5, gettoast6, mBluetoothLeService);
-            modifyPassword.modifyDialog(vibrator);
+            modify = modifyPassword.modifyDialog(vibrator);
+            modify.show();
         });
     }
 
@@ -526,7 +539,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                             sleep(100);
                             Value.downlog = false;
                             sendValue.send(out);
-                            if(mBluetoothLeService != null){
+                            if (mBluetoothLeService != null) {
                                 Value.BName = gets;
                             }
                             inDialog.dismiss();
@@ -1912,69 +1925,109 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         final Dialog progressDialog = new Dialog(context);
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        progressDialog.dismiss();
-
         LayoutInflater inflater = LayoutInflater.from(context);
         @SuppressLint("InflateParams") View v = inflater.inflate(R.layout.askdialog, null);
         ProgressBar pb_progress_bar = v.findViewById(R.id.pb_progress_bar);
         ConstraintLayout down_dialog = v.findViewById(R.id.ask_dialog);
         showing = v.findViewById(R.id.textView4);
+        Spinner s1 = v.findViewById(R.id.spinner);
         Button bn = v.findViewById(R.id.button1);
         Button by = v.findViewById(R.id.button2);
+        TextView t2 = v.findViewById(R.id.textView2);
 
         sendValue = new SendValue(mBluetoothLeService);
+        Value.downloading = true;
+        Logdata.clear();
 
+        Log.e(TAG, "Value.downloading = " + Value.downloading);
         bn.setText(getString(R.string.mes_no));
         by.setText(getString(R.string.mes_yes));
         pb_progress_bar.setVisibility(View.GONE);
 
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                this, R.layout.spinner_style, Countlist) {    //android.R.layout.simple_spinner_item
+            @Override
+            public boolean isEnabled(int position) {
+                return true;
+            }
+        };
+
+        Log.e(TAG, "Countlist = " + Countlist.size());
+
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_style);    //R.layout.spinner_style
+        s1.setAdapter(spinnerArrayAdapter);
+        s1.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("myLog", "position = " + position);
+                totle = Integer.valueOf(Countlist.get(position));
+                showtext = String.valueOf((test)) + " / " + String.valueOf(totle);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         bn.setOnClickListener(v12 -> {
             vibrator.vibrate(100);
-            Value.downloading = false;
+            if (Value.downloading) {
+                Value.downloading = false;
+                sendValue.send("STOP");
+            }
             if (Logdata.size() == totle) {
                 ask_Dialog.dismiss();
+                Value.opendialog = false;
+                Value.downloading = false;
             } else {
                 if (mBluetoothLeService.connect(Value.BID)) {
                     sendValue = new SendValue(mBluetoothLeService);
                     ask_Dialog.dismiss();
+                    Value.opendialog = false;
+                    Value.downloading = false;
                 } else {
                     ask_Dialog.dismiss();
+                    Value.opendialog = false;
+                    Value.downloading = false;
                 }
             }
         });
 
         by.setOnClickListener(v1 -> {
-            try {
-                vibrator.vibrate(100);
-                pb_progress_bar.setVisibility(View.VISIBLE);
-                if (mBluetoothLeService.connect(Value.BID)) {
-                    Toast.makeText(DeviceFunction.this, getString(R.string.prepare), Toast.LENGTH_SHORT).show();
-                    Value.downloading = true;
-                    test = 0;
-                    sendValue.send("END");
-                    sleep(100);
-                    sendValue.send("Delay00004");
-                    sleep(100);
-                    if (data_Json.getCount() > 0) {
-                        data_Json.delete(Value.BID);
-                        Log.e(TAG, "刪除紀錄 = " + data_Json.getCount());
-                        data_Json.close();
-                    }
-                } else {
-                    /*connectThread = new ConnectThread();
-                    connectThread.run();*/
+            vibrator.vibrate(100);
+            pb_progress_bar.setVisibility(View.VISIBLE);
+            t2.setVisibility(View.GONE);
+            s1.setVisibility(View.GONE);
+            if (mBluetoothLeService.connect(Value.BID)) {
+                Toast.makeText(DeviceFunction.this, getString(R.string.prepare), Toast.LENGTH_SHORT).show();
+                test = 0;
+                //Service_close();
+                sendValue.send("STOP");
+                if (data_Json.getCount() > 0) {
+                    data_Json.delete(Value.BID);
+                    Log.e(TAG, "刪除紀錄 = " + data_Json.getCount());
+                    data_Json.close();
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } else {
+                /*connectThread = new ConnectThread();
+                connectThread.run();*/
             }
         });
 
-        progressDialog.setContentView(down_dialog, new ConstraintLayout.LayoutParams((int) (2 * Value.all_Width / 3),
-                (int) (2 * Value.all_Height / 5)));
+        if (Value.all_Height > Value.all_Width) {
+            progressDialog.setContentView(down_dialog, new ConstraintLayout.LayoutParams((int) (2 * Value.all_Width / 3),
+                    (int) (2 * Value.all_Height / 5)));
+        } else {
+            progressDialog.setContentView(down_dialog, new ConstraintLayout.LayoutParams((int) (2 * Value.all_Width / 5),
+                    (int) (7 * Value.all_Height / 11)));
+        }
 
         progressDialog.setOnKeyListener((dialog, keyCode, event) -> {
             vibrator.vibrate(100);
-            sendValue.send("STOP");
+            if (Value.downloading) {
+                Value.downloading = false;
+                sendValue.send("STOP");
+            }
             return false;
         });
         return progressDialog;
@@ -2082,8 +2135,13 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             showDialog.dismiss();
         });
 
-        progressDialog.setContentView(setlinear, new ConstraintLayout.LayoutParams((int) (3 * Value.all_Width / 4),
-                (int) (5 * Value.all_Height / 7)));
+        if (Value.all_Height > Value.all_Width) {
+            progressDialog.setContentView(setlinear, new ConstraintLayout.LayoutParams((int) (3 * Value.all_Width / 4),
+                    (int) (Value.all_Height / 2)));
+        } else {
+            progressDialog.setContentView(setlinear, new ConstraintLayout.LayoutParams((int) (Value.all_Width / 2),
+                    (int) (5 * Value.all_Height / 6)));
+        }
 
         return progressDialog;
     }
@@ -2230,8 +2288,15 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             }
         });
 
-        progressDialog.setContentView(setlinear, new ConstraintLayout.LayoutParams((int) (3 * Value.all_Width / 4),
-                (int) (5 * Value.all_Height / 7)));
+        Log.e(TAG, "all_Height = " + Value.all_Height + " all_Width = " + Value.all_Width);
+
+        if (Value.all_Height > Value.all_Width) {
+            progressDialog.setContentView(setlinear, new ConstraintLayout.LayoutParams((int) (3 * Value.all_Width / 4),
+                    (int) (5 * Value.all_Height / 7)));
+        } else {
+            progressDialog.setContentView(setlinear, new ConstraintLayout.LayoutParams((int) (Value.all_Width / 2),
+                    (int) (5 * Value.all_Height / 6)));
+        }
 
         return progressDialog;
     }
@@ -2318,37 +2383,73 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                 Log.e(TAG, "連線成功");
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 s_connect = false;
+                mBluetoothLeService = null;
                 Log.e(TAG, "連線中斷" + Value.connected);
                 if (Value.connected) {
+                    new Thread(connectfail).start();
+                    Service_close();
                     try {
-                        new Thread(connectfail).start();
                         sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e(TAG, "重新連線");
+                    ConnectThread newThread = new ConnectThread(connectHandler);
+                    newThread.run();
+                } else {
+                    //Service_close();
+                    //Value.connected = true;
+                    //try {
+                    //new Thread(connectfail).start();
+                        /*sleep(2000);
                         ConnectThread newThread = new ConnectThread(connectHandler);
                         newThread.run();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
-                }
+                    }*/
 
+                    new AlertDialog.Builder(DeviceFunction.this)
+                            .setTitle(R.string.action_settings)
+                            .setMessage(R.string.cant_reconnect)
+                            .setPositiveButton(R.string.butoon_yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (mBluetoothAdapter != null)
+                                        //noinspection deprecation
+                                        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                                    Service_close();
+                                    Value.connected = false;
+                                    data_table.close();
+                                    disconnect();
+                                }
+                            })
+                            .show();
+                }
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
                 //displayGattServices(mBluetoothLeService.getSupportedGattServices());
                 Log.e(TAG, "連線狀態改變");
                 mBluetoothLeService.enableTXNotification();
-                if (!Value.connected)
+                if (!Value.connected) {
                     new Thread(sendcheck).start();
-                else {
-                    try {
+                } else {
+                    /*try {
                         sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     sendValue = new SendValue(mBluetoothLeService);
-                    if (!Value.downloading) {
-                        ConnectThread reThread = new ConnectThread(connectHandler);
-                        reThread.run();
+                    /*if (Value.downloading) {
+                        sendValue.send("STOP");
+                        try {
+                            sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         if (ask_Dialog != null) {
-                            ask_Dialog.dismiss();
+                            //ask_Dialog.dismiss();
+                            Value.opendialog = false;
+                            Value.downloading = false;
                         }
                     } else {
                         Value.connected = false;
@@ -2359,9 +2460,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                        sendValue = new SendValue(mBluetoothLeService);
                         ConnectThread reThread = new ConnectThread(connectHandler);
                         reThread.run();
-                    }
+                    }*/
                 }
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 runOnUiThread(() -> {
@@ -2378,7 +2480,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                     !text.startsWith("START")) {
                                 if (!(text.startsWith("COUNT") || text.startsWith("DATE") ||
                                         text.startsWith("TIME") || text.matches("LOGON") ||
-                                        text.matches("LOGOFF") || text.startsWith("LOG"))) {
+                                        text.matches("LOGOFF") || text.startsWith("LOG") ||
+                                        text.startsWith("PWR") || text.startsWith("STOP"))) {
                                     int i = Value.SelectItem.indexOf(checkDeviceName.setName(text));
                                     Value.return_RX.set((i - 1), text);
                                     Value.DataSave.set(i, text);
@@ -2391,26 +2494,50 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                     function.notifyDataSetChanged();
                                 } else if (text.startsWith("COUNT")) {
                                     Log.e(TAG, "停止紀錄 = " + text);
+                                    Countlist.clear();
+                                    Value.Count = text.substring(text.indexOf(Value.Jsonlist.get(check)) + 6, text.length());
+                                    int sum = Integer.valueOf(Value.Count);
+                                    int count = sum / 1000;
+                                    for (int i = 1; i <= count; i++) {
+                                        Countlist.add(String.valueOf(1000 * i));
+                                    }
+                                    if (count != 6) {
+                                        Countlist.add(String.valueOf(sum));
+                                    }
                                     Value.downlog = false;
                                     if (!Value.downlog) {
                                         navigationView.getMenu().findItem(R.id.nav_share).setTitle(getString(R.string.start) + getString(R.string.LOG));
                                     } else {
                                         navigationView.getMenu().findItem(R.id.nav_share).setTitle(getString(R.string.end) + getString(R.string.LOG));
                                     }
+                                    Value.setdataview = true;
+                                    if (Value.opendialog) {
+                                        ask_Dialog = askDialog(DeviceFunction.this);
+                                        ask_Dialog.show();
+                                        ask_Dialog.setCanceledOnTouchOutside(false);
+                                    }
+                                } else if (text.startsWith("PWR")) {
+                                    Value.P_word = text.substring(4, text.length());
+                                    Log.e(TAG, "客戶密碼 = " + Value.P_word);
                                 }
                             }
                         } else {
                             if (text.startsWith("OK")) {
-                                sendValue = new SendValue(mBluetoothLeService);
-                                sendValue.send("DOWNLOAD");
+                                //sendValue = new SendValue(mBluetoothLeService);
+                                //sleep(200);
+                                //sendValue.send("DOWNLOAD");
                                 /*sendLog = new SendLog();
                                 sendLog.set_over(true);
                                 sendLog.set_Service(mBluetoothLeService);
                                 sendLog.start();*/
-                            } else if (text.startsWith("COUNT")) {
-                                Value.Count = text.substring(text.indexOf(Value.Jsonlist.get(check)) + 6, text.length());
-                                totle = Integer.valueOf(Value.Count);
-                                showtext = String.valueOf((test)) + " / " + String.valueOf(totle);
+                            } else if (text.startsWith("Count")) {
+                                //Value.Count = text.substring(text.indexOf(Value.Jsonlist.get(check)) + 6, text.length());
+                                //sendValue.send("DOWNLOAD");
+                                if (Value.startdown) {
+                                    sleep(100);
+                                    sendValue.send("DOWNLOAD");
+                                    Value.startdown = false;
+                                }
                             } else if (text.startsWith("OVER")) {
                                 //sendLog.interrupt();
                                 Log.e(TAG, "Logdata.size() = " + Logdata.size());
@@ -2443,7 +2570,15 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                         }
                                     }
                                     ask_Dialog.dismiss();
+                                    Value.opendialog = false;
+                                    Value.downloading = false;
                                     //unbindService(mServiceConnection);
+                                }
+                                else if(connect_flag == 1){
+                                    showtext = String.valueOf(getString(R.string.downloadfail));
+                                    showing.setTextSize(16);
+                                    showing.setText(showtext);
+                                    connect_flag = 0;
                                 }
                             } else if (text.startsWith("Delay")) {
                                 Log.e(TAG, "Delaytime = " + text);
@@ -2453,8 +2588,11 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 Firstlist.clear();
                                 Secondlist.clear();
                                 Thirdlist.clear();
-                                Value.connected = true;
-                                Service_close();
+                                //Value.connected = true;
+                                //Service_close();
+                                sleep(100);
+                                sendValue.send("Count" + "0" + totle);
+                                Value.startdown = true;
                             } else if (text.startsWith("DATE")) {
                                 Value.Date = text.substring(4, text.length());
                             } else if (text.startsWith("TIME")) {
@@ -2462,6 +2600,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                             } else if (text.startsWith("INTER")) {
                                 Value.Inter = text.substring(5, text.length());
                             } else if (text.startsWith("+") || text.startsWith("-")) {
+                                connect_flag = 1;
                                 if (Value.modelsign == 1) {
                                     new Thread(down_log).start();
                                 } else if (Value.modelsign == 2) {
@@ -2469,7 +2608,20 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 } else if (Value.modelsign == 3) {
                                     new Thread(down_log).start();
                                 }
+                            } else if (text.startsWith("STOP")) {
+                                sendValue.send("END");
+                                sleep(100);
+                            } else if (text.startsWith("END")) {
+                                if(!Value.phonename.matches("Huawei")) {
+                                    sendValue.send("Delay00000");
+                                    sleep(100);
+                                }
+                                else {
+                                    sendValue.send("Delay00015");
+                                    sleep(100);
+                                }
                             }
+
                         }
                         /*if (send == 0 || send == 1) {
                             if (text.matches("OVER")) {
@@ -2584,7 +2736,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                     Log.e(TAG, "P_word = " + Value.P_word);
                                 }
                             }*/
-                    } catch (UnsupportedEncodingException /*| InterruptedException | JSONException*/ e) {
+                    } catch (UnsupportedEncodingException | InterruptedException /*| JSONException*/ e) {
                         e.printStackTrace();
                     }
                 });
@@ -2709,6 +2861,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             test++;
             Logdata.add(text);
             showtext = String.valueOf(test) + " / " + String.valueOf(totle);
+            showing.setTextSize(21);
             showing.setText(showtext);
             Log.e(TAG, "test = " + test);
             /*if (Logdata.size() == totle) {
@@ -2823,7 +2976,11 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         @Override
         public void run() {
             try {
-                charttime.clear();
+                charttime.clear();  //a
+                timelist.clear();   //b
+                ArrayList<String> a = new ArrayList<>(), b = new ArrayList<>();
+                a.clear();
+                b.clear();
                 String formattime;
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat log_date = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
                 String d_date = Value.Date;
@@ -2834,14 +2991,19 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                         d_time.substring(2, 4) + ":" + d_time.substring(4, 6);
                 String all_date = d_date + " " + d_time;
                 Date date = log_date.parse(all_date);
-                for (int i = Logdata.size(); i > 0; i--) {
+                for (int i = 6000; i > 0; i--) {
                     formattime = log_date.format(date);
-                    charttime.add(formattime);
+                    a.add(formattime);
                     formattime = formattime.substring(3, formattime.indexOf(" ")) + " " +
                             formattime.substring(formattime.indexOf(" ") + 1, formattime.length() - 3);
-                    timelist.add(formattime);
+                    b.add(formattime);
                     date.setTime(date.getTime() + (Integer.valueOf(Value.Inter) * 1000));
                 }
+                for (int i = (6000 - Logdata.size()); i < 6000; i++) {
+                    charttime.add(a.get(i));
+                    timelist.add(b.get(i));
+                }
+
                 Log.e(TAG, "timelist.size() = " + timelist.size());
                 Log.e(TAG, "timelist = " + timelist);
                 jsonflag = 2;
@@ -2859,25 +3021,21 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                 sleep(30);
                 TimeList_json = new JSONArray(timelist);
                 sleep(30);
-                //if(Firstlist.size() != 0) {
+                Collections.reverse(Firstlist);
                 Firstjson = new JSONArray(Firstlist);
                 sleep(30);
-                //}
-                //if(Secondlist.size() != 0) {
+                Collections.reverse(Secondlist);
                 Secondjson = new JSONArray(Secondlist);
                 sleep(30);
-                //}
-                //if(Thirdlist.size() != 0){
-                Log.e(TAG, "Thirdlist = " + Thirdlist.size());
+                Collections.reverse(Thirdlist);
                 Thirdjson = new JSONArray(Thirdlist);
                 sleep(30);
-                //}
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             Log.e(TAG, "charttime = " + charttime);
             Log.e(TAG, "Chart_json = " + Chart_json);
-
+            Value.totle = totle;
             data_Json.insert(Chart_json, TimeList_json, Firstjson,
                     Secondjson, Thirdjson, Value.BID);
             jsonflag = 3;
@@ -3124,11 +3282,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     .setTitle(R.string.warning)
                     .setMessage(R.string.stoprecord)
                     .setPositiveButton(R.string.butoon_yes, (dialog, which) -> {
-                        Value.downloading = true;
                         sendValue.send("END");
-                        ask_Dialog = askDialog(DeviceFunction.this);
-                        ask_Dialog.show();
-                        ask_Dialog.setCanceledOnTouchOutside(false);
+                        Value.opendialog = true;
                     })
                     .setNegativeButton(R.string.butoon_no, (dialog, which) -> {
                         Value.downloading = false;
@@ -3150,7 +3305,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     Value.all_Height, Value.P_word,
                     Value.G_word, Value.E_word, Value.I_word, gettoast1, gettoast2, gettoast3, gettoast4,
                     gettoast5, gettoast6, mBluetoothLeService);
-            modifyPassword.modifyDialog(vibrator);
+            modify = modifyPassword.modifyDialog(vibrator);
+            modify.show();
         } else if (id == R.id.nav_share) {
             if (!Value.downlog) {
                 new AlertDialog.Builder(this)
@@ -3200,6 +3356,14 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void getW_H() {
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        Value.all_Width = dm.widthPixels;
+        Value.all_Height = dm.heightPixels;
+        Log.e(TAG, "height : " + Value.all_Height + "dp" + " " + " width : " + Value.all_Width + "dp");
     }
 
     @Override
@@ -3262,16 +3426,64 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // land do nothing is ok
-            DisplayMetrics dm = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(dm);
-            Value.all_Width = dm.widthPixels;
-            Value.all_Height = dm.heightPixels;
+            if (saveDialog != null) {
+                if (saveDialog.isShowing()) {
+                    saveDialog.dismiss();
+                }
+                ConfigurationChange();
+            }
+            if (showDialog != null) {
+                if (showDialog.isShowing()) {
+                    showDialog.dismiss();
+                }
+                ConfigurationChange();
+            }
+            if (modify != null) {
+                if (modify.isShowing()) {
+                    modify.dismiss();
+                }
+                ConfigurationChange();
+            }
+            if (ask_Dialog != null) {
+                if (!Value.downloading) {
+                    if (ask_Dialog.isShowing()) {
+                        ask_Dialog.dismiss();
+                        Value.opendialog = false;
+                        Value.downloading = false;
+                    }
+                    ConfigurationChange();
+                }
+            }
         } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             // port do nothing is ok
-            DisplayMetrics dm = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(dm);
-            Value.all_Width = dm.widthPixels;
-            Value.all_Height = dm.heightPixels;
+            if (saveDialog != null) {
+                if (saveDialog.isShowing()) {
+                    saveDialog.dismiss();
+                }
+                ConfigurationChange();
+            }
+            if (showDialog != null) {
+                if (showDialog.isShowing()) {
+                    showDialog.dismiss();
+                }
+                ConfigurationChange();
+            }
+            if (modify != null) {
+                if (modify.isShowing()) {
+                    modify.dismiss();
+                }
+                ConfigurationChange();
+            }
+            if (ask_Dialog != null) {
+                if (!Value.downloading) {
+                    if (ask_Dialog.isShowing()) {
+                        ask_Dialog.dismiss();
+                        Value.opendialog = false;
+                        Value.downloading = false;
+                    }
+                    ConfigurationChange();
+                }
+            }
         }
     }
 }

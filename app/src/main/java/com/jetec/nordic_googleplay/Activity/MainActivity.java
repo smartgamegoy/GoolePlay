@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
         getW_H();
         String phone = android.os.Build.BRAND;    //手機廠商
+        Value.phonename = phone;
         Log.e(TAG,"phone = " + phone);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

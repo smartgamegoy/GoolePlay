@@ -101,6 +101,7 @@ public class JsonSQL extends SQLiteOpenHelper {
         Cursor cursor=db.rawQuery("SELECT * FROM " + table_name + " WHERE address = ?", new String[] {address});
         Log.e("myLog","cursor =" + cursor.getCount());
         cursor.moveToFirst();
+        Log.e("myLog","cursor.moveToFirst = " + cursor.moveToFirst());
         String Charttime = cursor.getString(cursor.getColumnIndex("Charttime"));
         String Timelist = cursor.getString(cursor.getColumnIndex("Timelist"));
         String Firstlist = cursor.getString(cursor.getColumnIndex("Firstlist"));
@@ -114,5 +115,17 @@ public class JsonSQL extends SQLiteOpenHelper {
         dataList.add(Thirdlist);
 
         return dataList;
+    }
+
+    public Boolean searchJson(String address){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor=db.rawQuery("SELECT * FROM " + table_name + " WHERE address = ?", new String[] {address});
+        if(cursor.getCount() != 0) {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

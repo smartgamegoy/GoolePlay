@@ -117,6 +117,8 @@ public class LogChartView extends AppCompatActivity {
         Firstlist = Value.Firstlist;
         List_d_num = Value.List_d_num;
 
+        new Thread(packagecsv).start();
+        new Thread(makepdf).start();
         logview();
     }
 
@@ -168,9 +170,6 @@ public class LogChartView extends AppCompatActivity {
         Button b4 = findViewById(R.id.button4);
 
         running = writeDialog(this, getString(R.string.process));
-
-        new Thread(packagecsv).start();
-        new Thread(makepdf).start();
 
         b1.setOnClickListener(v -> {
             vibrator.vibrate(100);

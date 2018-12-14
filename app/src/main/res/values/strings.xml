@@ -159,4 +159,6 @@
     <string name="PDFreport">PDF report</string>
     <string name="print">Print</string>
     <string name="process">Under processing</string>
+    <string name="cant_reconnect">Lose Bluetooth signal, please reconnected!</string>
+    <string name="downloadfail">Data is incomplete whitch was download fail, please try it again!</string>
 </resources>

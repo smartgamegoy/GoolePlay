@@ -159,4 +159,6 @@
     <string name="PDFreport">PDF報表</string>
     <string name="print">列印</string>
     <string name="process">資料處理中</string>
+    <string name="cant_reconnect">失去藍牙信號，請重新連線!</string>
+    <string name="downloadfail">資料下載不完全，請重新下載</string>
 </resources>

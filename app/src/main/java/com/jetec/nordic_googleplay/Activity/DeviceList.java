@@ -11,7 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -20,6 +22,7 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -85,8 +88,12 @@ public class DeviceList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+            setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
+
         BluetoothManager bluetoothManager = getManager(this);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         modelSQL = new ModelSQL(this);
@@ -115,11 +122,20 @@ public class DeviceList extends AppCompatActivity {
         show_device();
     }
 
+    private void getW_H(){
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        Value.all_Width = dm.widthPixels;
+        Value.all_Height = dm.heightPixels;
+        Log.e(TAG, "height : " + Value.all_Height + "dp" + " " + " width : " + Value.all_Width + "dp");
+    }
+
     private void show_device() {
 
         setContentView(R.layout.activity_main);
         flag = 0;
 
+        getW_H();
         mHandler = new Handler();
         checkDeviceName = new CheckDeviceName();
         setString = new GetString();
@@ -329,7 +345,11 @@ public class DeviceList extends AppCompatActivity {
                             Value.connected = true;
                             flag = 1;
                             check();
-                        } else {
+                        }else if(text.startsWith("+") || text.startsWith("-")){
+                            sleep(300);
+                            sendValue.send("STOP");
+                        }
+                        else {
                             if (!text.startsWith("OVER")) {
                                 if (!(text.startsWith("COUNT") || text.startsWith("DATE") ||
                                         text.startsWith("TIME") || text.matches("LOGON") ||
@@ -359,10 +379,14 @@ public class DeviceList extends AppCompatActivity {
                                     Value.SelectItem = SelectItem;
                                     Value.DataSave = DataSave;
                                     Value.return_RX = return_RX;
+                                    Value.get_noti = false;
                                     //sendLog.interrupt();
                                     Log.e(TAG,"Dialog.dismiss");
                                     Log.e(TAG,"Dialog.dismiss2");
-                                    device_function();
+                                    if(!Value.Engin)
+                                        device_function();
+                                    else
+                                        Engineer_function();
                                 }
                             } else {
                                 Log.e(TAG, "Loging = " + text);
@@ -492,8 +516,14 @@ public class DeviceList extends AppCompatActivity {
             tv.setTextColor(context.getResources().getColor(R.color.colorDialog));
         }
 
-        progressDialog.setContentView(layout, new LinearLayout.LayoutParams((int) (Value.all_Width / 2),
-                (int) (Value.all_Height / 5)));
+        if(Value.all_Height > Value.all_Width) {
+            progressDialog.setContentView(layout, new LinearLayout.LayoutParams((int) (Value.all_Width / 2),
+                    (int) (Value.all_Height / 5)));
+        }
+        else {
+            progressDialog.setContentView(layout, new LinearLayout.LayoutParams((int) (Value.all_Width / 4),
+                    (int) (Value.all_Height / 3)));
+        }
 
         return progressDialog;
     }
@@ -507,6 +537,8 @@ public class DeviceList extends AppCompatActivity {
         Button bn = findViewById(R.id.button1);
         TextView t1 = findViewById(R.id.textView3);
         EditText e1 = findViewById(R.id.editText1);
+
+        getW_H();
 
         Log.e(TAG,"Dialog.dismiss");
         progressDialog.dismiss();
@@ -523,15 +555,18 @@ public class DeviceList extends AppCompatActivity {
                 if (e1.getText().toString().trim().matches(Value.E_word)) {
                     Value.passwordFlag = 1;
                     Log.e(TAG, "管理者 登入");
-                    login();
+                    Value.get_noti = true;
+                    Engin();
                 } else if (e1.getText().toString().trim().matches(Value.P_word)) {
                     Value.passwordFlag = 2;
                     Log.e(TAG, "客戶 登入");
+                    Value.get_noti = true;
                     login();
                 } else if (e1.getText().toString().trim().matches(Value.I_word)) {
                     Toast.makeText(DeviceList.this, getString(R.string.initialization), Toast.LENGTH_SHORT).show();
                     initialization = new Initialization(Value.deviceModel, mBluetoothLeService);
                     try {
+                        Value.get_noti = true;
                         initialization.start();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -541,6 +576,7 @@ public class DeviceList extends AppCompatActivity {
                     login();
                 } else if (e1.getText().toString().trim().matches(Value.G_word)) {
                     Value.passwordFlag = 4;
+                    Value.get_noti = true;
                     Log.e(TAG, "訪客 登入");
                     login();
                 } else {
@@ -557,6 +593,7 @@ public class DeviceList extends AppCompatActivity {
                 //noinspection deprecation
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);
                 Value.connected = false;
+                Value.get_noti = false;
                 Service_close();
                 if (s_connect) {
                     s_connect = false;
@@ -564,6 +601,35 @@ public class DeviceList extends AppCompatActivity {
             }
             show_device();
         });
+    }
+
+    private void Engin(){
+        Value.Engin = true;
+        if(progressDialog2 != null && progressDialog2.isShowing()){
+            Log.e(TAG,"Dialog.dismiss2");
+            progressDialog2.dismiss();
+        }
+        check = 0;
+        SelectItem.add("NAME");
+        DataSave.add(device.getName());
+        sendValue.send("get");
+        progressDialog2 = writeDialog(DeviceList.this, getString(R.string.login));
+        if(!progressDialog2.isShowing()) {
+            Log.e(TAG,"Dialog2");
+            progressDialog2.show();
+            progressDialog2.setCanceledOnTouchOutside(false);
+        }
+        new Thread(timedelay).start();
+    }
+
+    private void Engineer_function() {
+
+        Intent intent = new Intent(DeviceList.this, Engineer.class);
+
+        startActivity(intent);
+        progressDialog.dismiss();
+        progressDialog2.dismiss();
+        finish();
     }
 
     private void device_function() {
@@ -607,6 +673,7 @@ public class DeviceList extends AppCompatActivity {
                     if (mBluetoothAdapter != null)
                         //noinspection deprecation
                         mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    Value.get_noti = false;
                     Service_close();
                     show_device();
                 }

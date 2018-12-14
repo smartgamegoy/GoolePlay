@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Vibrator;
+import android.support.constraint.ConstraintLayout;
+import android.text.InputType;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,17 +47,26 @@ public class ModifyPassword {
         this.bluetoothLeService = bluetoothLeService;
     }
 
-    public void modifyDialog(Vibrator vibrator) {
+    public Dialog modifyDialog(Vibrator vibrator) {
         Dialog progressDialog = new Dialog(context);
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        progressDialog.show();
 
         @SuppressLint("InflateParams") View v = inflater.inflate(R.layout.modifypassword, null);
-        LinearLayout modifylist = v.findViewById(R.id.modifylist);
+        ConstraintLayout modifylist = v.findViewById(R.id.modifypassword);
         EditText e1 = v.findViewById(R.id.editText1);
         EditText e2 = v.findViewById(R.id.editText2);   //android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@"
         Button by = v.findViewById(R.id.button2);
         Button bn = v.findViewById(R.id.button1);
+
+        e1.setKeyListener(DigitsKeyListener.getInstance(".,$%&^!()-_=+';:|}{[]*→←↘↖、，。?~～#€￠" +
+                "￡￥abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@>/<"));
+        //e1.setKeyListener(DigitsKeyListener.getInstance("abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789."));
+        e1.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+
+        e2.setKeyListener(DigitsKeyListener.getInstance(".,$%&^!()-_=+';:|}{[]*→←↘↖、，。?~～#€￠" +
+                "￡￥abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@>/<"));
+        //e1.setKeyListener(DigitsKeyListener.getInstance("abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789."));
+        e2.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
         by.setOnClickListener(v12 -> {
             vibrator.vibrate(100);
@@ -96,9 +108,16 @@ public class ModifyPassword {
             progressDialog.dismiss();
         });
 
-        progressDialog.setContentView(modifylist, new LinearLayout.LayoutParams((int)(3 * all_Width / 5),
-                (int)(2 * all_Height / 7)));
+        if(all_Height > all_Width) {
+            progressDialog.setContentView(modifylist, new ConstraintLayout.LayoutParams((int) (3 * all_Width / 5),
+                    (int) (all_Height / 2)));
+        }
+        else {
+            progressDialog.setContentView(modifylist, new ConstraintLayout.LayoutParams((int) (2 * all_Width / 5),
+                    (int) (5 * all_Height / 6)));
+        }
 
+        return progressDialog;
     }
 
     private void sending(String value) throws UnsupportedEncodingException {
