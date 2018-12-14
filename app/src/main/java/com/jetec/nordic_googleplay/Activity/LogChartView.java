@@ -5,10 +5,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.Vibrator;
@@ -25,7 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
 import com.itextpdf.kernel.font.PdfFont;
@@ -59,7 +60,6 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.opencsv.CSVWriter;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -70,8 +70,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static java.lang.Thread.sleep;
 
 public class LogChartView extends AppCompatActivity {
 
@@ -97,6 +95,7 @@ public class LogChartView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.logview); //布局
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
@@ -118,7 +117,10 @@ public class LogChartView extends AppCompatActivity {
         List_d_num = Value.List_d_num;
 
         new Thread(packagecsv).start();
-        new Thread(makepdf).start();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
+            new Thread(makepdf).start();
+        }
+
         logview();
     }
 
@@ -169,6 +171,10 @@ public class LogChartView extends AppCompatActivity {
         Button b3 = findViewById(R.id.button3);
         Button b4 = findViewById(R.id.button4);
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+            b4.setEnabled(false);
+        }
+
         running = writeDialog(this, getString(R.string.process));
 
         b1.setOnClickListener(v -> {
@@ -196,35 +202,51 @@ public class LogChartView extends AppCompatActivity {
 
         b3.setOnClickListener(v -> {
             vibrator.vibrate(100);
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.report)
-                    .setMessage(R.string.choose)
-                    .setPositiveButton(R.string.CSV, (dialog, which) -> {
-                        vibrator.vibrate(100);
-                        csvuri = Uri.fromFile(file);
-                        Intent shareIntent = new Intent();
-                        shareIntent.setAction(Intent.ACTION_SEND);
-                        shareIntent.putExtra(Intent.EXTRA_STREAM, csvuri);
-                        shareIntent.setType("text/*");
-                        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
-                    })
-                    .setNegativeButton(R.string.PDF, (dialog, which) -> {
-                        vibrator.vibrate(100);
-                        flag = 1;
-                        if(!setdpp){
-                            running.show();
-                            running.setCanceledOnTouchOutside(false);
-                        }
-                        else {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.report)
+                        .setMessage(R.string.choose)
+                        .setPositiveButton(R.string.CSV, (dialog, which) -> {
+                            vibrator.vibrate(100);
+                            csvuri = Uri.fromFile(file);
                             Intent shareIntent = new Intent();
                             shareIntent.setAction(Intent.ACTION_SEND);
-                            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(pdffile));
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, csvuri);
                             shareIntent.setType("text/*");
                             startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
-                        }
-                    })
-                    .setNeutralButton(R.string.mes_no, (dialog, which) -> vibrator.vibrate(100))
-                    .show();
+                        })
+                        .setNegativeButton(R.string.PDF, (dialog, which) -> {
+                            vibrator.vibrate(100);
+                            flag = 1;
+                            if (!setdpp) {
+                                running.show();
+                                running.setCanceledOnTouchOutside(false);
+                            } else {
+                                Intent shareIntent = new Intent();
+                                shareIntent.setAction(Intent.ACTION_SEND);
+                                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(pdffile));
+                                shareIntent.setType("text/*");
+                                startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+                            }
+                        })
+                        .setNeutralButton(R.string.mes_no, (dialog, which) -> vibrator.vibrate(100))
+                        .show();
+            }else {
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.report)
+                        .setMessage(R.string.choose)
+                        .setPositiveButton(R.string.CSV, (dialog, which) -> {
+                            vibrator.vibrate(100);
+                            csvuri = Uri.fromFile(file);
+                            Intent shareIntent = new Intent();
+                            shareIntent.setAction(Intent.ACTION_SEND);
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, csvuri);
+                            shareIntent.setType("text/*");
+                            startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+                        })
+                        .setNeutralButton(R.string.mes_no, (dialog, which) -> vibrator.vibrate(100))
+                        .show();
+            }
         });
 
         b4.setOnClickListener(new View.OnClickListener() {

@@ -2612,8 +2612,12 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 sendValue.send("END");
                                 sleep(100);
                             } else if (text.startsWith("END")) {
-                                if(!Value.phonename.matches("Huawei")) {
+                                if(!Value.phonename.matches("Huawei") && !Value.phonename.matches("asus")) {
                                     sendValue.send("Delay00000");
+                                    sleep(100);
+                                }
+                                else if(Value.phonename.matches("asus")){
+                                    sendValue.send("Delay00008");
                                     sleep(100);
                                 }
                                 else {
