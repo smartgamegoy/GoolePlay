@@ -161,4 +161,8 @@
     <string name="process">资料处理中</string>
     <string name="cant_reconnect">失去蓝牙信号，请重新连线!</string>
     <string name="downloadfail">资料下载不完全，请重新下载</string>
+    <string name="stable">稳定</string>
+    <string name="highspeed">高速</string>
+    <string name="choseway">选择下载方式</string>
+    <string name="chosewaymessage">高速下载仅适用较高阶之手机设备</string>
 </resources>

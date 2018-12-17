@@ -1,42 +1,24 @@
 package com.jetec.nordic_googleplay.CreatPDF;
 
-import android.util.Log;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
+import com.itextpdf.text.pdf.PdfWriter;
 
-import com.itextpdf.kernel.events.Event;
-import com.itextpdf.kernel.events.IEventHandler;
-import com.itextpdf.kernel.events.PdfDocumentEvent;
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.kernel.geom.Rectangle;
-import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
-import com.itextpdf.layout.Document;
-import java.io.IOException;
+public class HeaderHandler extends PdfPageEventHelper {
 
-public class HeaderHandler implements IEventHandler {
+    private Phrase header;
 
-    private Document doc;
-    private PdfFont font;
-    private String title;
-
-    public HeaderHandler(Document doc, String title) throws IOException {
-        this.doc = doc;
-        font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UTF16-H",true);
-        this.title = title;
+    public void setHeader(Phrase header) {
+        this.header = header;
     }
+
     @Override
-    public void handleEvent(Event event) {
-        PdfDocumentEvent docEvent = (PdfDocumentEvent) event;
-        PdfCanvas canvas_header = new PdfCanvas(docEvent.getPage());
-        PdfCanvas canvas_footer = new PdfCanvas(docEvent.getPage());
-        Rectangle pageSize = docEvent.getPage().getPageSize();
-        canvas_header.beginText();
-        canvas_footer.beginText();
-        Log.e("footer","pageSize.getBottom() =" + pageSize.getBottom());
-        Log.e("footer","畫在這 =" + (pageSize.getBottom() + doc.getBottomMargin()));
-        canvas_header.moveText(doc.getLeftMargin(), pageSize.getTop() - doc.getTopMargin() + 5)
-                .setFontAndSize(font, 15)
-                .showText(title)
-                .endText()
-                .release();
+    public void onEndPage(PdfWriter writer, Document document) {
+        PdfContentByte canvas = writer.getDirectContentUnder();// 220 820
+        ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, header, 45, 810, 0);
     }
 }

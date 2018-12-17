@@ -3,9 +3,7 @@ package com.jetec.nordic_googleplay.Activity;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -27,18 +25,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.itextpdf.io.font.FontConstants;
-import com.itextpdf.kernel.events.PdfDocumentEvent;
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.TextAlignment;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.jetec.nordic_googleplay.CreatPDF.CreatTable;
 import com.jetec.nordic_googleplay.CreatPDF.FooterHandler;
 import com.jetec.nordic_googleplay.CreatPDF.HeaderHandler;
 import com.jetec.nordic_googleplay.R;
@@ -60,15 +55,12 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.opencsv.CSVWriter;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class LogChartView extends AppCompatActivity {
@@ -117,9 +109,7 @@ public class LogChartView extends AppCompatActivity {
         List_d_num = Value.List_d_num;
 
         new Thread(packagecsv).start();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
-            new Thread(makepdf).start();
-        }
+        new Thread(makepdf).start();
 
         logview();
     }
@@ -171,10 +161,6 @@ public class LogChartView extends AppCompatActivity {
         Button b3 = findViewById(R.id.button3);
         Button b4 = findViewById(R.id.button4);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
-            b4.setEnabled(false);
-        }
-
         running = writeDialog(this, getString(R.string.process));
 
         b1.setOnClickListener(v -> {
@@ -202,51 +188,48 @@ public class LogChartView extends AppCompatActivity {
 
         b3.setOnClickListener(v -> {
             vibrator.vibrate(100);
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.report)
-                        .setMessage(R.string.choose)
-                        .setPositiveButton(R.string.CSV, (dialog, which) -> {
-                            vibrator.vibrate(100);
-                            csvuri = Uri.fromFile(file);
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.report)
+                    .setMessage(R.string.choose)
+                    .setPositiveButton(R.string.CSV, (dialog, which) -> {
+                        vibrator.vibrate(100);
+                        csvuri = Uri.fromFile(file);
+                        Intent shareIntent = new Intent();
+                        shareIntent.setAction(Intent.ACTION_SEND);
+                        shareIntent.putExtra(Intent.EXTRA_STREAM, csvuri);
+                        shareIntent.setType("text/*");
+                        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+                    })
+                    .setNegativeButton(R.string.PDF, (dialog, which) -> {
+                        vibrator.vibrate(100);
+                        flag = 1;
+                        if (!setdpp) {
+                            running.show();
+                            running.setCanceledOnTouchOutside(false);
+                        } else {
                             Intent shareIntent = new Intent();
                             shareIntent.setAction(Intent.ACTION_SEND);
-                            shareIntent.putExtra(Intent.EXTRA_STREAM, csvuri);
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(pdffile));
                             shareIntent.setType("text/*");
                             startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
-                        })
-                        .setNegativeButton(R.string.PDF, (dialog, which) -> {
-                            vibrator.vibrate(100);
-                            flag = 1;
-                            if (!setdpp) {
-                                running.show();
-                                running.setCanceledOnTouchOutside(false);
-                            } else {
-                                Intent shareIntent = new Intent();
-                                shareIntent.setAction(Intent.ACTION_SEND);
-                                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(pdffile));
-                                shareIntent.setType("text/*");
-                                startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
-                            }
-                        })
-                        .setNeutralButton(R.string.mes_no, (dialog, which) -> vibrator.vibrate(100))
-                        .show();
-            }else {
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.report)
-                        .setMessage(R.string.choose)
-                        .setPositiveButton(R.string.CSV, (dialog, which) -> {
-                            vibrator.vibrate(100);
-                            csvuri = Uri.fromFile(file);
-                            Intent shareIntent = new Intent();
-                            shareIntent.setAction(Intent.ACTION_SEND);
-                            shareIntent.putExtra(Intent.EXTRA_STREAM, csvuri);
-                            shareIntent.setType("text/*");
-                            startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
-                        })
-                        .setNeutralButton(R.string.mes_no, (dialog, which) -> vibrator.vibrate(100))
-                        .show();
-            }
+                        }
+                    })
+                    .setNeutralButton(R.string.mes_no, (dialog, which) -> vibrator.vibrate(100))
+                    .show();
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.report)
+                    .setMessage(R.string.choose)
+                    .setPositiveButton(R.string.CSV, (dialog, which) -> {
+                        vibrator.vibrate(100);
+                        csvuri = Uri.fromFile(file);
+                        Intent shareIntent = new Intent();
+                        shareIntent.setAction(Intent.ACTION_SEND);
+                        shareIntent.putExtra(Intent.EXTRA_STREAM, csvuri);
+                        shareIntent.setType("text/*");
+                        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+                    })
+                    .setNeutralButton(R.string.mes_no, (dialog, which) -> vibrator.vibrate(100))
+                    .show();
         });
 
         b4.setOnClickListener(new View.OnClickListener() {
@@ -254,11 +237,10 @@ public class LogChartView extends AppCompatActivity {
             public void onClick(View v) {
                 vibrator.vibrate(100);
                 flag = 2;
-                if(!setdpp){
+                if (!setdpp) {
                     running.show();
                     running.setCanceledOnTouchOutside(false);
-                }
-                else {
+                } else {
                     Intent intent = new Intent(LogChartView.this, PDFView.class);
                     startActivity(intent);
                     finish();
@@ -777,287 +759,52 @@ public class LogChartView extends AppCompatActivity {
             String fileName = "JetecRemote" + ".pdf";
             String filePath = baseDir + File.separator + fileName;
             pdffile = new File(filePath);
-            try {
-                fOut = new FileOutputStream(pdffile);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
             Log.e(TAG, "file = " + pdffile);
             try {
-                PdfFont simpleEn = PdfFontFactory.createFont(FontConstants.COURIER);
-                PdfWriter pdfWriter = new PdfWriter(filePath);
-                PdfDocument pdfDoc = new PdfDocument(pdfWriter);
 
-                Document document = new Document(pdfDoc, PageSize.A4);
-                document.setMargins(40, 20, 40, 20);
-
-                int count = Value.modelsign, alldata = Value.charttime.size(), page;
-                if (alldata % 260 == 0) {
-                    page = alldata / 260;
+                int alldata = Value.charttime.size(), page;
+                if (alldata % 300 == 0) {
+                    page = alldata / 300;
                 } else {
-                    page = (alldata / 260) + 1;
+                    page = (alldata / 300) + 1;
                 }
 
-                HeaderHandler headerHandler = new HeaderHandler(document, Value.BName);
-                Log.e(TAG, "BName = " + Value.BName);
-                FooterHandler footerHandler = new FooterHandler(document, page);
+                HeaderHandler head = new HeaderHandler();
+                FooterHandler foot = new FooterHandler();
+                CreatTable table = new CreatTable();
+                Document document = new Document(PageSize.A4, -20, -20, 40, 40);
+                FileOutputStream fOut = new FileOutputStream(pdffile);
+                PdfWriter writer = PdfWriter.getInstance(document, fOut);
+                BaseFont bfChinese = BaseFont.createFont("STSongStd-Light", "UniGB-UTF16-H", true);
+                Font chineseFont = new Font(bfChinese, 12, Font.NORMAL);
+                String gettitle = Value.BName;
+                Paragraph title = new Paragraph(gettitle, chineseFont);
+                head.setHeader(title);
+                foot.setallpage(page);
+                writer.setPageEvent(head);
+                writer.setPageEvent(foot);
 
-                pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, headerHandler);
-                pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, footerHandler);
-
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat log_date = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
-                if (count == 1) {
-                    //noinspection deprecation
-                    Table table = new Table((count + 2) * 4);
-                    for (int i = 0; i < page; i++) {
-                        for (int j = 0; j < 4; j++) {
-                            Paragraph a = new Paragraph(getString(R.string.pdftime)).setFont(simpleEn).setFontSize(6.3f);
-                            Paragraph b = new Paragraph(""), c = new Paragraph(""), d = new Paragraph("");
-                            Cell cell = new Cell(1, 2).add(a)
-                                    .setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
-                            cell.setHeight(7f);
-                            table.addCell(cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-
-                            if (Value.name.get(0).toString().matches("I")) {
-                                b = new Paragraph(getString(R.string.pdf1st)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(0).toString().matches("T")) {
-                                b = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(0).toString().matches("H")) {
-                                b = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(0).toString().matches("C")) {
-                                b = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            Cell cell2 = new Cell(1, 1).add(b);
-                            cell2.setHeight(7f);
-                            table.addCell(cell2.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-                        }
-                        for (int k = (260 * i); k < 65 + (260 * i); k++) {
-                            for (int l = 0; l < 4; l++) {
-                                Paragraph s1list, s2list, s3list, s4list;
-                                ArrayList<String> date = Value.charttime;
-                                Date setdate;
-                                if (k % 65 == 0) {
-                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("yyyy-MM-dd");
-                                    if ((k + (l * 65)) < date.size()) {
-                                        setdate = log_date.parse(date.get((k + (l * 65))));
-                                        s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
-                                    } else {
-                                        s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
-                                    }
-                                } else {
-                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("HH:mm:ss");
-                                    if ((k + (l * 65)) < date.size()) {
-                                        setdate = log_date.parse(date.get((k + (l * 65))));
-                                        s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
-                                    } else {
-                                        s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
-                                    }
-                                }
-                                if ((k + (l * 65)) < date.size()) {
-                                    s2list = new Paragraph(Firstlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
-                                } else {
-                                    s2list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
-                                }
-                                Cell s1cell = new Cell(1, 2).add(s1list).setHeight(7f).setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
-                                Cell s2cell = new Cell(1, 1).add(s2list).setHeight(7f);
-                                table.addCell(s1cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-                                table.addCell(s2cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-                            }
-                        }
-                    }
-                    document.add(table);
-                } else if (count == 2) {
-                    //noinspection deprecation
-                    Table table = new Table((count + 2) * 4);
-                    for (int i = 0; i < page; i++) {
-                        for (int j = 0; j < 4; j++) {
-                            Paragraph a = new Paragraph(getString(R.string.pdftime)).setFont(simpleEn).setFontSize(6.3f);
-                            Paragraph b = new Paragraph(""), c = new Paragraph(""), d = new Paragraph("");
-                            Cell cell = new Cell(1, 2).add(a)
-                                    .setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
-                            cell.setHeight(7f);
-                            table.addCell(cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-
-                            if (Value.name.get(0).toString().matches("I")) {
-                                b = new Paragraph(getString(R.string.pdf1st)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(0).toString().matches("T")) {
-                                b = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(0).toString().matches("H")) {
-                                b = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(0).toString().matches("C")) {
-                                b = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            Cell cell2 = new Cell(1, 1).add(b);
-                            cell2.setHeight(7f);
-                            table.addCell(cell2.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-
-                            if (Value.name.get(1).toString().matches("I")) {
-                                c = new Paragraph(getString(R.string.pdf2nd)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(1).toString().matches("T")) {
-                                c = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(1).toString().matches("H")) {
-                                c = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(1).toString().matches("C")) {
-                                c = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            Cell cell3 = new Cell(1, 1).add(c);
-                            cell3.setHeight(7f);
-                            table.addCell(cell3.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-                        }
-                        for (int k = (260 * i); k < 65 + (260 * i); k++) {
-                            for (int l = 0; l < 4; l++) {
-                                Paragraph s1list, s2list, s3list, s4list;
-                                ArrayList<String> date = Value.charttime;
-                                Date setdate;
-                                if (k % 65 == 0) {
-                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("yyyy-MM-dd");
-                                    if ((k + (l * 65)) < date.size()) {
-                                        setdate = log_date.parse(date.get((k + (l * 65))));
-                                        s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
-                                    } else {
-                                        s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
-                                    }
-                                } else {
-                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("HH:mm:ss");
-                                    if ((k + (l * 65)) < date.size()) {
-                                        setdate = log_date.parse(date.get((k + (l * 65))));
-                                        s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
-                                    } else {
-                                        s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
-                                    }
-                                }
-                                if ((k + (l * 65)) < date.size()) {
-                                    s2list = new Paragraph(Firstlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
-                                    s3list = new Paragraph(Secondlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
-                                } else {
-                                    s2list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
-                                    s3list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
-                                }
-                                Cell s1cell = new Cell(1, 2).add(s1list).setHeight(7f).setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
-                                Cell s2cell = new Cell(1, 1).add(s2list).setHeight(7f);
-                                Cell s3cell = new Cell(1, 1).add(s3list).setHeight(7f);
-                                table.addCell(s1cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-                                table.addCell(s2cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-                                table.addCell(s3cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-                            }
-                        }
-                    }
-                    document.add(table);
-                } else if (count == 3) {
-                    //noinspection deprecation
-                    Table table = new Table((count + 2) * 4);
-                    for (int i = 0; i < page; i++) {
-                        for (int j = 0; j < 4; j++) {
-                            Paragraph a = new Paragraph(getString(R.string.pdftime)).setFont(simpleEn).setFontSize(6.3f);
-                            Paragraph b = new Paragraph(""), c = new Paragraph(""), d = new Paragraph("");
-                            Cell cell = new Cell(1, 2).add(a)
-                                    .setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
-                            cell.setHeight(7f);
-                            table.addCell(cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-
-                            if (Value.name.get(0).toString().matches("I")) {
-                                b = new Paragraph(getString(R.string.pdf1st)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(0).toString().matches("T")) {
-                                b = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(0).toString().matches("H")) {
-                                b = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(0).toString().matches("C")) {
-                                b = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            Cell cell2 = new Cell(1, 1).add(b);
-                            cell2.setHeight(7f);
-                            table.addCell(cell2.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-
-                            if (Value.name.get(1).toString().matches("I")) {
-                                c = new Paragraph(getString(R.string.pdf2nd)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(1).toString().matches("T")) {
-                                c = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(1).toString().matches("H")) {
-                                c = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(1).toString().matches("C")) {
-                                c = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            Cell cell3 = new Cell(1, 1).add(c);
-                            cell3.setHeight(7f);
-                            table.addCell(cell3.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-
-                            if (Value.name.get(2).toString().matches("I")) {
-                                d = new Paragraph(getString(R.string.pdf3rd)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(2).toString().matches("T")) {
-                                d = new Paragraph(getString(R.string.pdfT)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(2).toString().matches("H")) {
-                                d = new Paragraph(getString(R.string.pdfH)).setFont(simpleEn).setFontSize(6.3f);
-                            } else if (Value.name.get(2).toString().matches("C")) {
-                                d = new Paragraph(getString(R.string.pdfC)).setFont(simpleEn).setFontSize(6.3f);
-                            }
-                            Cell cell4 = new Cell(1, 1).add(d);
-                            cell4.setHeight(7f);
-                            table.addCell(cell4.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-                        }
-                        for (int k = (260 * i); k < 65 + (260 * i); k++) {
-                            for (int l = 0; l < 4; l++) {
-                                Paragraph s1list, s2list, s3list, s4list;
-                                ArrayList<String> date = Value.charttime;
-                                Date setdate;
-                                if (k % 65 == 0) {
-                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("yyyy-MM-dd");
-                                    if ((k + (l * 65)) < date.size()) {
-                                        setdate = log_date.parse(date.get((k + (l * 65))));
-                                        s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
-                                    } else {
-                                        s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
-                                    }
-                                } else {
-                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat newdate = new SimpleDateFormat("HH:mm:ss");
-                                    if ((k + (l * 65)) < date.size()) {
-                                        setdate = log_date.parse(date.get((k + (l * 65))));
-                                        s1list = new Paragraph(newdate.format(setdate)).setFont(simpleEn).setFontSize(6.3f);
-                                    } else {
-                                        s1list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
-                                    }
-                                }
-                                if ((k + (l * 65)) < date.size()) {
-                                    s2list = new Paragraph(Firstlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
-                                    s3list = new Paragraph(Secondlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
-                                    s4list = new Paragraph(Thirdlist.get((k + (l * 65)))).setFont(simpleEn).setFontSize(6.3f);
-                                } else {
-                                    s2list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
-                                    s3list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
-                                    s4list = new Paragraph("").setFont(simpleEn).setFontSize(6.3f);
-                                }
-                                Cell s1cell = new Cell(1, 2).add(s1list).setHeight(7f).setBackgroundColor(com.itextpdf.kernel.color.Color.LIGHT_GRAY);
-                                Cell s2cell = new Cell(1, 1).add(s2list).setHeight(7f);
-                                Cell s3cell = new Cell(1, 1).add(s3list).setHeight(7f);
-                                Cell s4cell = new Cell(1, 1).add(s4list).setHeight(7f);
-                                table.addCell(s1cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-                                table.addCell(s2cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-                                table.addCell(s3cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-                                table.addCell(s4cell.clone(true)).setTextAlignment(TextAlignment.RIGHT);
-                            }
-                        }
-                    }
-                    document.add(table);
-                }
+                document.open();
+                table.setList(LogChartView.this, Firstlist, Secondlist, Thirdlist, charttime, page);
+                document.add(table.createTable(document));
                 document.close();
                 Log.e(TAG, "已完成");
                 setdpp = true;
-                if(running.isShowing()){
+                if (running.isShowing()) {
                     running.dismiss();
-                    if(flag == 1){
+                    if (flag == 1) {
                         Intent shareIntent = new Intent();
                         shareIntent.setAction(Intent.ACTION_SEND);
                         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(pdffile));
                         shareIntent.setType("text/*");
                         startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
-                    }
-                    else if(flag == 2){
+                    } else if (flag == 2) {
                         Intent intent = new Intent(LogChartView.this, PDFView.class);
                         startActivity(intent);
                         finish();
                     }
                 }
-                //Toast.makeText(LogChartView.this, "Complete！", Toast.LENGTH_SHORT).show();
-            } catch (IOException | ParseException e) {
+            } catch (IOException | DocumentException e) {
                 e.printStackTrace();
             }
         }

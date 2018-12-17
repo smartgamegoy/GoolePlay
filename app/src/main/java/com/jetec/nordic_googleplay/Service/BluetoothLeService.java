@@ -21,7 +21,9 @@ import android.util.Log;
 
 import com.jetec.nordic_googleplay.Value;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,7 +60,8 @@ public class BluetoothLeService extends Service {
     public static String HEART_RATE_MEASUREMENT = "00002a37-0000-1000-8000-00805f9b34fb";
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
 
-    public int flag = 0, MTU;
+    public int flag = 0, count = 0;
+    private ArrayList<String> loglist = new ArrayList<>();
 
     public void enableTXNotification() {
         //Log.e(TAG,"高速藍牙");
@@ -76,8 +79,13 @@ public class BluetoothLeService extends Service {
             return;
         }
         mBluetoothGatt.setCharacteristicNotification(TxChar, true);
-        if(!Value.phonename.matches("Huawei"))
+        //if(Value.phonename.matches("xiaomi"))
+            //mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+        //else if(Value.phonename.matches("asus"))
+            //mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+        if(Value.connect_flag == 1){
             mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+        }
         BluetoothGattDescriptor descriptor = TxChar.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
@@ -106,11 +114,14 @@ public class BluetoothLeService extends Service {
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
+
+        int getstatus;
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 //gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+                getstatus = status;
                 gatt.discoverServices();
                 //onConnectionUpdated(gatt, 6, 0,3200, status);
                 intentAction = ACTION_GATT_CONNECTED;
@@ -122,6 +133,7 @@ public class BluetoothLeService extends Service {
                 Log.e(TAG, "已連線");
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                getstatus = status;
                 Log.e(TAG, "斷線囉");
                 gatt.close();
                 intentAction = ACTION_GATT_DISCONNECTED;
@@ -151,12 +163,43 @@ public class BluetoothLeService extends Service {
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            if(!Value.phonename.matches("Huawei")) {
+            //if(Value.phonename.matches("asus")) {
+                //gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+            /*}
+            else if(Value.phonename.matches("xiaomi")){
+                gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+            }*/
+            //test(characteristic);
+            //flag = 1;
+            //if(flag == 0) {
+            if(Value.connect_flag == 1){
                 gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
             }
-            //flag = 1;
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            //}
         }
+
+        /*private void test(BluetoothGattCharacteristic characteristic){
+            try {
+                String text = new String(characteristic.getValue(), "UTF-8");
+                if(text.startsWith("-") || text.startsWith("+")){
+                    flag = 1;
+                    count++;
+                    loglist.add(text);
+                    Log.e(TAG,"count = " + count);
+                }
+                else if(text.startsWith("INTER")){
+                    loglist.clear();
+                    count = 0;
+                }
+                if(loglist != null && loglist.size() != 0 && text.matches("OVER")){
+                    Log.e(TAG,"count_totle = " + count);
+                    flag = 0;
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }*/
 
         /*public void onConnectionUpdated(BluetoothGatt gatt, int interval, int latency, int timeout,
                                         int status) {
@@ -299,7 +342,7 @@ public class BluetoothLeService extends Service {
         }
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
-        mBluetoothGatt = device.connectGatt(this, true, mGattCallback);
+        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         refreshDeviceCache(mBluetoothGatt);
         Log.d(TAG, "Trying to create a new connection.");
         Log.e(TAG, "refresh = " + refreshDeviceCache(mBluetoothGatt));

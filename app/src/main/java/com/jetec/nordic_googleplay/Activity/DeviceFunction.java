@@ -1933,6 +1933,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         Spinner s1 = v.findViewById(R.id.spinner);
         Button bn = v.findViewById(R.id.button1);
         Button by = v.findViewById(R.id.button2);
+        Button bs = v.findViewById(R.id.button3);
         TextView t2 = v.findViewById(R.id.textView2);
 
         sendValue = new SendValue(mBluetoothLeService);
@@ -1971,20 +1972,19 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
 
         bn.setOnClickListener(v12 -> {
             vibrator.vibrate(100);
-            if (Value.downloading) {
-                Value.downloading = false;
-                sendValue.send("STOP");
-            }
             if (Logdata.size() == totle) {
                 ask_Dialog.dismiss();
                 Value.opendialog = false;
                 Value.downloading = false;
             } else {
-                if (mBluetoothLeService.connect(Value.BID)) {
+                if (mBluetoothLeService.mConnectionState != 0) {
+                    if (Value.downloading) {
+                        Value.stop = true;
+                        sendValue.send("STOP");
+                    }
                     sendValue = new SendValue(mBluetoothLeService);
                     ask_Dialog.dismiss();
                     Value.opendialog = false;
-                    Value.downloading = false;
                 } else {
                     ask_Dialog.dismiss();
                     Value.opendialog = false;
@@ -1996,22 +1996,51 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         by.setOnClickListener(v1 -> {
             vibrator.vibrate(100);
             pb_progress_bar.setVisibility(View.VISIBLE);
-            t2.setVisibility(View.GONE);
-            s1.setVisibility(View.GONE);
-            if (mBluetoothLeService.connect(Value.BID)) {
-                Toast.makeText(DeviceFunction.this, getString(R.string.prepare), Toast.LENGTH_SHORT).show();
-                test = 0;
-                //Service_close();
-                sendValue.send("STOP");
-                if (data_Json.getCount() > 0) {
-                    data_Json.delete(Value.BID);
-                    Log.e(TAG, "刪除紀錄 = " + data_Json.getCount());
-                    data_Json.close();
-                }
-            } else {
-                /*connectThread = new ConnectThread();
-                connectThread.run();*/
-            }
+            new AlertDialog.Builder(DeviceFunction.this)
+                    .setTitle(R.string.choseway)
+                    .setMessage(R.string.chosewaymessage)
+                    .setPositiveButton(R.string.highspeed, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            t2.setVisibility(View.GONE);
+                            s1.setVisibility(View.GONE);
+                            if (mBluetoothLeService.mConnectionState != 0) {
+                                Toast.makeText(DeviceFunction.this, getString(R.string.prepare), Toast.LENGTH_SHORT).show();
+                                test = 0;
+                                Value.connect_flag = 1;
+                                sendValue.send("STOP");
+                                if (data_Json.getCount() > 0) {
+                                    data_Json.delete(Value.BID);
+                                    Log.e(TAG, "刪除紀錄 = " + data_Json.getCount());
+                                    data_Json.close();
+                                }
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.stable, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            t2.setVisibility(View.GONE);
+                            s1.setVisibility(View.GONE);
+                            if (mBluetoothLeService.mConnectionState != 0) {
+                                Toast.makeText(DeviceFunction.this, getString(R.string.prepare), Toast.LENGTH_SHORT).show();
+                                test = 0;
+                                Value.connect_flag = 2;
+                                sendValue.send("STOP");
+                                if (data_Json.getCount() > 0) {
+                                    data_Json.delete(Value.BID);
+                                    Log.e(TAG, "刪除紀錄 = " + data_Json.getCount());
+                                    data_Json.close();
+                                }
+                            }
+                        }
+                    })
+                    .setNeutralButton(R.string.butoon_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .show();
         });
 
         if (Value.all_Height > Value.all_Width) {
@@ -2600,6 +2629,13 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                             } else if (text.startsWith("INTER")) {
                                 Value.Inter = text.substring(5, text.length());
                             } else if (text.startsWith("+") || text.startsWith("-")) {
+                                if(Value.stop){
+                                    Log.e(TAG,"停了");
+                                    if(text.startsWith("+") || text.startsWith("-")){
+                                        Value.downloading = false;
+                                        Value.stop = false;
+                                    }
+                                }
                                 connect_flag = 1;
                                 if (Value.modelsign == 1) {
                                     new Thread(down_log).start();
@@ -2612,134 +2648,29 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 sendValue.send("END");
                                 sleep(100);
                             } else if (text.startsWith("END")) {
-                                if(!Value.phonename.matches("Huawei") && !Value.phonename.matches("asus")) {
+                                if(Value.connect_flag == 1){
+                                    sendValue.send("Delay00000");
+                                    sleep(100);
+                                }
+                                else {
+                                    sendValue.send("Delay00050");
+                                    sleep(100);
+                                }
+                                /*if(!Value.phonename.matches("Huawei") && !Value.phonename.matches("asus")) {
                                     sendValue.send("Delay00000");
                                     sleep(100);
                                 }
                                 else if(Value.phonename.matches("asus")){
-                                    sendValue.send("Delay00008");
+                                    sendValue.send("Delay00050");
                                     sleep(100);
                                 }
                                 else {
-                                    sendValue.send("Delay00015");
+                                    sendValue.send("Delay00020");
                                     sleep(100);
-                                }
+                                }*/
                             }
 
                         }
-                        /*if (send == 0 || send == 1) {
-                            if (text.matches("OVER")) {
-                                    check = check + 1;
-                                    Log.e(TAG, "checkOVER = " + text);
-                                    Log.e(TAG, "check = " + check);
-                                    Log.e(TAG, "RX = " + Value.return_RX);
-                                    show_device_function();
-                                    progressDialog2.dismiss();
-                                } else {
-                                    if (text.startsWith(Jsonlist.get(check))) {
-                                        if (Value.SelectItem != null && Value.SelectItem.size() > 0 && Value.return_RX != null && Value.DataSave != null) {
-                                            if(!(text.startsWith("COUNT") || text.startsWith("DATE") || text.startsWith("TIME") || text.startsWith("LOG"))) {
-                                                Value.SelectItem.add(checkDeviceName.setName(text));
-                                                Value.return_RX.add(text);
-                                                Value.DataSave.add(text);
-                                            }
-                                            else {
-                                                //Log.e(TAG, "額外處理");
-                                                //getString(text);
-                                            }
-                                            check = check + 1;
-                                            Log.e(TAG, "check = " + Jsonlist.get(check));
-                                        }
-                                    }
-                                }
-                            }
-                            else if (send == 3) {
-                                if (text.matches("OVER")) {
-                                    Log.e(TAG, "checkOVER = " + text);
-                                    if (checkDeviceName.setName(text).matches(Jsonlist.get(check))) {
-                                        Log.e(TAG, "RX = " + Value.return_RX);
-                                        show_device_function();
-                                    }
-                                } else {
-                                    if (checkDeviceName.setName(text).matches(Jsonlist.get(check))) {
-                                        Value.SelectItem.set(check + 1, checkDeviceName.setName(text));
-                                        Value.return_RX.set(check, text);
-                                        Value.DataSave.set(check + 1, text);
-                                        check = check + 1;
-                                        Log.e(TAG, "check = " + Jsonlist.get(check));
-                                        Log.e(TAG, "SelectItem = " + Value.SelectItem);
-                                        Log.e(TAG, "return_RX = " + Value.return_RX);
-                                        Log.e(TAG, "DataSave = " + Value.DataSave);
-                                    }
-                                }
-                            }
-                            else if(send == 2){
-                                if (text.startsWith("NAME")) {    //Nordic_UART
-                                    List_d_num.set(0, text.substring(4));
-                                    Value.DataSave.set(0, text.substring(4));
-                                    function.notifyDataSetChanged();
-                                }
-                                else {
-                                    if(!text.matches("OVER")) {
-                                        int i = Value.SelectItem.indexOf(checkDeviceName.setName(text));
-                                        Log.e(TAG, "i = " + i + "\n" + "text = " + text);
-                                        Value.return_RX.set((i - 1), text);
-                                        Value.DataSave.set(i, text);
-                                        List_d_num.set(i, getDeviceNum.get(Value.return_RX.get(i - 1)));
-                                        Log.e(TAG, "i = " + i);
-                                        Log.e(TAG, "SelectItem = " + Value.SelectItem);
-                                        Log.e(TAG, "return_RX= " + Value.return_RX);
-                                        Log.e(TAG, "List_d_num = " + List_d_num);
-                                        Log.e(TAG, "DataSave = " + Value.DataSave);
-                                        function.notifyDataSetChanged();
-                                    }
-                                }
-                            }
-                            else if (send == 4){
-                                if(text.startsWith("Count")){
-                                    test = 0;
-                                    showtext = String.valueOf((test)) + " / " + String.valueOf(totle);
-                                    showing.setText(showtext);
-                                    sleep(50);
-                                    //noinspection deprecation
-                                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                                    Service_close();
-                                }
-                                else if(text.startsWith("START")){
-                                    getdate = text.substring(text.indexOf("START") + 5, text.length());
-                                    new Thread(timeprocess).start();
-                                }
-                                else if(text.startsWith("COU")){
-                                    getcount = text;
-                                    new Thread(getc).start();
-                                }
-                                else if(text.startsWith("INT")){
-                                    gettime = text;
-                                    new Thread(uptime).start();
-                                }
-                                else if(text.startsWith("STOP")){
-                                    send = 2;
-                                }
-                                else {
-                                    if(text.startsWith("T")) {
-                                        Logdata.add(text);
-                                        new Thread(down_log).start();
-                                        if(String.valueOf(test).matches(getcount)){
-                                            send = 2;
-                                            connect_flag = 4;
-                                            ask_Dialog.dismiss();
-                                        }
-                                    }
-                                }
-                            }
-                            else {
-                                send = 2;
-                                Log.e(TAG, "text = " + text);
-                                if(text.startsWith("PWR=")){
-                                    Value.P_word = text.substring(text.indexOf("=") + 1,text.length());
-                                    Log.e(TAG, "P_word = " + Value.P_word);
-                                }
-                            }*/
                     } catch (UnsupportedEncodingException | InterruptedException /*| JSONException*/ e) {
                         e.printStackTrace();
                     }

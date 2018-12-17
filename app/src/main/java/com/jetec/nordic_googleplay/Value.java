@@ -23,9 +23,10 @@ public class Value {
     public static Boolean opendialog = false;
     public static Boolean Engin = false;
     public static Boolean startdown = false;
+    public static Boolean stop = false;
     public static String deviceModel = "default";   //型號
     public static ArrayList<String> Jsonlist, SelectItem, DataSave, return_RX;
-    public static int passwordFlag, modelsign, totle;
+    public static int passwordFlag, modelsign, totle, connect_flag = 0;
     public static String Count, Time, Date, GetLog, Inter;
     public static String E_word, P_word, G_word, I_word;
     public static ArrayList<Character> name;
