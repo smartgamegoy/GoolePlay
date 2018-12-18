@@ -165,4 +165,5 @@
     <string name="highspeed">HighSpeed</string>
     <string name="choseway">Choose the way of download</string>
     <string name="chosewaymessage">High speed only useful on advanced hardware device</string>
+    <string name="complete">Complete</string>
 </resources>

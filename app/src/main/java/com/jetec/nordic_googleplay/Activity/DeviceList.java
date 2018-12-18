@@ -347,13 +347,16 @@ public class DeviceList extends AppCompatActivity {
                             check();
                         }else if(text.startsWith("+") || text.startsWith("-")){
                             sleep(300);
+                            sendValue = new SendValue(mBluetoothLeService);
                             sendValue.send("STOP");
                         }
                         else {
                             if (!text.startsWith("OVER")) {
                                 if (!(text.startsWith("COUNT") || text.startsWith("DATE") ||
                                         text.startsWith("TIME") || text.matches("LOGON") ||
-                                        text.matches("LOGOFF") || text.startsWith("LOG"))) {
+                                        text.matches("LOGOFF") || text.startsWith("LOG") ||
+                                        text.startsWith("+") ||text.startsWith("-") ||
+                                        text.startsWith("STOP"))) {
                                     Log.e(TAG, "check = " + Value.Jsonlist.get(check));
                                     SelectItem.add(checkDeviceName.setName(text));
                                     return_RX.add(text);
@@ -367,6 +370,8 @@ public class DeviceList extends AppCompatActivity {
                                     Log.e(TAG, "check = " + Value.Jsonlist.get(check));
                                 }else {
                                     Log.e(TAG, "Loging = " + text);
+                                    if(text.startsWith("+") ||text.startsWith("-"))
+                                        sendValue.send("STOP");
                                 }
                             } else if (text.matches("OVER") && !text.startsWith("LOG")) {
                                 //check = check + 1;
@@ -375,18 +380,20 @@ public class DeviceList extends AppCompatActivity {
                                 Log.e(TAG, "RX = " + return_RX);
                                 Log.e(TAG, "SelectItem = " + SelectItem);
                                 Log.e(TAG, "型號 = " + Value.deviceModel);
-                                if (Value.Jsonlist.get(check).matches("OVER")) {
-                                    Value.SelectItem = SelectItem;
-                                    Value.DataSave = DataSave;
-                                    Value.return_RX = return_RX;
-                                    Value.get_noti = false;
-                                    //sendLog.interrupt();
-                                    Log.e(TAG,"Dialog.dismiss");
-                                    Log.e(TAG,"Dialog.dismiss2");
-                                    if(!Value.Engin)
-                                        device_function();
-                                    else
-                                        Engineer_function();
+                                if(Value.Jsonlist != null) {
+                                    if (Value.Jsonlist.get(check).matches("OVER")) {
+                                        Value.SelectItem = SelectItem;
+                                        Value.DataSave = DataSave;
+                                        Value.return_RX = return_RX;
+                                        Value.get_noti = false;
+                                        //sendLog.interrupt();
+                                        Log.e(TAG, "Dialog.dismiss");
+                                        Log.e(TAG, "Dialog.dismiss2");
+                                        if (!Value.Engin)
+                                            device_function();
+                                        else
+                                            Engineer_function();
+                                    }
                                 }
                             } else {
                                 Log.e(TAG, "Loging = " + text);
@@ -552,12 +559,14 @@ public class DeviceList extends AppCompatActivity {
         by.setOnClickListener(v -> {
             vibrator.vibrate(100);
             if (e1.getText().toString().length() == 6) {
+                Log.e(TAG,"e1 = " + e1.getText().toString().trim());
                 if (e1.getText().toString().trim().matches(Value.E_word)) {
                     Value.passwordFlag = 1;
                     Log.e(TAG, "管理者 登入");
                     Value.get_noti = true;
                     Engin();
                 } else if (e1.getText().toString().trim().matches(Value.P_word)) {
+                    Value.Engin = false;
                     Value.passwordFlag = 2;
                     Log.e(TAG, "客戶 登入");
                     Value.get_noti = true;
@@ -566,6 +575,7 @@ public class DeviceList extends AppCompatActivity {
                     Toast.makeText(DeviceList.this, getString(R.string.initialization), Toast.LENGTH_SHORT).show();
                     initialization = new Initialization(Value.deviceModel, mBluetoothLeService);
                     try {
+                        Value.Engin = false;
                         Value.get_noti = true;
                         initialization.start();
                     } catch (InterruptedException e) {
@@ -573,9 +583,12 @@ public class DeviceList extends AppCompatActivity {
                     }
                     Value.passwordFlag = 3;
                     Log.e(TAG, "初始化 原廠設定");
-                    login();
+                    Toast.makeText(DeviceList.this, getString(R.string.complete), Toast.LENGTH_SHORT).show();
+                    Service_close();
+                    backtofirst();
                 } else if (e1.getText().toString().trim().matches(Value.G_word)) {
                     Value.passwordFlag = 4;
+                    Value.Engin = false;
                     Value.get_noti = true;
                     Log.e(TAG, "訪客 登入");
                     login();

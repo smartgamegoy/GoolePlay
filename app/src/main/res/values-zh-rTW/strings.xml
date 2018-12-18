@@ -165,4 +165,5 @@
     <string name="highspeed">高速</string>
     <string name="choseway">選擇下載方式</string>
     <string name="chosewaymessage">高速下載僅適用較高階之手機設備</string>
+    <string name="complete">完成</string>
 </resources>

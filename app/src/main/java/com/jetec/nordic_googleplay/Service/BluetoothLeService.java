@@ -135,11 +135,13 @@ public class BluetoothLeService extends Service {
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 getstatus = status;
                 Log.e(TAG, "斷線囉");
-                gatt.close();
-                intentAction = ACTION_GATT_DISCONNECTED;
+                gatt.connect();
+                Log.e(TAG,"gatt.connect() = " + gatt.connect());
+                //gatt.close();
+                /*intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
                 Log.i(TAG, "Disconnected from GATT server.");
-                broadcastUpdate(intentAction);
+                broadcastUpdate(intentAction);*/
             }
         }
 
@@ -201,7 +203,7 @@ public class BluetoothLeService extends Service {
             }
         }*/
 
-        /*public void onConnectionUpdated(BluetoothGatt gatt, int interval, int latency, int timeout,
+        public void onConnectionUpdated(BluetoothGatt gatt, int interval, int latency, int timeout,
                                         int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 if (Value.downloading || Value.get_noti) {
@@ -214,7 +216,7 @@ public class BluetoothLeService extends Service {
                 Log.e(TAG, "onConnectionUpdated received status: " + status + ", interval: " + interval + ", latency: " + latency + ", timeout: " + timeout);
                 //mCallbacks.onError(gatt.getDevice(), ERROR_CONNECTION_PRIORITY_REQUEST, status);
             }
-        }*/
+        }
     };
 
     public void requestConnectionPriority(int priority) {
@@ -342,7 +344,7 @@ public class BluetoothLeService extends Service {
         }
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
-        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+        mBluetoothGatt = device.connectGatt(this, true, mGattCallback);
         refreshDeviceCache(mBluetoothGatt);
         Log.d(TAG, "Trying to create a new connection.");
         Log.e(TAG, "refresh = " + refreshDeviceCache(mBluetoothGatt));

@@ -1937,7 +1937,6 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         TextView t2 = v.findViewById(R.id.textView2);
 
         sendValue = new SendValue(mBluetoothLeService);
-        Value.downloading = true;
         Logdata.clear();
 
         Log.e(TAG, "Value.downloading = " + Value.downloading);
@@ -2006,6 +2005,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                             s1.setVisibility(View.GONE);
                             if (mBluetoothLeService.mConnectionState != 0) {
                                 Toast.makeText(DeviceFunction.this, getString(R.string.prepare), Toast.LENGTH_SHORT).show();
+                                Value.downloading = true;
                                 test = 0;
                                 Value.connect_flag = 1;
                                 sendValue.send("STOP");
@@ -2024,6 +2024,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                             s1.setVisibility(View.GONE);
                             if (mBluetoothLeService.mConnectionState != 0) {
                                 Toast.makeText(DeviceFunction.this, getString(R.string.prepare), Toast.LENGTH_SHORT).show();
+                                Value.downloading = true;
                                 test = 0;
                                 Value.connect_flag = 2;
                                 sendValue.send("STOP");
@@ -2411,10 +2412,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 Log.e(TAG, "連線成功");
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-                s_connect = false;
-                mBluetoothLeService = null;
+                //s_connect = false;
+                //mBluetoothLeService = null;
                 Log.e(TAG, "連線中斷" + Value.connected);
-                if (Value.connected) {
+                /*if (Value.connected) {
                     new Thread(connectfail).start();
                     Service_close();
                     try {
@@ -2425,7 +2426,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     Log.e(TAG, "重新連線");
                     ConnectThread newThread = new ConnectThread(connectHandler);
                     newThread.run();
-                } else {
+                } else {*/
                     //Service_close();
                     //Value.connected = true;
                     //try {
@@ -2437,7 +2438,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                         e.printStackTrace();
                     }*/
 
-                    new AlertDialog.Builder(DeviceFunction.this)
+                    /*new AlertDialog.Builder(DeviceFunction.this)
                             .setTitle(R.string.action_settings)
                             .setMessage(R.string.cant_reconnect)
                             .setPositiveButton(R.string.butoon_yes, new DialogInterface.OnClickListener() {
@@ -2453,7 +2454,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 }
                             })
                             .show();
-                }
+                }*/
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
                 //displayGattServices(mBluetoothLeService.getSupportedGattServices());
@@ -2510,7 +2511,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 if (!(text.startsWith("COUNT") || text.startsWith("DATE") ||
                                         text.startsWith("TIME") || text.matches("LOGON") ||
                                         text.matches("LOGOFF") || text.startsWith("LOG") ||
-                                        text.startsWith("PWR") || text.startsWith("STOP"))) {
+                                        text.startsWith("PWR") || text.startsWith("STOP") ||
+                                        text.startsWith("+") ||text.startsWith("-"))) {
                                     int i = Value.SelectItem.indexOf(checkDeviceName.setName(text));
                                     Value.return_RX.set((i - 1), text);
                                     Value.DataSave.set(i, text);
@@ -2630,10 +2632,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 Value.Inter = text.substring(5, text.length());
                             } else if (text.startsWith("+") || text.startsWith("-")) {
                                 if(Value.stop){
-                                    Log.e(TAG,"停了");
                                     if(text.startsWith("+") || text.startsWith("-")){
                                         Value.downloading = false;
                                         Value.stop = false;
+                                        Log.e(TAG,"停了");
                                     }
                                 }
                                 connect_flag = 1;
@@ -3144,7 +3146,6 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             vibrator.vibrate(100);
-            connect_flag = 2;
             if (mBluetoothAdapter != null)
                 //noinspection deprecation
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);

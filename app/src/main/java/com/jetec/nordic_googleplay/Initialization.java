@@ -40,7 +40,7 @@ public class Initialization {
                         sleep(500);
                     }
                     else if(Value.Jsonlist.get(i).matches("CR1")){
-                        sendValue.send(Value.Jsonlist.get(i) + "+0100.0");
+                        sendValue.send(Value.Jsonlist.get(i) + "+0065.0");
                         sleep(500);
                     }
                     else if(Value.Jsonlist.get(i).matches("EL2")){
@@ -70,6 +70,10 @@ public class Initialization {
                 }
             }
             case ("BT-2-IIL"):{
+                sendValue.send("DP1" + "+0000.0");
+                sleep(500);
+                sendValue.send("DP2" + "+0000.0");
+                sleep(500);
                 for(int i = 0; i < Value.Jsonlist.size(); i++) {
                     //noinspection StatementWithEmptyBody
                     if (Value.Jsonlist.get(i).matches("OVER")){
@@ -94,12 +98,12 @@ public class Initialization {
 
                     }
                     else if(Value.Jsonlist.get(i).matches("DP2")){
-                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
-                        sleep(500);
+                        //sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        //sleep(500);
                     }
                     else if(Value.Jsonlist.get(i).matches("DP1")){
-                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
-                        sleep(500);
+                        //sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        //sleep(500);
                     }
                     else if(Value.Jsonlist.get(i).matches("SPK")){
                         sendValue.send(Value.Jsonlist.get(i) + "+0001.0");
@@ -151,6 +155,120 @@ public class Initialization {
                     }
                     else if(Value.Jsonlist.get(i).matches("IH1")){
                         sendValue.send(Value.Jsonlist.get(i) + "+9999.0");
+                        sleep(500);
+                    }
+                }
+            }
+            case ("BT-2-II"):{
+                sendValue.send("DP1" + "+0000.0");
+                sleep(500);
+                sendValue.send("DP2" + "+0000.0");
+                sleep(500);
+                for(int i = 0; i < Value.Jsonlist.size(); i++) {
+                    if (Value.Jsonlist.get(i).matches("OVER")){
+                        //OVER
+                    }
+                    else if(Value.Jsonlist.get(i).matches("DP2")){
+                        //sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        //sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("DP1")){
+                        //sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        //sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("SPK")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0001.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+9999.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+9999.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "-0999.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+9999.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "-0999.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+9999.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("IL2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "-0999.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("IH2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+9999.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("IL1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "-0999.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("IH1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+9999.0");
+                        sleep(500);
+                    }
+                }
+            }
+            case ("BT_2_TH"):{
+                for(int i = 0; i < Value.Jsonlist.size(); i++) {
+                    if (Value.Jsonlist.get(i).matches("OVER")){
+                        //OVER
+                    }
+                    else if(Value.Jsonlist.get(i).matches("SPK")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0001.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0100.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0065.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0100.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "-0010.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0065.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
                         sleep(500);
                     }
                 }
