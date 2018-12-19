@@ -697,6 +697,7 @@ public class DeviceList extends AppCompatActivity {
                         //noinspection deprecation
                         mBluetoothAdapter.stopLeScan(mLeScanCallback);
                     Value.get_noti = false;
+                    Value.connected = false;
                     Service_close();
                     show_device();
                 }

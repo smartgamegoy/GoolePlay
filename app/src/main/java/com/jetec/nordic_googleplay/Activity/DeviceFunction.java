@@ -2960,8 +2960,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     date.setTime(date.getTime() + (Integer.valueOf(Value.Inter) * 1000));
                 }
                 for (int i = (6000 - Logdata.size()); i < 6000; i++) {
-                    charttime.add(a.get(i));
-                    timelist.add(b.get(i));
+                    charttime.add(a.get(5999 - i));
+                    timelist.add(b.get(5999 - i));
                 }
 
                 Log.e(TAG, "timelist.size() = " + timelist.size());
@@ -3287,13 +3287,13 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                     Date date = new Date();
                                     String strDate = get_date.format(date);
                                     String strtime = get_time.format(date);
-                                    sendValue.send(strDate);
-                                    sleep(100);
-                                    sendValue.send(strtime);
-                                    sleep(100);
+                                    sendValue.send("DATE" + strDate);
+                                    sleep(500);
+                                    sendValue.send("TIME" + strtime);
+                                    sleep(500);
                                     Log.e(TAG, "Value.return_RX = " + Value.return_RX.get(Value.SelectItem.indexOf("INTER") - 1));
                                     sendValue.send(Value.return_RX.get(Value.SelectItem.indexOf("INTER") - 1));
-                                    sleep(100);
+                                    sleep(500);
                                     sendValue.send("START");
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
