@@ -69,7 +69,7 @@ public class LogChartView extends AppCompatActivity {
     private LineChart lc;
     private Vibrator vibrator;
     private Dialog chartdialog = null, running = null;
-    private int dialogflag, select_item = -1;
+    private int dialogflag = 0, select_item = -1;
     private View view1;
     private Uri csvuri;
     private File file, pdffile;
@@ -257,6 +257,7 @@ public class LogChartView extends AppCompatActivity {
     }
 
     private void initData() {
+        lc.clear();
         lc.setExtraOffsets((int) (2 * all_Width / 100), (int) (3 * all_Height / 100),
                 (int) (4 * all_Width / 100), (int) (all_Height / 100));
         setDescription(device);
@@ -308,11 +309,9 @@ public class LogChartView extends AppCompatActivity {
                     minIndex = Float.valueOf(Mm.get(i));
                 }
             }
-            if (minIndex > 0) {
-                maxIndex = maxIndex + minIndex;
-            } else {
-                maxIndex = maxIndex - minIndex;
-            }
+            maxIndex = maxIndex + 10;
+            minIndex = minIndex - 10;
+
             Log.e(TAG, "maxIndex = " + maxIndex);
             Log.e(TAG, "minIndex = " + minIndex);
 
@@ -329,8 +328,10 @@ public class LogChartView extends AppCompatActivity {
             });
         } else if (dialogflag == 1) {   //第一排
             if (leftAxis != null) {
+                Log.e(TAG,"開始清屏");
                 leftAxis.removeLimitLine(yLimitLinedown);
                 leftAxis.removeLimitLine(yLimitLineup);
+                Log.e(TAG,"清屏null");
             }
             if (Value.name.get(0).toString().matches("T")) {
                 yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH1"))),
@@ -391,11 +392,10 @@ public class LogChartView extends AppCompatActivity {
                     minIndex = Float.valueOf(Mm.get(i));
                 }
             }
-            if (minIndex > 0) {
-                maxIndex = maxIndex + minIndex;
-            } else {
-                maxIndex = maxIndex - minIndex;
-            }
+
+            maxIndex = maxIndex + 10;
+            minIndex = minIndex - 10;
+
             Log.e(TAG, "maxIndex = " + maxIndex);
             Log.e(TAG, "minIndex = " + minIndex);
 
@@ -412,8 +412,10 @@ public class LogChartView extends AppCompatActivity {
             });
         } else if (dialogflag == 2) {   //第二排
             if (leftAxis != null) {
+                Log.e(TAG,"開始清屏");
                 leftAxis.removeLimitLine(yLimitLinedown);
                 leftAxis.removeLimitLine(yLimitLineup);
+                Log.e(TAG,"清屏null");
             }
             if (Value.name.get(1).toString().matches("T")) {
                 yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH2"))),
@@ -475,11 +477,10 @@ public class LogChartView extends AppCompatActivity {
                     minIndex = Float.valueOf(Mm.get(i));
                 }
             }
-            if (minIndex > 0) {
-                maxIndex = maxIndex + minIndex;
-            } else {
-                maxIndex = maxIndex - minIndex;
-            }
+
+            maxIndex = maxIndex + 10;
+            minIndex = minIndex - 10;
+
             Log.e(TAG, "maxIndex = " + maxIndex);
             Log.e(TAG, "minIndex = " + minIndex);
 
@@ -495,7 +496,90 @@ public class LogChartView extends AppCompatActivity {
                 }
             });
         } else {  //CO2
+            if (leftAxis != null) {
+                Log.e(TAG,"開始清屏");
+                leftAxis.removeLimitLine(yLimitLinedown);
+                leftAxis.removeLimitLine(yLimitLineup);
+                Log.e(TAG,"清屏null");
+            }
+            if (Value.name.get(2).toString().matches("T")) {
+                yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH3"))),
+                        getString(R.string.Temperature) + getString(R.string.UL));  //上限線
+            }
+            if (Value.name.get(2).toString().matches("H")) {
+                yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH3"))),
+                        getString(R.string.Humidity) + getString(R.string.UL));  //上限線
+            }
+            if (Value.name.get(2).toString().matches("C")) {
+                yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH3"))),
+                        getString(R.string.Co2) + getString(R.string.UL));  //上限線
+            }
+            if (Value.name.get(2).toString().matches("I")) {
+                yLimitLinedown = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EH3"))),
+                        getString(R.string.I2) + getString(R.string.UL));  //上限線
+            }
+            yLimitLinedown.enableDashedLine((float) all_Width / 100, (float) all_Width / 100, 1);
+            yLimitLinedown.setTextSize(14);
+            yLimitLinedown.setLineColor(Color.RED);
+            yLimitLinedown.setTextColor(Color.RED);
+            leftAxis = lc.getAxisLeft();
+            leftAxis.addLimitLine(yLimitLinedown);
 
+            if (Value.name.get(2).toString().matches("T")) {
+                yLimitLineup = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EL3"))),
+                        getString(R.string.Temperature) + getString(R.string.LL));  //下限線
+            }
+            if (Value.name.get(2).toString().matches("H")) {
+                yLimitLineup = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EL3"))),
+                        getString(R.string.Humidity) + getString(R.string.LL));  //下限線
+            }
+            if (Value.name.get(2).toString().matches("C")) {
+                yLimitLineup = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EL3"))),
+                        getString(R.string.Co2) + getString(R.string.LL));  //下限線
+            }
+            if (Value.name.get(2).toString().matches("I")) {
+                yLimitLineup = new LimitLine(Float.valueOf(List_d_num.get(Value.SelectItem.indexOf("EL3"))),
+                        getString(R.string.I2) + getString(R.string.LL));  //下限線
+            }
+
+            yLimitLineup.enableDashedLine((float) all_Width / 100, (float) all_Width / 100, 1);
+            yLimitLineup.setTextSize(14);
+            yLimitLineup.setLineColor(Color.CYAN);
+            yLimitLineup.setTextColor(Color.CYAN);
+            YAxis leftAxis2 = lc.getAxisLeft();
+            leftAxis2.addLimitLine(yLimitLineup);
+
+            ArrayList<String> Mm = new ArrayList<>();
+            Mm.clear();
+            Mm.addAll(Thirdlist);
+            float maxIndex = Float.valueOf(Mm.get(0));
+            float minIndex = Float.valueOf(Mm.get(0));
+            for (int i = 0; i < Mm.size(); i++) {
+                if (maxIndex < Float.valueOf(Mm.get(i))) {
+                    maxIndex = Float.valueOf(Mm.get(i));
+                }
+                if (minIndex > Float.valueOf(Mm.get(i))) {
+                    minIndex = Float.valueOf(Mm.get(i));
+                }
+            }
+
+            maxIndex = maxIndex + 10;
+            minIndex = minIndex - 10;
+
+            Log.e(TAG, "maxIndex = " + maxIndex);
+            Log.e(TAG, "minIndex = " + minIndex);
+
+            yAxisLeft.setAxisMaximum(maxIndex);
+            yAxisLeft.setAxisMinimum(minIndex);
+            yAxisLeft.setGranularity(1);
+            yAxisLeft.setTextSize(14);
+            yAxisLeft.setTextColor(Color.BLACK);
+            yAxisLeft.setValueFormatter(new IAxisValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+                    return String.valueOf(value);
+                }
+            });
         }
 
         lc.getAxisRight().setEnabled(false);
@@ -536,7 +620,7 @@ public class LogChartView extends AppCompatActivity {
                 } else if (Value.name.get(0).toString().matches("T")) {
                     dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.temperature), Color.GREEN));
                 } else if (Value.name.get(0).toString().matches("H")) {
-                    dataSets.add(lineDataSet(ChartData(Secondlist), getString(R.string.humidity), Color.BLUE));
+                    dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.humidity), Color.BLUE));
                 } else if (Value.name.get(0).toString().matches("C")) {
                     Log.e(TAG, "待增加");
                 }
@@ -564,14 +648,16 @@ public class LogChartView extends AppCompatActivity {
                 }
             }
         } else if (dialogflag == 1) {
-            if (Value.name.get(0).toString().matches("I")) {
-                dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.I1row), Color.GREEN));
-            } else if (Value.name.get(0).toString().matches("T")) {
-                dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.temperature), Color.GREEN));
-            } else if (Value.name.get(0).toString().matches("H")) {
-                dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.humidity), Color.BLUE));
-            } else if (Value.name.get(0).toString().matches("C")) {
-                Log.e(TAG, "待增加");
+            if (Firstlist.size() != 0) {
+                if (Value.name.get(0).toString().matches("I")) {
+                    dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.I1row), Color.GREEN));
+                } else if (Value.name.get(0).toString().matches("T")) {
+                    dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.temperature), Color.GREEN));
+                } else if (Value.name.get(0).toString().matches("H")) {
+                    dataSets.add(lineDataSet(ChartData(Firstlist), getString(R.string.humidity), Color.BLUE));
+                } else if (Value.name.get(0).toString().matches("C")) {
+                    Log.e(TAG, "待增加");
+                }
             }
         } else if (dialogflag == 2) {
             if (Secondlist.size() != 0) {
@@ -630,7 +716,7 @@ public class LogChartView extends AppCompatActivity {
     private List<Entry> ChartData(List<String> list) {
         List<Entry> data = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            float getdata = (Float.valueOf(list.get(i)) / 10);
+            float getdata = (Float.valueOf(list.get(i)));
             data.add(new Entry((i + 1), getdata));
         }
         return data;
@@ -703,7 +789,8 @@ public class LogChartView extends AppCompatActivity {
             public void onClick(View v) {
                 vibrator.vibrate(100);
                 select_item = -1;
-                initView();
+                Log.e(TAG,"開始");
+                //initView();
                 initData();
                 chartdialog.dismiss();
             }

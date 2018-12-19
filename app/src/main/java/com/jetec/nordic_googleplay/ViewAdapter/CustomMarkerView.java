@@ -31,16 +31,35 @@ public class CustomMarkerView extends MarkerView {
     public void refreshContent(Entry e, Highlight highlight) {
         tvContent.setText(" " + e.getY()); // set the entry-value as the display text
         Log.e(TAG,"e.getY() = " + e.getY());
-        if(String.valueOf(e.getY()).length() == 5)
-            tvContent.setPadding(0,(int)all_Height/90,0,0);
-        if(String.valueOf(e.getY()).length() == 4)
-            tvContent.setPadding((int)all_Width/80,(int)all_Height/90,0,0);
-        if(String.valueOf(e.getY()).length() == 3)
-            tvContent.setPadding((int)all_Width/40,(int)all_Height/90,0,0);
-        if(String.valueOf(e.getY()).length() == 2)
-            tvContent.setPadding((int)all_Width/20,(int)all_Height/90,0,0);
-        if(String.valueOf(e.getY()).length() == 1)
-            tvContent.setPadding((int)all_Width/10,(int)all_Height/90,0,0);
+        Log.e(TAG,"e.getY() = " + String.valueOf(e.getY()).length());
+        if(e.getY() > 0) {
+            if (String.valueOf(e.getY()).length() == 6)
+                tvContent.setPadding(0, (int) all_Height / 50, 0, 0);
+            if (String.valueOf(e.getY()).length() == 5)
+                tvContent.setPadding(0, (int) all_Height / 50, 0, 0);
+            if (String.valueOf(e.getY()).length() == 4)
+                tvContent.setPadding((int) all_Width / 80, (int) all_Height / 50, 0, 0);
+            if (String.valueOf(e.getY()).length() == 3)
+                tvContent.setPadding((int) all_Width / 40, (int) all_Height / 50, 0, 0);
+            if (String.valueOf(e.getY()).length() == 2)
+                tvContent.setPadding((int) all_Width / 20, (int) all_Height / 50, 0, 0);
+            if (String.valueOf(e.getY()).length() == 1)
+                tvContent.setPadding((int) all_Width / 10, (int) all_Height / 50, 0, 0);
+        }
+        else{
+            if (String.valueOf(e.getY()).length() == 7)
+                tvContent.setPadding(0, (int) all_Height / 50, 0, 0);
+            if (String.valueOf(e.getY()).length() == 6)
+                tvContent.setPadding(0, (int) all_Height / 50, 0, 0);
+            if (String.valueOf(e.getY()).length() == 5)
+                tvContent.setPadding((int) all_Width / 80, (int) all_Height / 50, 0, 0);
+            if (String.valueOf(e.getY()).length() == 4)
+                tvContent.setPadding((int) all_Width / 40, (int) all_Height / 50, 0, 0);
+            if (String.valueOf(e.getY()).length() == 3)
+                tvContent.setPadding((int) all_Width / 20, (int) all_Height / 50, 0, 0);
+            if (String.valueOf(e.getY()).length() == 2)
+                tvContent.setPadding((int) all_Width / 10, (int) all_Height / 90, 0, 0);
+        }
     }
 
     private MPPointF mOffset;
