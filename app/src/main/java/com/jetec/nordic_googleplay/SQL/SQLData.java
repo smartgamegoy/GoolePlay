@@ -38,7 +38,8 @@ public class SQLData extends SQLiteOpenHelper {
         String DATABASE_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + table_name + "(" +
                 "_id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL," +
                 "num" + " TEXT, " +
-                "savelist" + " TEXT" + ")";
+                "savelist" + " TEXT," +
+                "model" + " TEXT" + ")";
         db.execSQL(DATABASE_CREATE_TABLE);
     }
 
@@ -76,30 +77,33 @@ public class SQLData extends SQLiteOpenHelper {
         db.delete(table_name, "_id=" + id ,null);
     }
 
-    public long insert(JSONArray DataSave, String num)
+    public long insert(JSONArray DataSave, String num, String model)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put("num", num);
         cv.put("savelist", DataSave.toString());
+        cv.put("model", model);
 
         long new_insert = db.insert(table_name, num, cv);
         Log.e("Log","SQL = " + new_insert);
         return new_insert;
     }
 
-    public ArrayList<HashMap<String, String>> fillList(){
+    public ArrayList<HashMap<String, String>> fillList(String model){
 
         ArrayList<HashMap<String, String>> dataList = new ArrayList<HashMap<String, String>>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor=db.rawQuery("SELECT * FROM " + table_name, null);
+        Cursor cursor=db.rawQuery("SELECT * FROM " + table_name+ " WHERE model=?", new String[]{model});
+        Log.e("cursor","cursor.getcount = " + cursor.getCount());
         cursor.moveToFirst();
         do {
             String id = String.valueOf(cursor.getInt(cursor.getColumnIndex("_id")));
             String num = cursor.getString(cursor.getColumnIndex("num"));
             String savelist = cursor.getString(cursor.getColumnIndex("savelist"));
+            String savemodel = cursor.getString(cursor.getColumnIndex("model"));
 
             HashMap<String, String> map = new HashMap<String, String>();
             Log.e("putmap", "id" + id);
@@ -136,11 +140,11 @@ public class SQLData extends SQLiteOpenHelper {
         return set_update > 0;
     }
 
-    public int getCount(String num){
+    public int getCount(String num, String model){
         int count;
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor=db.rawQuery("SELECT * FROM " + table_name + " WHERE num=?", new String[]{num});
+        Cursor cursor=db.rawQuery("SELECT * FROM " + table_name + " WHERE num=? AND model=?", new String[]{num, model});
 
         count = cursor.getCount();
         Log.e("myLog","count =" + count);
@@ -160,5 +164,16 @@ public class SQLData extends SQLiteOpenHelper {
             e.printStackTrace();
         }
         return savelJSON;
+    }
+
+    public int modelsearch(String model){
+        int count;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor=db.rawQuery("SELECT * FROM " + table_name + " WHERE model=?", new String[]{model});
+
+        count = cursor.getCount();
+        Log.e("myLog","count =" + count);
+        return count;
     }
 }

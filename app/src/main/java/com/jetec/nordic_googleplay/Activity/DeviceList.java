@@ -76,7 +76,7 @@ public class DeviceList extends AppCompatActivity {
     private ListView list_device;
     private Intent intents;
     private ArrayList<String> return_RX, SelectItem, DataSave, Jsonlist;
-    private Dialog progressDialog = null, progressDialog2 = null;
+    private Dialog progressDialog = null, progressDialog2 = null, initialDialog = null;
     private String TAG = "DeviceList";
     private String text;
     private String Jetec = "Jetec";
@@ -573,6 +573,10 @@ public class DeviceList extends AppCompatActivity {
                     login();
                 } else if (e1.getText().toString().trim().matches(Value.I_word)) {
                     Toast.makeText(DeviceList.this, getString(R.string.initialization), Toast.LENGTH_SHORT).show();
+                    initialDialog = writeDialog(this, getString(R.string.intervalset));
+                    initialDialog.show();
+                    initialDialog.setCanceledOnTouchOutside(false);
+                    Log.e(TAG, "Value.deviceModel = " + Value.deviceModel);
                     initialization = new Initialization(Value.deviceModel, mBluetoothLeService);
                     try {
                         Value.Engin = false;
@@ -580,13 +584,19 @@ public class DeviceList extends AppCompatActivity {
                         initialization.start();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                    } finally {
+                        initialDialog.dismiss();
+                        Value.passwordFlag = 3;
+                        Log.e(TAG, "初始化 原廠設定");
+                        Toast.makeText(DeviceList.this, getString(R.string.complete), Toast.LENGTH_SHORT).show();
+                        Value.get_noti = false;
+                        Value.connected = false;
+                        Service_close();
+                        backtofirst();
                     }
-                    Value.passwordFlag = 3;
-                    Log.e(TAG, "初始化 原廠設定");
-                    Toast.makeText(DeviceList.this, getString(R.string.complete), Toast.LENGTH_SHORT).show();
-                    Service_close();
-                    backtofirst();
-                } else if (e1.getText().toString().trim().matches(Value.G_word)) {
+                }
+
+                else if (e1.getText().toString().trim().matches(Value.G_word)) {
                     Value.passwordFlag = 4;
                     Value.Engin = false;
                     Value.get_noti = true;

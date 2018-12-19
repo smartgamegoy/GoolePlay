@@ -155,8 +155,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         super.onCreate(savedInstanceState);
         vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
-            setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
 
         BluetoothManager bluetoothManager = getManager(this);
@@ -2077,16 +2077,23 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         ListView list = v.findViewById(R.id.loading);
         TextView t1 = v.findViewById(R.id.no_list);
 
+
         if (data_table.getCount() == 0) {
             list.setVisibility(View.GONE);
             t1.setVisibility(View.VISIBLE);
         } else {
-            list.setVisibility(View.VISIBLE);
-            t1.setVisibility(View.GONE);
-            listData = data_table.fillList();
-            dataList = new DataList(this, listData, Value.all_Width);
-            list.setAdapter(dataList);
-            list.setOnItemClickListener(mLoadClickListener);
+            if (data_table.modelsearch(Value.deviceModel) > 0) {
+                list.setVisibility(View.VISIBLE);
+                t1.setVisibility(View.GONE);
+                listData = data_table.fillList(Value.deviceModel);
+                dataList = new DataList(this, listData, Value.all_Width);
+                list.setAdapter(dataList);
+                list.setOnItemClickListener(mLoadClickListener);
+            }
+            else {
+                list.setVisibility(View.GONE);
+                t1.setVisibility(View.VISIBLE);
+            }
         }
 
         by.setOnClickListener(v12 -> {
@@ -2246,13 +2253,19 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             list.setVisibility(View.GONE);
             t1.setVisibility(View.VISIBLE);
         } else {
-            select_item = -1;
-            list.setVisibility(View.VISIBLE);
-            t1.setVisibility(View.GONE);
-            listData = data_table.fillList();
-            dataList = new DataList(this, listData, Value.all_Width);
-            list.setAdapter(dataList);
-            list.setOnItemClickListener(mListClickListener);
+            if (data_table.modelsearch(Value.deviceModel) > 0) {
+                select_item = -1;
+                list.setVisibility(View.VISIBLE);
+                t1.setVisibility(View.GONE);
+                listData = data_table.fillList(Value.deviceModel);
+                dataList = new DataList(this, listData, Value.all_Width);
+                list.setAdapter(dataList);
+                list.setOnItemClickListener(mListClickListener);
+            }
+            else {
+                list.setVisibility(View.GONE);
+                t1.setVisibility(View.VISIBLE);
+            }
         }
 
         close.setOnClickListener(v14 -> {
@@ -2266,16 +2279,16 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             if (listname.matches(""))
                 Toast.makeText(DeviceFunction.this, getString(R.string.addblank), Toast.LENGTH_SHORT).show();
             else {
-                if (data_table.getCount(listname) == 0) {
+                if (data_table.getCount(listname, Value.deviceModel) == 0) {
                     JSONArray DataSave = new JSONArray(Value.DataSave);
-                    data_table.insert(DataSave, listname);
+                    data_table.insert(DataSave, listname, Value.deviceModel);
                     SQLdata.clear();
                     list.setVisibility(View.VISIBLE);
                     t1.setVisibility(View.GONE);
                     name.setText("");
                     try {
                         sleep(100);
-                        listData = data_table.fillList();
+                        listData = data_table.fillList(Value.deviceModel);
                         dataList = new DataList(DeviceFunction.this, listData, Value.all_Width);
                         list.setAdapter(dataList);
                     } catch (InterruptedException e) {
@@ -2299,10 +2312,17 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     t1.setVisibility(View.VISIBLE);
                     select_item = -1;
                 } else {
-                    listData = data_table.fillList();
-                    dataList = new DataList(DeviceFunction.this, listData, Value.all_Width);
-                    list.setAdapter(dataList);
-                    select_item = -1;
+                    if (data_table.modelsearch(Value.deviceModel) > 0) {
+                        listData = data_table.fillList(Value.deviceModel);
+                        dataList = new DataList(DeviceFunction.this, listData, Value.all_Width);
+                        list.setAdapter(dataList);
+                        select_item = -1;
+                    }
+                    else {
+                        list.setVisibility(View.GONE);
+                        t1.setVisibility(View.VISIBLE);
+                        select_item = -1;
+                    }
                 }
             }
         });
@@ -2349,12 +2369,17 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             if (getname.matches("")) {
                 Toast.makeText(DeviceFunction.this, getString(R.string.addblank), Toast.LENGTH_SHORT).show();
             } else {
-                data_table.update(Integer.valueOf(SQLdata.get(select_item)), getname);
-                listData = data_table.fillList();
-                dataList = new DataList(DeviceFunction.this, listData, Value.all_Width);
-                list.setAdapter(dataList);
-                select_item = -1;
-                upDialog.dismiss();
+                if (data_table.getCount(getname, Value.deviceModel) == 0) {
+                    data_table.update(Integer.valueOf(SQLdata.get(select_item)), getname);
+                    listData = data_table.fillList(Value.deviceModel);
+                    dataList = new DataList(DeviceFunction.this, listData, Value.all_Width);
+                    list.setAdapter(dataList);
+                    select_item = -1;
+                    upDialog.dismiss();
+                }
+                else {
+                    Toast.makeText(DeviceFunction.this, getString(R.string.same), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -2427,10 +2452,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     ConnectThread newThread = new ConnectThread(connectHandler);
                     newThread.run();
                 } else {*/
-                    //Service_close();
-                    //Value.connected = true;
-                    //try {
-                    //new Thread(connectfail).start();
+                //Service_close();
+                //Value.connected = true;
+                //try {
+                //new Thread(connectfail).start();
                         /*sleep(2000);
                         ConnectThread newThread = new ConnectThread(connectHandler);
                         newThread.run();
@@ -2512,7 +2537,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                         text.startsWith("TIME") || text.matches("LOGON") ||
                                         text.matches("LOGOFF") || text.startsWith("LOG") ||
                                         text.startsWith("PWR") || text.startsWith("STOP") ||
-                                        text.startsWith("+") ||text.startsWith("-"))) {
+                                        text.startsWith("+") || text.startsWith("-"))) {
                                     int i = Value.SelectItem.indexOf(checkDeviceName.setName(text));
                                     Value.return_RX.set((i - 1), text);
                                     Value.DataSave.set(i, text);
@@ -2604,8 +2629,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                     Value.opendialog = false;
                                     Value.downloading = false;
                                     //unbindService(mServiceConnection);
-                                }
-                                else if(connect_flag == 1){
+                                } else if (connect_flag == 1) {
                                     showtext = String.valueOf(getString(R.string.downloadfail));
                                     showing.setTextSize(16);
                                     showing.setText(showtext);
@@ -2631,11 +2655,11 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                             } else if (text.startsWith("INTER")) {
                                 Value.Inter = text.substring(5, text.length());
                             } else if (text.startsWith("+") || text.startsWith("-")) {
-                                if(Value.stop){
-                                    if(text.startsWith("+") || text.startsWith("-")){
+                                if (Value.stop) {
+                                    if (text.startsWith("+") || text.startsWith("-")) {
                                         Value.downloading = false;
                                         Value.stop = false;
-                                        Log.e(TAG,"停了");
+                                        Log.e(TAG, "停了");
                                     }
                                 }
                                 connect_flag = 1;
@@ -2650,11 +2674,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 sendValue.send("END");
                                 sleep(100);
                             } else if (text.startsWith("END")) {
-                                if(Value.connect_flag == 1){
+                                if (Value.connect_flag == 1) {
                                     sendValue.send("Delay00000");
                                     sleep(100);
-                                }
-                                else {
+                                } else {
                                     sendValue.send("Delay00050");
                                     sleep(100);
                                 }

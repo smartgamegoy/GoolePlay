@@ -1,7 +1,17 @@
 package com.jetec.nordic_googleplay;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.jetec.nordic_googleplay.Activity.DeviceList;
 import com.jetec.nordic_googleplay.Service.BluetoothLeService;
 
 import java.text.SimpleDateFormat;
@@ -26,6 +36,7 @@ public class Initialization {
     public void start() throws InterruptedException {
         switch (model){
             case ("default"):{
+                Log.e("初始化型號","default");
                 for(int i = 0; i < Value.Jsonlist.size(); i++) {
                     //noinspection StatementWithEmptyBody
                     if (Value.Jsonlist.get(i).matches("OVER")){
@@ -69,7 +80,9 @@ public class Initialization {
                     }
                 }
             }
+            break;
             case ("BT-2-IIL"):{
+                Log.e("初始化型號","BT-2-IIL");
                 sendValue.send("DP1" + "+0000.0");
                 sleep(500);
                 sendValue.send("DP2" + "+0000.0");
@@ -159,7 +172,9 @@ public class Initialization {
                     }
                 }
             }
+            break;
             case ("BT-2-II"):{
+                Log.e("初始化型號","BT-2-II");
                 sendValue.send("DP1" + "+0000.0");
                 sleep(500);
                 sendValue.send("DP2" + "+0000.0");
@@ -230,7 +245,9 @@ public class Initialization {
                     }
                 }
             }
-            case ("BT_2_TH"):{
+            break;
+            case ("BT-2-TH"):{
+                Log.e("初始化型號","BT_2_TH");
                 for(int i = 0; i < Value.Jsonlist.size(); i++) {
                     if (Value.Jsonlist.get(i).matches("OVER")){
                         //OVER
@@ -273,8 +290,8 @@ public class Initialization {
                     }
                 }
             }
+            break;
         }
-
     }
 
     private void getDateTime(Date date){
