@@ -179,6 +179,18 @@ public class Initialization {
                         sleep(500);
                     }
                 }
+                sendValue.send("SP1+1250.0");
+                sleep(500);
+                sendValue.send("SV1+0000.0");
+                sleep(500);
+                sendValue.send("ER1+1000.0");
+                sleep(500);
+                sendValue.send("SP2+1250.0");
+                sleep(500);
+                sendValue.send("SV2+0000.0");
+                sleep(500);
+                sendValue.send("ER2+1000.0");
+                sleep(500);
             }
             break;
             case ("BT-2-II"):{
@@ -256,6 +268,18 @@ public class Initialization {
                         sleep(500);
                     }
                 }
+                sendValue.send("SP1+1250.0");
+                sleep(500);
+                sendValue.send("SV1+0000.0");
+                sleep(500);
+                sendValue.send("ER1+1000.0");
+                sleep(500);
+                sendValue.send("SP2+1250.0");
+                sleep(500);
+                sendValue.send("SV2+0000.0");
+                sleep(500);
+                sendValue.send("ER2+1000.0");
+                sleep(500);
             }
             break;
             case ("BT-2-TH"):{
@@ -352,6 +376,12 @@ public class Initialization {
                         sleep(500);
                     }
                 }
+                sendValue.send("SP1+1250.0");
+                sleep(500);
+                sendValue.send("SV1+0000.0");
+                sleep(500);
+                sendValue.send("ER1+1000.0");
+                sleep(500);
             }
             break;
         }
