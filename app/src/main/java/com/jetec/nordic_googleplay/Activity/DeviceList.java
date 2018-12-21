@@ -351,52 +351,59 @@ public class DeviceList extends AppCompatActivity {
                             sendValue.send("STOP");
                         }
                         else {
-                            if (!text.startsWith("OVER")) {
-                                if (!(text.startsWith("COUNT") || text.startsWith("DATE") ||
-                                        text.startsWith("TIME") || text.matches("LOGON") ||
-                                        text.matches("LOGOFF") || text.startsWith("LOG") ||
-                                        text.startsWith("+") ||text.startsWith("-") ||
-                                        text.startsWith("STOP"))) {
-                                    Log.e(TAG, "check = " + Value.Jsonlist.get(check));
-                                    SelectItem.add(checkDeviceName.setName(text));
-                                    return_RX.add(text);
-                                    DataSave.add(text);
-                                    check = check + 1;
-                                } else if((text.startsWith("COUNT") || text.startsWith("DATE") ||
-                                        text.startsWith("TIME") || text.matches("LOGON") ||
-                                        text.matches("LOGOFF"))){
-                                    setString.set(text, check);
-                                    check = check + 1;
-                                    Log.e(TAG, "check = " + Value.Jsonlist.get(check));
-                                }else {
-                                    Log.e(TAG, "Loging = " + text);
-                                    if(text.startsWith("+") ||text.startsWith("-"))
-                                        sendValue.send("STOP");
-                                }
-                            } else if (text.matches("OVER") && !text.startsWith("LOG")) {
-                                //check = check + 1;
-                                Log.e(TAG, "checkOVER = " + text);
-                                Log.e(TAG, "check = " + check);
-                                Log.e(TAG, "RX = " + return_RX);
-                                Log.e(TAG, "SelectItem = " + SelectItem);
-                                Log.e(TAG, "型號 = " + Value.deviceModel);
-                                if(Value.Jsonlist != null) {
-                                    if (Value.Jsonlist.get(check).matches("OVER")) {
-                                        Value.SelectItem = SelectItem;
-                                        Value.DataSave = DataSave;
-                                        Value.return_RX = return_RX;
-                                        Value.get_noti = false;
-                                        //sendLog.interrupt();
-                                        Log.e(TAG, "Dialog.dismiss");
-                                        Log.e(TAG, "Dialog.dismiss2");
-                                        if (!Value.Engin)
-                                            device_function();
-                                        else
-                                            Engineer_function();
+                            if(!Value.init) {
+                                if (!text.startsWith("OVER")) {
+                                    if (!(text.startsWith("COUNT") || text.startsWith("DATE") ||
+                                            text.startsWith("TIME") || text.matches("LOGON") ||
+                                            text.matches("LOGOFF") || text.startsWith("LOG") ||
+                                            text.startsWith("+") || text.startsWith("-") ||
+                                            text.startsWith("STOP"))) {
+                                        Log.e(TAG, "check = " + Value.Jsonlist.get(check));
+                                        SelectItem.add(checkDeviceName.setName(text));
+                                        return_RX.add(text);
+                                        DataSave.add(text);
+                                        check = check + 1;
+                                    } else if ((text.startsWith("COUNT") || text.startsWith("DATE") ||
+                                            text.startsWith("TIME") || text.matches("LOGON") ||
+                                            text.matches("LOGOFF"))) {
+                                        setString.set(text, check);
+                                        check = check + 1;
+                                        Log.e(TAG, "check = " + Value.Jsonlist.get(check));
+                                    } else {
+                                        Log.e(TAG, "Loging = " + text);
+                                        if (text.startsWith("+") || text.startsWith("-"))
+                                            sendValue.send("STOP");
                                     }
+                                } else if (text.matches("OVER") && !text.startsWith("LOG")) {
+                                    //check = check + 1;
+                                    Log.e(TAG, "checkOVER = " + text);
+                                    Log.e(TAG, "check = " + check);
+                                    Log.e(TAG, "RX = " + return_RX);
+                                    Log.e(TAG, "SelectItem = " + SelectItem);
+                                    Log.e(TAG, "型號 = " + Value.deviceModel);
+                                    if (Value.Jsonlist != null) {
+                                        if (Value.Jsonlist.get(check).matches("OVER")) {
+                                            Value.SelectItem = SelectItem;
+                                            Value.DataSave = DataSave;
+                                            Value.return_RX = return_RX;
+                                            Value.get_noti = false;
+                                            //sendLog.interrupt();
+                                            Log.e(TAG, "Dialog.dismiss");
+                                            Log.e(TAG, "Dialog.dismiss2");
+                                            if (!Value.Engin)
+                                                device_function();
+                                            else
+                                                Engineer_function();
+                                        }
+                                    }
+                                } else {
+                                    Log.e(TAG, "Loging = " + text);
                                 }
-                            } else {
-                                Log.e(TAG, "Loging = " + text);
+                            }
+                            else {
+                                if(text.matches("OVER")){
+                                    Value.init = false;
+                                }
                             }
                         }
                     } catch (UnsupportedEncodingException | InterruptedException | JSONException e) {
@@ -581,6 +588,7 @@ public class DeviceList extends AppCompatActivity {
                     try {
                         Value.Engin = false;
                         Value.get_noti = true;
+                        Value.init = true;
                         initialization.start();
                     } catch (InterruptedException e) {
                         e.printStackTrace();

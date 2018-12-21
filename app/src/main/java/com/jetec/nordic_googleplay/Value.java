@@ -24,6 +24,7 @@ public class Value {
     public static Boolean Engin = false;
     public static Boolean startdown = false;
     public static Boolean stop = false;
+    public static Boolean init = false;
     public static String deviceModel = "default";   //型號
     public static ArrayList<String> Jsonlist, SelectItem, DataSave, return_RX;
     public static int passwordFlag, modelsign, totle, connect_flag = 0;
