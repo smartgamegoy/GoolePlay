@@ -216,20 +216,6 @@ public class LogChartView extends AppCompatActivity {
                     })
                     .setNeutralButton(R.string.mes_no, (dialog, which) -> vibrator.vibrate(100))
                     .show();
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.report)
-                    .setMessage(R.string.choose)
-                    .setPositiveButton(R.string.CSV, (dialog, which) -> {
-                        vibrator.vibrate(100);
-                        csvuri = Uri.fromFile(file);
-                        Intent shareIntent = new Intent();
-                        shareIntent.setAction(Intent.ACTION_SEND);
-                        shareIntent.putExtra(Intent.EXTRA_STREAM, csvuri);
-                        shareIntent.setType("text/*");
-                        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
-                    })
-                    .setNeutralButton(R.string.mes_no, (dialog, which) -> vibrator.vibrate(100))
-                    .show();
         });
 
         b4.setOnClickListener(new View.OnClickListener() {

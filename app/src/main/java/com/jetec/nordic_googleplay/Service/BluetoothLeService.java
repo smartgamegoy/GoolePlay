@@ -17,6 +17,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.jetec.nordic_googleplay.Value;
@@ -80,12 +81,12 @@ public class BluetoothLeService extends Service {
         }
         mBluetoothGatt.setCharacteristicNotification(TxChar, true);
         //if(Value.phonename.matches("xiaomi"))
-            //mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+        //mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
         //else if(Value.phonename.matches("asus"))
-            //mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
-        if(Value.connect_flag == 1){
+        //mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+        /*if (Value.connect_flag == 1) {
             mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
-        }
+        }*/
         BluetoothGattDescriptor descriptor = TxChar.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
@@ -116,6 +117,7 @@ public class BluetoothLeService extends Service {
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
 
         int getstatus;
+
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             String intentAction;
@@ -135,13 +137,13 @@ public class BluetoothLeService extends Service {
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 getstatus = status;
                 Log.e(TAG, "斷線囉");
-                gatt.connect();
-                Log.e(TAG,"gatt.connect() = " + gatt.connect());
-                //gatt.close();
-                /*intentAction = ACTION_GATT_DISCONNECTED;
+                /*gatt.connect();
+                Log.e(TAG,"gatt.connect() = " + gatt.connect());*/
+                //gatt.connect();
+                intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
                 Log.i(TAG, "Disconnected from GATT server.");
-                broadcastUpdate(intentAction);*/
+                broadcastUpdate(intentAction);
             }
         }
 
@@ -166,19 +168,20 @@ public class BluetoothLeService extends Service {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             //if(Value.phonename.matches("asus")) {
-                //gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+            //gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
             /*}
             else if(Value.phonename.matches("xiaomi")){
                 gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
             }*/
-            //test(characteristic);
-            //flag = 1;
-            //if(flag == 0) {
-            if(Value.connect_flag == 1){
+            if (Value.connect_flag == 1) {
                 gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
             }
+            readCharacteristic(characteristic);
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-            //}
+        }
+
+        public void onMtuChanged(android.bluetooth.BluetoothGatt gatt, int mtu, int status) {
+            Log.e("BLE", "onMtuChanged mtu=" + mtu + ",status=" + status);
         }
 
         /*private void test(BluetoothGattCharacteristic characteristic){
@@ -206,10 +209,11 @@ public class BluetoothLeService extends Service {
         public void onConnectionUpdated(BluetoothGatt gatt, int interval, int latency, int timeout,
                                         int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                if (Value.downloading || Value.get_noti) {
-                    requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
-                    Log.e(TAG, "高速藍牙 => 最短間隔(ms) = " + interval + ", 延遲時間 = " + latency + ", 時間限制 = " + timeout);
-                }
+                Log.e(TAG, "高速藍牙 => 最短間隔(ms) = " + interval + ", 延遲時間 = " + latency + ", 時間限制 = " + timeout);
+                /*if (Value.connect_flag == 1) {
+                    if(!gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH))
+                        gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+                }*/
             } else if (status == 0x3b) { // HCI_ERR_UNACCEPT_CONN_INTERVAL
                 Log.e(TAG, "onConnectionUpdated received status: Unacceptable connection interval, interval: " + interval + ", latency: " + latency + ", timeout: " + timeout);
             } else {
@@ -232,18 +236,20 @@ public class BluetoothLeService extends Service {
 
 
     private void broadcastUpdate(final String action) {
-        final Intent intent = new Intent(action);
+        Intent intent = new Intent(action);
         this.sendBroadcast(intent);
+        //LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     private void broadcastUpdate(String action, BluetoothGattCharacteristic characteristic) {
         // This is special handling for the Heart Rate Measurement profile.  Data parsing is
         // carried out as per profile specifications:
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        Log.e(TAG, "uuid = " + characteristic.getUuid());
+        //Log.e(TAG, "uuid = " + characteristic.getUuid());
         if (UUID.fromString(Characteristic_uuid_TX).equals(characteristic.getUuid())) {
             Intent intent = new Intent(action);
             intent.putExtra(EXTRA_DATA, characteristic.getValue());
+            //LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             this.sendBroadcast(intent);
             //flag = 0;
         } else {
@@ -313,21 +319,7 @@ public class BluetoothLeService extends Service {
         if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)
                 && mBluetoothGatt != null) {
             Log.e(TAG, "Trying to use an existing mBluetoothGatt for connection.");
-            //mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
             if (mBluetoothGatt.connect()) {
-                /*final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-                if (device == null) {
-                    Log.w(TAG, "Device not found.  Unable to connect.");
-                    return false;
-                }
-                // We want to directly connect to the device, so we are setting the autoConnect
-                // parameter to false.
-                mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
-                refreshDeviceCache(mBluetoothGatt);
-                Log.d(TAG, "Trying to create a new connection.");
-                Log.e(TAG,"refresh = " + refreshDeviceCache(mBluetoothGatt));
-                mBluetoothDeviceAddress = address;
-                mConnectionState = STATE_CONNECTING;*/
                 mConnectionState = STATE_CONNECTING;
                 Log.e(TAG, "mBluetoothGatt connect.");
                 return true;
@@ -344,15 +336,10 @@ public class BluetoothLeService extends Service {
         }
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
-        mBluetoothGatt = device.connectGatt(this, true, mGattCallback);
+        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         refreshDeviceCache(mBluetoothGatt);
         Log.d(TAG, "Trying to create a new connection.");
         Log.e(TAG, "refresh = " + refreshDeviceCache(mBluetoothGatt));
-        /*for(;!refreshDeviceCache(mBluetoothGatt);){
-            mBluetoothGatt = device.connectGatt(this, true, mGattCallback);
-            refreshDeviceCache(mBluetoothGatt);
-            Log.e(TAG, "refresh = " + refreshDeviceCache(mBluetoothGatt));
-        }*/
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
         return true;

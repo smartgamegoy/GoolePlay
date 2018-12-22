@@ -2440,7 +2440,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                 //s_connect = false;
                 //mBluetoothLeService = null;
                 Log.e(TAG, "連線中斷" + Value.connected);
-                /*if (Value.connected) {
+                if (Value.connected) {
                     new Thread(connectfail).start();
                     Service_close();
                     try {
@@ -2451,7 +2451,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     Log.e(TAG, "重新連線");
                     ConnectThread newThread = new ConnectThread(connectHandler);
                     newThread.run();
-                } else {*/
+                }/*else {
                 //Service_close();
                 //Value.connected = true;
                 //try {
@@ -2493,8 +2493,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }*/
-                    sendValue = new SendValue(mBluetoothLeService);
-                    /*if (Value.downloading) {
+                    /*sendValue = new SendValue(mBluetoothLeService);
+                    if (Value.downloading) {
                         sendValue.send("STOP");
                         try {
                             sleep(100);
@@ -2575,6 +2575,11 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 } else if (text.startsWith("PWR")) {
                                     Value.P_word = text.substring(4, text.length());
                                     Log.e(TAG, "客戶密碼 = " + Value.P_word);
+                                }else if(text.startsWith("+") || text.startsWith("-")){
+                                    sendValue = new SendValue(mBluetoothLeService);
+                                    sendValue.send("STOP");
+                                    Value.connect_flag = 0;
+                                    mBluetoothLeService.mBluetoothGatt.requestConnectionPriority(0);
                                 }
                             }
                         } else {
@@ -2599,8 +2604,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 Log.e(TAG, "Logdata.size() = " + Logdata.size());
                                 if (Logdata.size() == totle) {
                                     //sendLog.interrupt();
+                                    Value.connect_flag = 0;
                                     Value.downloading = false;
                                     jsonflag = 0;
+                                    mBluetoothLeService.mBluetoothGatt.requestConnectionPriority(0);
                                     new Thread(analysislog).start();
                                     for (; jsonflag == 0; ) {
                                         try {
@@ -2629,6 +2636,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                     Value.opendialog = false;
                                     Value.downloading = false;
                                     //unbindService(mServiceConnection);
+                                    requeststorage();
                                 } else if (connect_flag == 1) {
                                     showtext = String.valueOf(getString(R.string.downloadfail));
                                     showing.setTextSize(16);
@@ -2675,7 +2683,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                 sleep(100);
                             } else if (text.startsWith("END")) {
                                 if (Value.connect_flag == 1) {
-                                    sendValue.send("Delay00000");
+                                    sendValue.send("Delay00004");
                                     sleep(100);
                                 } else {
                                     sendValue.send("Delay00050");
@@ -2809,7 +2817,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
         Logdata.add(text);
         showtext = String.valueOf(test) + " / " + String.valueOf(totle);
         showing.setText(showtext);
-        Log.e(TAG, "test = " + test);
+        //Log.e(TAG, "test = " + test);
     }
 
     @SuppressLint("HandlerLeak")
