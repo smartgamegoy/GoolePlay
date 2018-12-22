@@ -89,7 +89,7 @@ public class Interval {
                                 }
                                 sum = ihour * 3600 + iminute * 60 + isecond;
                                 try {
-                                    if(sum <= 3600 /*&& sum >= 30*/) {
+                                    if(sum <= 3600 && sum >= 30) {
                                         Toast.makeText(context, context.getString(R.string.intervalset), Toast.LENGTH_SHORT).show();
                                         try {
                                             sendValue.send("END");
