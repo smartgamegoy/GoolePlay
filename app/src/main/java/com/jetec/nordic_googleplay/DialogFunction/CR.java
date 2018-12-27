@@ -126,7 +126,7 @@ public class CR {
                     }
                 }
             } else if (Value.name.get(0).toString().matches("C")) {
-                if (10 * t > 2000 || 10 * t < -2000) {
+                if (10 * t > 2000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 }else {
                     if (t == 0.0) {
@@ -175,7 +175,7 @@ public class CR {
                     }
                 }
             }else if (Value.name.get(0).toString().matches("D")) {
-                if (10 * t > 3000 || 10 * t < -3000) {
+                if (10 * t > 3000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 }else {
                     if (t == 0.0) {
@@ -224,7 +224,7 @@ public class CR {
                     }
                 }
             }else if (Value.name.get(0).toString().matches("E")) {
-                if (10 * t > 5000 || 10 * t < -5000) {
+                if (10 * t > 5000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 }else {
                     if (t == 0.0) {
@@ -487,7 +487,7 @@ public class CR {
                     }
                 }
             }else if (Value.name.get(1).toString().matches("C")) {
-                if (10 * t > 2000 || 10 * t < -2000) {
+                if (10 * t > 2000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 }else {
                     if (t == 0.0) {
@@ -536,7 +536,7 @@ public class CR {
                     }
                 }
             }else if (Value.name.get(1).toString().matches("D")) {
-                if (10 * t > 3000 || 10 * t < -3000) {
+                if (10 * t > 3000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 }else {
                     if (t == 0.0) {
@@ -585,7 +585,7 @@ public class CR {
                     }
                 }
             }else if (Value.name.get(1).toString().matches("E")) {
-                if (10 * t > 5000 || 10 * t < -5000) {
+                if (10 * t > 5000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 }else {
                     if (t == 0.0) {
@@ -848,7 +848,7 @@ public class CR {
                     }
                 }
             } else if (Value.name.get(2).toString().matches("C")) {
-                if (10 * t > 2000 || 10 * t < -2000) {
+                if (10 * t > 2000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 }else {
                     if (t == 0.0) {
@@ -897,7 +897,7 @@ public class CR {
                     }
                 }
             }else if (Value.name.get(2).toString().matches("D")) {
-                if (10 * t > 3000 || 10 * t < -3000) {
+                if (10 * t > 3000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 }else {
                     if (t == 0.0) {
@@ -946,7 +946,7 @@ public class CR {
                     }
                 }
             }else if (Value.name.get(2).toString().matches("E")) {
-                if (10 * t > 5000 || 10 * t < -5000) {
+                if (10 * t > 5000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 }else {
                     if (t == 0.0) {
