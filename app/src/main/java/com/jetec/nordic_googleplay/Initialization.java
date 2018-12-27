@@ -384,6 +384,201 @@ public class Initialization {
                 sleep(500);
             }
             break;
+            case ("BT-3-THC"):{
+                Log.e("初始化型號","BT-3-THC");
+                sendValue.send("NAMEJTC");
+                sleep(500);
+                sendValue.send("PWR=000000");
+                sleep(500);
+                for(int i = 0; i < Value.Jsonlist.size(); i++) {
+                    if (Value.Jsonlist.get(i).matches("OVER")){
+                        //OVER
+                    }
+                    else if(Value.Jsonlist.get(i).matches("SPK")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0001.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR3")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+2000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0100.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0065.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL3")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH3")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+2000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0100.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "-0010.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0065.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV3")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                }
+            }
+            break;
+            case ("BT-3-THD"):{
+                Log.e("初始化型號","BT-3-THD");
+                sendValue.send("NAMEJTC");
+                sleep(500);
+                sendValue.send("PWR=000000");
+                sleep(500);
+                for(int i = 0; i < Value.Jsonlist.size(); i++) {
+                    if (Value.Jsonlist.get(i).matches("OVER")){
+                        //OVER
+                    }
+                    else if(Value.Jsonlist.get(i).matches("SPK")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0001.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR3")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+3000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0100.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0065.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL3")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH3")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+3000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0100.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "-0010.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0065.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV3")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                }
+            }
+            break;
+            case ("BT-3-THE"):{
+                Log.e("初始化型號","BT-3-THE");
+                sendValue.send("NAMEJTC");
+                sleep(500);
+                sendValue.send("PWR=000000");
+                sleep(500);
+                for(int i = 0; i < Value.Jsonlist.size(); i++) {
+                    if (Value.Jsonlist.get(i).matches("OVER")){
+                        //OVER
+                    }
+                    else if(Value.Jsonlist.get(i).matches("SPK")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0001.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR3")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+5000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0100.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0065.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL3")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH3")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+5000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0100.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "-0010.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0065.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV3")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV2")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                }
+            }
+            break;
         }
     }
 

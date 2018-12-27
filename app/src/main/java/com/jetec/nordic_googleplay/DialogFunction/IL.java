@@ -138,7 +138,167 @@ public class IL {
                     }
                 }
             } else if (Value.name.get(0).toString().matches("C")) {
-                Log.e(TAG, "待增加");
+                if (10 * t > 2000 || 10 * t < -2000) {
+                    Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                } else {
+                    Min = t;
+                    if (Min < Max) {
+                        if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                            String out = name + "+" + "0000.0";
+                            Log.e(TAG, "out = " + out);
+                            sendValue.send(out);
+                            inDialog.dismiss();
+                        } else {
+                            if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(1, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 0; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "-" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                function.notifyDataSetChanged();
+                                inDialog.dismiss();
+                            } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(0, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 1; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "+" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                inDialog.dismiss();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.MIN), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }else if (Value.name.get(0).toString().matches("D")) {
+                if (10 * t > 3000 || 10 * t < -3000) {
+                    Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                } else {
+                    Min = t;
+                    if (Min < Max) {
+                        if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                            String out = name + "+" + "0000.0";
+                            Log.e(TAG, "out = " + out);
+                            sendValue.send(out);
+                            inDialog.dismiss();
+                        } else {
+                            if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(1, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 0; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "-" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                function.notifyDataSetChanged();
+                                inDialog.dismiss();
+                            } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(0, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 1; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "+" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                inDialog.dismiss();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.MIN), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }else if (Value.name.get(0).toString().matches("E")) {
+                if (10 * t > 5000 || 10 * t < -5000) {
+                    Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                } else {
+                    Min = t;
+                    if (Min < Max) {
+                        if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                            String out = name + "+" + "0000.0";
+                            Log.e(TAG, "out = " + out);
+                            sendValue.send(out);
+                            inDialog.dismiss();
+                        } else {
+                            if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(1, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 0; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "-" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                function.notifyDataSetChanged();
+                                inDialog.dismiss();
+                            } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(0, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 1; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "+" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                inDialog.dismiss();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.MIN), Toast.LENGTH_SHORT).show();
+                    }
+                }
             } else if (Value.name.get(0).toString().matches("I")) {
                 if (!Value.IDP1) {
                     if (10 * t > 99990 || 10 * t < -9990) {
@@ -387,7 +547,167 @@ public class IL {
                     }
                 }
             } else if (Value.name.get(1).toString().matches("C")) {
-                Log.e(TAG, "待增加");
+                if (10 * t > 2000 || 10 * t < -2000) {
+                    Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                } else {
+                    Min = t;
+                    if (Min < Max) {
+                        if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                            String out = name + "+" + "0000.0";
+                            Log.e(TAG, "out = " + out);
+                            sendValue.send(out);
+                            inDialog.dismiss();
+                        } else {
+                            if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(1, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 0; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "-" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                function.notifyDataSetChanged();
+                                inDialog.dismiss();
+                            } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(0, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 1; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "+" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                inDialog.dismiss();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.MIN), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }else if (Value.name.get(1).toString().matches("D")) {
+                if (10 * t > 3000 || 10 * t < -3000) {
+                    Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                } else {
+                    Min = t;
+                    if (Min < Max) {
+                        if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                            String out = name + "+" + "0000.0";
+                            Log.e(TAG, "out = " + out);
+                            sendValue.send(out);
+                            inDialog.dismiss();
+                        } else {
+                            if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(1, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 0; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "-" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                function.notifyDataSetChanged();
+                                inDialog.dismiss();
+                            } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(0, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 1; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "+" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                inDialog.dismiss();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.MIN), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }else if (Value.name.get(1).toString().matches("E")) {
+                if (10 * t > 5000 || 10 * t < -5000) {
+                    Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                } else {
+                    Min = t;
+                    if (Min < Max) {
+                        if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                            String out = name + "+" + "0000.0";
+                            Log.e(TAG, "out = " + out);
+                            sendValue.send(out);
+                            inDialog.dismiss();
+                        } else {
+                            if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(1, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 0; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "-" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                function.notifyDataSetChanged();
+                                inDialog.dismiss();
+                            } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(0, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 1; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "+" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                inDialog.dismiss();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.MIN), Toast.LENGTH_SHORT).show();
+                    }
+                }
             } else if (Value.name.get(1).toString().matches("I")) {
                 if (!Value.IDP2) {
                     if (10 * t > 99990 || 10 * t < -9990) {
@@ -636,7 +956,167 @@ public class IL {
                     }
                 }
             } else if (Value.name.get(2).toString().matches("C")) {
-                Log.e(TAG, "待增加");
+                if (10 * t > 2000 || 10 * t < -2000) {
+                    Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                } else {
+                    Min = t;
+                    if (Min < Max) {
+                        if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                            String out = name + "+" + "0000.0";
+                            Log.e(TAG, "out = " + out);
+                            sendValue.send(out);
+                            inDialog.dismiss();
+                        } else {
+                            if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(1, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 0; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "-" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                function.notifyDataSetChanged();
+                                inDialog.dismiss();
+                            } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(0, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 1; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "+" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                inDialog.dismiss();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.MIN), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }else if (Value.name.get(2).toString().matches("D")) {
+                if (10 * t > 3000 || 10 * t < -3000) {
+                    Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                } else {
+                    Min = t;
+                    if (Min < Max) {
+                        if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                            String out = name + "+" + "0000.0";
+                            Log.e(TAG, "out = " + out);
+                            sendValue.send(out);
+                            inDialog.dismiss();
+                        } else {
+                            if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(1, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 0; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "-" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                function.notifyDataSetChanged();
+                                inDialog.dismiss();
+                            } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(0, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 1; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "+" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                inDialog.dismiss();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.MIN), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }else if (Value.name.get(2).toString().matches("E")) {
+                if (10 * t > 5000 || 10 * t < -5000) {
+                    Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                } else {
+                    Min = t;
+                    if (Min < Max) {
+                        if (t == 0.0) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                            String out = name + "+" + "0000.0";
+                            Log.e(TAG, "out = " + out);
+                            sendValue.send(out);
+                            inDialog.dismiss();
+                        } else {
+                            if (gets.startsWith("-")) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(1, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 0; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "-" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                function.notifyDataSetChanged();
+                                inDialog.dismiss();
+                            } else {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                                gets = String.valueOf(t);
+                                int i = gets.indexOf(".");
+                                Log.e(TAG, "gets = " + gets);
+                                String num1 = gets.substring(0, gets.indexOf("."));
+                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                StringBuilder set = new StringBuilder("0");
+                                for (int j = 1; j < (4 - i); j++)
+                                    set.append("0");
+                                String out = name + "+" + set + num1 + num2;
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
+                                inDialog.dismiss();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.MIN), Toast.LENGTH_SHORT).show();
+                    }
+                }
             } else if (Value.name.get(2).toString().matches("I")) {
                 if (!Value.IDP3) {
                     if (10 * t > 99990 || 10 * t < -9990) {
