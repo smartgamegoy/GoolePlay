@@ -18,7 +18,7 @@ public class IH {
     private Context context;
     private Function function;
 
-    public IH(Context context, Function function){
+    public IH(Context context, Function function) {
         this.context = context;
         this.function = function;
     }
@@ -28,7 +28,7 @@ public class IH {
         SendValue sendValue = new SendValue(bluetoothLeService);
         String TAG = "IH";
         Float Max;
-        if(name.matches("IH1")) {
+        if (name.matches("IH1")) {
             if (Value.name.get(0).toString().matches("T")) {
                 if (10 * t > 650 || 10 * t < -99) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
@@ -42,6 +42,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -76,6 +77,7 @@ public class IH {
                                 String out = name + "+" + set + num1 + num2;
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -96,6 +98,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -130,6 +133,7 @@ public class IH {
                                 String out = name + "+" + set + num1 + num2;
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -150,6 +154,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -162,11 +167,17 @@ public class IH {
                                 String num1 = gets.substring(1, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 0; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "-" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 0; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "-" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "-" + "0" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
@@ -179,11 +190,18 @@ public class IH {
                                 String num1 = gets.substring(0, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 1; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "+" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 1; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "+" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "+" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -191,7 +209,7 @@ public class IH {
                         Toast.makeText(context, context.getString(R.string.MAX), Toast.LENGTH_SHORT).show();
                     }
                 }
-            }else if (Value.name.get(0).toString().matches("D")) {
+            } else if (Value.name.get(0).toString().matches("D")) {
                 if (10 * t > 30000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
@@ -204,6 +222,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -216,11 +235,17 @@ public class IH {
                                 String num1 = gets.substring(1, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 0; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "-" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 0; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "-" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "-" + "0" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
@@ -233,11 +258,18 @@ public class IH {
                                 String num1 = gets.substring(0, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 1; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "+" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 1; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "+" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "+" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -245,7 +277,7 @@ public class IH {
                         Toast.makeText(context, context.getString(R.string.MAX), Toast.LENGTH_SHORT).show();
                     }
                 }
-            }else if (Value.name.get(0).toString().matches("E")) {
+            } else if (Value.name.get(0).toString().matches("E")) {
                 if (10 * t > 50000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
@@ -258,6 +290,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -270,11 +303,17 @@ public class IH {
                                 String num1 = gets.substring(1, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 0; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "-" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 0; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "-" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "-" + "0" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
@@ -287,11 +326,18 @@ public class IH {
                                 String num1 = gets.substring(0, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 1; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "+" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 1; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "+" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "+" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -313,6 +359,7 @@ public class IH {
                                 String out = name + "+" + "0000.0";
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
                                 if (gets.startsWith("-")) {
@@ -348,14 +395,13 @@ public class IH {
                                     String num1 = gets.substring(0, gets.indexOf("."));
                                     String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                     StringBuilder set = new StringBuilder("0");
-                                    if(i != 4){
+                                    if (i != 4) {
                                         for (int j = 1; j < (4 - i); j++)
                                             set.append("0");
                                         String out = name + "+" + set + num1 + num2;
                                         Log.e(TAG, "out = " + out);
                                         sendValue.send(out);
-                                    }
-                                    else {
+                                    } else {
                                         String out = name + "+" + num1 + num2;
                                         Log.e(TAG, "out = " + out);
                                         sendValue.send(out);
@@ -365,74 +411,82 @@ public class IH {
                                 }
                             }
                         }
-                    }else {
+                    } else {
                         Toast.makeText(context, context.getString(R.string.MAX), Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Max = t;
-                    Log.e(TAG,"t= " + t);
+                    Log.e(TAG, "t= " + t);
                     if (Max > Min) {
-                        Log.e(TAG,"10 * t= " + (10*t));
+                        Log.e(TAG, "10 * t= " + (10 * t));
                         if (10 * t > 9999 || 10 * t < -1999) {
                             Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                         } else {
-                            if (gets.startsWith("-")) {
+                            if (t == 0.0) {
                                 sendValue.send("END");
                                 sleep(100);
                                 Value.downlog = false;
-                                gets = String.valueOf(t);
-                                int i = gets.indexOf(".");
-                                Log.e(TAG, "gets = " + gets);
-                                String num1 = gets.substring(1, gets.indexOf("."));
-                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
-                                StringBuilder set = new StringBuilder("0");
-                                if(i != 4){
-                                    for (int j = 0; j < (4 - i); j++)
-                                        set.append("0");
-                                    String out = name + "-" + set + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
-                                }
-                                else {
-                                    String out = name + "-" + "0" + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
-                                }
+                                String out = name + "+" + "0000.0";
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
-                                sendValue.send("END");
-                                sleep(100);
-                                Value.downlog = false;
-                                gets = String.valueOf(t);
-                                int i = gets.indexOf(".");
-                                Log.e(TAG, "gets = " + gets);
-                                String num1 = gets.substring(0, gets.indexOf("."));
-                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
-                                StringBuilder set = new StringBuilder("0");
-                                if(i != 4){
-                                    for (int j = 1; j < (4 - i); j++)
-                                        set.append("0");
-                                    String out = name + "+" + set + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
+                                if (gets.startsWith("-")) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                    gets = String.valueOf(t);
+                                    int i = gets.indexOf(".");
+                                    Log.e(TAG, "gets = " + gets);
+                                    String num1 = gets.substring(1, gets.indexOf("."));
+                                    String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                    StringBuilder set = new StringBuilder("0");
+                                    if (i != 4) {
+                                        for (int j = 0; j < (4 - i); j++)
+                                            set.append("0");
+                                        String out = name + "-" + set + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                    } else {
+                                        String out = name + "-" + "0" + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                    }
+                                    function.notifyDataSetChanged();
+                                    inDialog.dismiss();
+                                } else {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                    gets = String.valueOf(t);
+                                    int i = gets.indexOf(".");
+                                    Log.e(TAG, "gets = " + gets);
+                                    String num1 = gets.substring(0, gets.indexOf("."));
+                                    String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                    StringBuilder set = new StringBuilder("0");
+                                    if (i != 4) {
+                                        for (int j = 1; j < (4 - i); j++)
+                                            set.append("0");
+                                        String out = name + "+" + set + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                    } else {
+                                        String out = name + "+" + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                    }
+                                    function.notifyDataSetChanged();
+                                    inDialog.dismiss();
                                 }
-                                else {
-                                    String out = name + "+" + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
-                                }
-                                function.notifyDataSetChanged();
-                                inDialog.dismiss();
                             }
                         }
-                    }else {
+                    } else {
                         Toast.makeText(context, context.getString(R.string.MAX), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
-        }
-        else if(name.matches("IH2")) {
+        } else if (name.matches("IH2")) {
             if (Value.name.get(1).toString().matches("T")) {
                 if (10 * t > 650 || 10 * t < -99) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
@@ -446,6 +500,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -480,6 +535,7 @@ public class IH {
                                 String out = name + "+" + set + num1 + num2;
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -500,6 +556,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -534,6 +591,7 @@ public class IH {
                                 String out = name + "+" + set + num1 + num2;
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -554,6 +612,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -566,11 +625,17 @@ public class IH {
                                 String num1 = gets.substring(1, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 0; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "-" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 0; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "-" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "-" + "0" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
@@ -583,11 +648,18 @@ public class IH {
                                 String num1 = gets.substring(0, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 1; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "+" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 1; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "+" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "+" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -595,7 +667,7 @@ public class IH {
                         Toast.makeText(context, context.getString(R.string.MAX), Toast.LENGTH_SHORT).show();
                     }
                 }
-            }else if (Value.name.get(1).toString().matches("D")) {
+            } else if (Value.name.get(1).toString().matches("D")) {
                 if (10 * t > 30000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
@@ -608,6 +680,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -620,11 +693,17 @@ public class IH {
                                 String num1 = gets.substring(1, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 0; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "-" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 0; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "-" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "-" + "0" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
@@ -637,11 +716,18 @@ public class IH {
                                 String num1 = gets.substring(0, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 1; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "+" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 1; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "+" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "+" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -649,7 +735,7 @@ public class IH {
                         Toast.makeText(context, context.getString(R.string.MAX), Toast.LENGTH_SHORT).show();
                     }
                 }
-            }else if (Value.name.get(1).toString().matches("E")) {
+            } else if (Value.name.get(1).toString().matches("E")) {
                 if (10 * t > 50000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
@@ -662,6 +748,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -674,11 +761,17 @@ public class IH {
                                 String num1 = gets.substring(1, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 0; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "-" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 0; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "-" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "-" + "0" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
@@ -691,11 +784,18 @@ public class IH {
                                 String num1 = gets.substring(0, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 1; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "+" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 1; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "+" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "+" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -717,6 +817,7 @@ public class IH {
                                 String out = name + "+" + "0000.0";
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
                                 if (gets.startsWith("-")) {
@@ -729,14 +830,13 @@ public class IH {
                                     String num1 = gets.substring(1, gets.indexOf("."));
                                     String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                     StringBuilder set = new StringBuilder("0");
-                                    if(i != 4){
+                                    if (i != 4) {
                                         for (int j = 0; j < (4 - i); j++)
                                             set.append("0");
                                         String out = name + "-" + set + num1 + num2;
                                         Log.e(TAG, "out = " + out);
                                         sendValue.send(out);
-                                    }
-                                    else {
+                                    } else {
                                         String out = name + "-" + "0" + num1 + num2;
                                         Log.e(TAG, "out = " + out);
                                         sendValue.send(out);
@@ -753,14 +853,13 @@ public class IH {
                                     String num1 = gets.substring(0, gets.indexOf("."));
                                     String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                     StringBuilder set = new StringBuilder("0");
-                                    if(i != 4){
+                                    if (i != 4) {
                                         for (int j = 1; j < (4 - i); j++)
                                             set.append("0");
                                         String out = name + "+" + set + num1 + num2;
                                         Log.e(TAG, "out = " + out);
                                         sendValue.send(out);
-                                    }
-                                    else {
+                                    } else {
                                         String out = name + "+" + num1 + num2;
                                         Log.e(TAG, "out = " + out);
                                         sendValue.send(out);
@@ -770,7 +869,7 @@ public class IH {
                                 }
                             }
                         }
-                    }else {
+                    } else {
                         Toast.makeText(context, context.getString(R.string.MAX), Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -779,63 +878,71 @@ public class IH {
                         if (10 * t > 9999 || 10 * t < -1999) {
                             Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                         } else {
-                            if (gets.startsWith("-")) {
+                            if (t == 0.0) {
                                 sendValue.send("END");
                                 sleep(100);
                                 Value.downlog = false;
-                                gets = String.valueOf(t);
-                                int i = gets.indexOf(".");
-                                Log.e(TAG, "gets = " + gets);
-                                String num1 = gets.substring(1, gets.indexOf("."));
-                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
-                                StringBuilder set = new StringBuilder("0");
-                                if(i != 4){
-                                    for (int j = 0; j < (4 - i); j++)
-                                        set.append("0");
-                                    String out = name + "-" + set + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
-                                }
-                                else {
-                                    String out = name + "-" + "0" + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
-                                }
+                                String out = name + "+" + "0000.0";
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
-                                sendValue.send("END");
-                                sleep(100);
-                                Value.downlog = false;
-                                gets = String.valueOf(t);
-                                int i = gets.indexOf(".");
-                                Log.e(TAG, "gets = " + gets);
-                                String num1 = gets.substring(0, gets.indexOf("."));
-                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
-                                StringBuilder set = new StringBuilder("0");
-                                if(i != 4){
-                                    for (int j = 1; j < (4 - i); j++)
-                                        set.append("0");
-                                    String out = name + "+" + set + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
+                                if (gets.startsWith("-")) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                    gets = String.valueOf(t);
+                                    int i = gets.indexOf(".");
+                                    Log.e(TAG, "gets = " + gets);
+                                    String num1 = gets.substring(1, gets.indexOf("."));
+                                    String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                    StringBuilder set = new StringBuilder("0");
+                                    if (i != 4) {
+                                        for (int j = 0; j < (4 - i); j++)
+                                            set.append("0");
+                                        String out = name + "-" + set + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                    } else {
+                                        String out = name + "-" + "0" + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                    }
+                                    function.notifyDataSetChanged();
+                                    inDialog.dismiss();
+                                } else {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                    gets = String.valueOf(t);
+                                    int i = gets.indexOf(".");
+                                    Log.e(TAG, "gets = " + gets);
+                                    String num1 = gets.substring(0, gets.indexOf("."));
+                                    String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                    StringBuilder set = new StringBuilder("0");
+                                    if (i != 4) {
+                                        for (int j = 1; j < (4 - i); j++)
+                                            set.append("0");
+                                        String out = name + "+" + set + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                    } else {
+                                        String out = name + "+" + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                    }
+                                    function.notifyDataSetChanged();
+                                    inDialog.dismiss();
                                 }
-                                else {
-                                    String out = name + "+" + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
-                                }
-                                function.notifyDataSetChanged();
-                                inDialog.dismiss();
                             }
                         }
-                    }else {
+                    } else {
                         Toast.makeText(context, context.getString(R.string.MAX), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
-        }
-        else if(name.matches("IH3")) {
+        } else if (name.matches("IH3")) {
             if (Value.name.get(2).toString().matches("T")) {
                 if (10 * t > 650 || 10 * t < -99) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
@@ -849,6 +956,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -883,6 +991,7 @@ public class IH {
                                 String out = name + "+" + set + num1 + num2;
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -903,6 +1012,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -937,6 +1047,7 @@ public class IH {
                                 String out = name + "+" + set + num1 + num2;
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -957,6 +1068,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -969,11 +1081,17 @@ public class IH {
                                 String num1 = gets.substring(1, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 0; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "-" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 0; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "-" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "-" + "0" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
@@ -986,11 +1104,18 @@ public class IH {
                                 String num1 = gets.substring(0, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 1; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "+" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 1; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "+" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "+" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -998,7 +1123,7 @@ public class IH {
                         Toast.makeText(context, context.getString(R.string.MAX), Toast.LENGTH_SHORT).show();
                     }
                 }
-            }else if (Value.name.get(2).toString().matches("D")) {
+            } else if (Value.name.get(2).toString().matches("D")) {
                 if (10 * t > 30000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
@@ -1011,6 +1136,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -1023,11 +1149,17 @@ public class IH {
                                 String num1 = gets.substring(1, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 0; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "-" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 0; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "-" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "-" + "0" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
@@ -1040,11 +1172,18 @@ public class IH {
                                 String num1 = gets.substring(0, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 1; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "+" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 1; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "+" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "+" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -1052,7 +1191,7 @@ public class IH {
                         Toast.makeText(context, context.getString(R.string.MAX), Toast.LENGTH_SHORT).show();
                     }
                 }
-            }else if (Value.name.get(2).toString().matches("E")) {
+            } else if (Value.name.get(2).toString().matches("E")) {
                 if (10 * t > 50000 || 10 * t < 0) {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
@@ -1065,6 +1204,7 @@ public class IH {
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
+                            function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
@@ -1077,11 +1217,17 @@ public class IH {
                                 String num1 = gets.substring(1, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 0; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "-" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 0; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "-" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "-" + "0" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
@@ -1094,11 +1240,18 @@ public class IH {
                                 String num1 = gets.substring(0, gets.indexOf("."));
                                 String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                 StringBuilder set = new StringBuilder("0");
-                                for (int j = 1; j < (4 - i); j++)
-                                    set.append("0");
-                                String out = name + "+" + set + num1 + num2;
-                                Log.e(TAG, "out = " + out);
-                                sendValue.send(out);
+                                if (i != 4) {
+                                    for (int j = 1; j < (4 - i); j++)
+                                        set.append("0");
+                                    String out = name + "+" + set + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                } else {
+                                    String out = name + "+" + num1 + num2;
+                                    Log.e(TAG, "out = " + out);
+                                    sendValue.send(out);
+                                }
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             }
                         }
@@ -1120,6 +1273,7 @@ public class IH {
                                 String out = name + "+" + "0000.0";
                                 Log.e(TAG, "out = " + out);
                                 sendValue.send(out);
+                                function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
                                 if (gets.startsWith("-")) {
@@ -1132,14 +1286,13 @@ public class IH {
                                     String num1 = gets.substring(1, gets.indexOf("."));
                                     String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                     StringBuilder set = new StringBuilder("0");
-                                    if(i != 4){
+                                    if (i != 4) {
                                         for (int j = 0; j < (4 - i); j++)
                                             set.append("0");
                                         String out = name + "-" + set + num1 + num2;
                                         Log.e(TAG, "out = " + out);
                                         sendValue.send(out);
-                                    }
-                                    else {
+                                    } else {
                                         String out = name + "-" + "0" + num1 + num2;
                                         Log.e(TAG, "out = " + out);
                                         sendValue.send(out);
@@ -1156,14 +1309,13 @@ public class IH {
                                     String num1 = gets.substring(0, gets.indexOf("."));
                                     String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
                                     StringBuilder set = new StringBuilder("0");
-                                    if(i != 4){
+                                    if (i != 4) {
                                         for (int j = 1; j < (4 - i); j++)
                                             set.append("0");
                                         String out = name + "+" + set + num1 + num2;
                                         Log.e(TAG, "out = " + out);
                                         sendValue.send(out);
-                                    }
-                                    else {
+                                    } else {
                                         String out = name + "+" + num1 + num2;
                                         Log.e(TAG, "out = " + out);
                                         sendValue.send(out);
@@ -1173,7 +1325,7 @@ public class IH {
                                 }
                             }
                         }
-                    }else {
+                    } else {
                         Toast.makeText(context, context.getString(R.string.MAX), Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -1182,57 +1334,66 @@ public class IH {
                         if (10 * t > 9999 || 10 * t < -1999) {
                             Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                         } else {
-                            if (gets.startsWith("-")) {
+                            if (t == 0.0) {
                                 sendValue.send("END");
                                 sleep(100);
                                 Value.downlog = false;
-                                gets = String.valueOf(t);
-                                int i = gets.indexOf(".");
-                                Log.e(TAG, "gets = " + gets);
-                                String num1 = gets.substring(1, gets.indexOf("."));
-                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
-                                StringBuilder set = new StringBuilder("0");
-                                if(i != 4){
-                                    for (int j = 0; j < (4 - i); j++)
-                                        set.append("0");
-                                    String out = name + "-" + set + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
-                                }
-                                else {
-                                    String out = name + "-" + "0" + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
-                                }
+                                String out = name + "+" + "0000.0";
+                                Log.e(TAG, "out = " + out);
+                                sendValue.send(out);
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
-                                sendValue.send("END");
-                                sleep(100);
-                                Value.downlog = false;
-                                gets = String.valueOf(t);
-                                int i = gets.indexOf(".");
-                                Log.e(TAG, "gets = " + gets);
-                                String num1 = gets.substring(0, gets.indexOf("."));
-                                String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
-                                StringBuilder set = new StringBuilder("0");
-                                if(i != 4){
-                                    for (int j = 1; j < (4 - i); j++)
-                                        set.append("0");
-                                    String out = name + "+" + set + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
+                                if (gets.startsWith("-")) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                    gets = String.valueOf(t);
+                                    int i = gets.indexOf(".");
+                                    Log.e(TAG, "gets = " + gets);
+                                    String num1 = gets.substring(1, gets.indexOf("."));
+                                    String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                    StringBuilder set = new StringBuilder("0");
+                                    if (i != 4) {
+                                        for (int j = 0; j < (4 - i); j++)
+                                            set.append("0");
+                                        String out = name + "-" + set + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                    } else {
+                                        String out = name + "-" + "0" + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                    }
+                                    function.notifyDataSetChanged();
+                                    inDialog.dismiss();
+                                } else {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                    gets = String.valueOf(t);
+                                    int i = gets.indexOf(".");
+                                    Log.e(TAG, "gets = " + gets);
+                                    String num1 = gets.substring(0, gets.indexOf("."));
+                                    String num2 = gets.substring(gets.indexOf("."), gets.indexOf(".") + 2);
+                                    StringBuilder set = new StringBuilder("0");
+                                    if (i != 4) {
+                                        for (int j = 1; j < (4 - i); j++)
+                                            set.append("0");
+                                        String out = name + "+" + set + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                    } else {
+                                        String out = name + "+" + num1 + num2;
+                                        Log.e(TAG, "out = " + out);
+                                        sendValue.send(out);
+                                    }
+                                    function.notifyDataSetChanged();
+                                    inDialog.dismiss();
                                 }
-                                else {
-                                    String out = name + "+" + num1 + num2;
-                                    Log.e(TAG, "out = " + out);
-                                    sendValue.send(out);
-                                }
-                                function.notifyDataSetChanged();
-                                inDialog.dismiss();
                             }
                         }
-                    }else {
+                    } else {
                         Toast.makeText(context, context.getString(R.string.MAX), Toast.LENGTH_SHORT).show();
                     }
                 }
