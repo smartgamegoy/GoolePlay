@@ -834,8 +834,7 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(1).toString().matches("H")) {
                     editText.setHint(" - 10 ~ 10");
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
-                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
-                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -1641,10 +1640,11 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             }
             break;
             case "IH1": {
-                editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
-                        InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
                 if (Value.name.get(0).toString().matches("T")) {
                     editText.setHint(" - 10 ~ 65");
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -1669,6 +1669,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     });
                 } else if (Value.name.get(0).toString().matches("H")) {
                     editText.setHint(" 0 ~ 99");
+                    editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -1700,9 +1702,13 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                         editText.setHint(" 0 ~ 3000");
                     else if(Value.name.get(0).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
+                    editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                     c = true;
                 } else if (Value.name.get(0).toString().matches("I")) {
                     c = true;
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     if (!Value.IDP1) {
                         editText.setHint(" 9999 ~ -999");
                     } else {
@@ -1712,10 +1718,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             }
             break;
             case "IH2": {
-                editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
-                        InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 if (Value.name.get(1).toString().matches("T")) {
                     editText.setHint(" - 10 ~ 65");
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -1740,6 +1746,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     });
                 } else if (Value.name.get(1).toString().matches("H")) {
                     editText.setHint(" 0 ~ 99");
+                    editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -1772,8 +1780,12 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     else if(Value.name.get(1).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     c = true;
+                    editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                 } else if (Value.name.get(1).toString().matches("I")) {
                     c = true;
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     if (!Value.IDP2) {
                         editText.setHint(" 9999 ~ -999");
                     } else {
@@ -1783,10 +1795,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             }
             break;
             case "IH3": {
-                editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
-                        InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 if (Value.name.get(2).toString().matches("T")) {
                     editText.setHint(" - 10 ~ 65");
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -1811,6 +1823,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     });
                 } else if (Value.name.get(2).toString().matches("H")) {
                     editText.setHint(" 0 ~ 99");
+                    editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -1843,8 +1857,12 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     else if(Value.name.get(2).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     c = true;
+                    editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                 } else if (Value.name.get(2).toString().matches("I")) {
                     c = true;
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     if (!Value.IDP3) {
                         editText.setHint(" 9999 ~ -999");
                     } else {
@@ -1854,10 +1872,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             }
             break;
             case "IL1": {
-                editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
-                        InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 if (Value.name.get(0).toString().matches("T")) {
                     editText.setHint(" - 10 ~ 65");
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -1882,6 +1900,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     });
                 } else if (Value.name.get(0).toString().matches("H")) {
                     editText.setHint(" 0 ~ 99");
+                    editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -1914,8 +1934,12 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     else if(Value.name.get(0).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     c = true;
+                    editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                 } else if (Value.name.get(0).toString().matches("I")) {
                     c = true;
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     if (!Value.IDP1) {
                         editText.setHint(" 9999 ~ -999");
                     } else {
@@ -1925,10 +1949,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             }
             break;
             case "IL2": {
-                editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
-                        InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 if (Value.name.get(1).toString().matches("T")) {
                     editText.setHint(" - 10 ~ 65");
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -1953,6 +1977,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     });
                 } else if (Value.name.get(1).toString().matches("H")) {
                     editText.setHint(" 0 ~ 99");
+                    editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -1985,8 +2011,12 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     else if(Value.name.get(1).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     c = true;
+                    editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                 } else if (Value.name.get(1).toString().matches("I")) {
                     c = true;
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     if (!Value.IDP2) {
                         editText.setHint(" 9999 ~ -999");
                     } else {
@@ -1996,10 +2026,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
             }
             break;
             case "IL3": {
-                editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
-                        InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 if (Value.name.get(2).toString().matches("T")) {
                     editText.setHint(" - 10 ~ 65");
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -2024,6 +2054,8 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     });
                 } else if (Value.name.get(2).toString().matches("H")) {
                     editText.setHint(" 0 ~ 99");
+                    editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                     editText.addTextChangedListener(new TextWatcher() {
                         int l = 0;    //記錄字串删除字元之前，字串的長度
                         int location = 0; //記錄光標位置
@@ -2056,8 +2088,12 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     else if(Value.name.get(2).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     c = true;
+                    editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
                 } else if (Value.name.get(2).toString().matches("I")) {
                     c = true;
+                    editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     if (!Value.IDP3) {
                         editText.setHint(" 9999 ~ -999");
                     } else {

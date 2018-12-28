@@ -31,7 +31,9 @@ public class GetDeviceName {
             else if(name.get(0).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.PV1);
             }
-            else if(name.get(0).toString().matches("C")){
+            else if(name.get(0).toString().matches("C") ||
+                    name.get(0).toString().matches("D") ||
+                    name.get(0).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.PV1);
             }
             else if(name.get(0).toString().matches("I")){
@@ -45,7 +47,9 @@ public class GetDeviceName {
             else if(name.get(1).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.PV2);
             }
-            else if(name.get(1).toString().matches("C")){
+            else if(name.get(1).toString().matches("C") ||
+                    name.get(1).toString().matches("D") ||
+                    name.get(1).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.PV2);
             }
             else if(name.get(1).toString().matches("I")){
@@ -59,7 +63,9 @@ public class GetDeviceName {
             else if(name.get(2).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.PV3);
             }
-            else if(name.get(2).toString().matches("C")){
+            else if(name.get(2).toString().matches("C") ||
+                    name.get(2).toString().matches("D") ||
+                    name.get(2).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.PV3);
             }
             else if(name.get(2).toString().matches("I")){
@@ -73,7 +79,9 @@ public class GetDeviceName {
             else if(name.get(0).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.EH1);
             }
-            else if(name.get(0).toString().matches("C")){
+            else if(name.get(0).toString().matches("C") ||
+                    name.get(0).toString().matches("D") ||
+                    name.get(0).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.EH1);
             }
             else if(name.get(0).toString().matches("I")){
@@ -87,7 +95,9 @@ public class GetDeviceName {
             else if(name.get(1).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.EH2);
             }
-            else if(name.get(1).toString().matches("C")){
+            else if(name.get(1).toString().matches("C") ||
+                    name.get(1).toString().matches("D") ||
+                    name.get(1).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.EH2);
             }
             else if(name.get(1).toString().matches("I")){
@@ -101,7 +111,9 @@ public class GetDeviceName {
             else if(name.get(2).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.EH3);
             }
-            else if(name.get(2).toString().matches("C")){
+            else if(name.get(2).toString().matches("C") ||
+                    name.get(2).toString().matches("D") ||
+                    name.get(2).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.EH3);
             }
             else if(name.get(2).toString().matches("I")){
@@ -115,7 +127,9 @@ public class GetDeviceName {
             else if(name.get(0).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.EL1);
             }
-            else if(name.get(0).toString().matches("C")){
+            else if(name.get(0).toString().matches("C") ||
+                    name.get(0).toString().matches("D") ||
+                    name.get(0).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.EL1);
             }
             else if(name.get(0).toString().matches("I")){
@@ -129,7 +143,9 @@ public class GetDeviceName {
             else if(name.get(1).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.EL2);
             }
-            else if(name.get(1).toString().matches("C")){
+            else if(name.get(1).toString().matches("C") ||
+                    name.get(1).toString().matches("D") ||
+                    name.get(1).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.EL2);
             }
             else if(name.get(1).toString().matches("I")){
@@ -143,7 +159,9 @@ public class GetDeviceName {
             else if(name.get(2).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.EL3);
             }
-            else if(name.get(2).toString().matches("C")){
+            else if(name.get(2).toString().matches("C") ||
+                    name.get(2).toString().matches("D") ||
+                    name.get(2).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.EL3);
             }
             else if(name.get(2).toString().matches("I")){
@@ -157,7 +175,9 @@ public class GetDeviceName {
             else if(name.get(0).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.CR1);
             }
-            else if(name.get(0).toString().matches("C")){
+            else if(name.get(0).toString().matches("C") ||
+                    name.get(0).toString().matches("D") ||
+                    name.get(0).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.CR1);
             }
             else if(name.get(0).toString().matches("I")){
@@ -171,7 +191,9 @@ public class GetDeviceName {
             else if(name.get(1).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.CR2);
             }
-            else if(name.get(1).toString().matches("C")){
+            else if(name.get(1).toString().matches("C") ||
+                    name.get(1).toString().matches("D") ||
+                    name.get(1).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.CR2);
             }
             else if(name.get(1).toString().matches("I")){
@@ -185,7 +207,9 @@ public class GetDeviceName {
             else if(name.get(2).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.CR3);
             }
-            else if(name.get(2).toString().matches("C")){
+            else if(name.get(2).toString().matches("C") ||
+                    name.get(2).toString().matches("D") ||
+                    name.get(2).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.CR3);
             }
             else if(name.get(2).toString().matches("I")){
@@ -202,7 +226,9 @@ public class GetDeviceName {
             else if(name.get(0).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.DP1);
             }
-            else if(name.get(0).toString().matches("C")){
+            else if(name.get(0).toString().matches("C") ||
+                    name.get(0).toString().matches("D") ||
+                    name.get(0).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.DP1);
             }
             else if(name.get(0).toString().matches("I")){
@@ -216,7 +242,9 @@ public class GetDeviceName {
             else if(name.get(1).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.DP2);
             }
-            else if(name.get(1).toString().matches("C")){
+            else if(name.get(1).toString().matches("C") ||
+                    name.get(1).toString().matches("D") ||
+                    name.get(1).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.DP2);
             }
             else if(name.get(1).toString().matches("I")){
@@ -230,7 +258,9 @@ public class GetDeviceName {
             else if(name.get(2).toString().matches("H")){
                 rename = this.context.getString(R.string.H) + " " + this.context.getString(R.string.DP3);
             }
-            else if(name.get(2).toString().matches("C")){
+            else if(name.get(2).toString().matches("C") ||
+                    name.get(2).toString().matches("D") ||
+                    name.get(2).toString().matches("E")){
                 rename = this.context.getString(R.string.C) + " " + this.context.getString(R.string.DP3);
             }
             else if(name.get(2).toString().matches("I")){

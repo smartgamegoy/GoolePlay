@@ -126,11 +126,17 @@ public class GetDeviceNum {
                             } else {
                                 String newStr = str.substring(str.indexOf("+") + 1, str.length())
                                         .replaceFirst("^0*", "");
+                                Log.e("這裡","newStr = " + newStr);
                                 if (newStr.matches("")) {
                                     renum = "0";
                                 } else {
-                                    renum = newStr;
-                                    Log.e(TAG, "renum = " + renum);
+                                    if(newStr.startsWith(".")){
+                                        renum = "0" + newStr;
+                                    }
+                                    else {
+                                        renum = newStr;
+                                        Log.e(TAG, "renum = " + renum);
+                                    }
                                 }
                             }
                         } else {
@@ -142,7 +148,12 @@ public class GetDeviceNum {
                                 if (newStr.matches("")) {
                                     renum = "0";
                                 } else {
-                                    renum = "-" + newStr;
+                                    if(newStr.startsWith(".")){
+                                        renum = "-" + "0" + newStr;
+                                    }
+                                    else {
+                                        renum = "-" + newStr;
+                                    }
                                 }
                             }
                         }
@@ -177,7 +188,9 @@ public class GetDeviceNum {
                             }
                         }
                     }
-                    else if(Value.name.get(0).toString().matches("C")){
+                    else if(Value.name.get(0).toString().matches("C") ||
+                            Value.name.get(0).toString().matches("D") ||
+                            Value.name.get(0).toString().matches("E")){
                         if (str.contains("+")) {
                             if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
                                 renum = "0";
@@ -282,8 +295,13 @@ public class GetDeviceNum {
                                 if (newStr.matches("")) {
                                     renum = "0";
                                 } else {
-                                    renum = newStr;
-                                    Log.e(TAG, "renum = " + renum);
+                                    if(newStr.startsWith(".")){
+                                        renum = "0" + newStr;
+                                    }
+                                    else {
+                                        renum = newStr;
+                                        Log.e(TAG, "renum = " + renum);
+                                    }
                                 }
                             }
                         } else {
@@ -295,7 +313,12 @@ public class GetDeviceNum {
                                 if (newStr.matches("")) {
                                     renum = "0";
                                 } else {
-                                    renum = "-" + newStr;
+                                    if(newStr.startsWith(".")){
+                                        renum = "-" + "0" + newStr;
+                                    }
+                                    else {
+                                        renum = "-" + newStr;
+                                    }
                                 }
                             }
                         }
@@ -327,7 +350,9 @@ public class GetDeviceNum {
                             }
                         }
                     }
-                    else if(Value.name.get(1).toString().matches("C")){
+                    else if(Value.name.get(1).toString().matches("C") ||
+                            Value.name.get(1).toString().matches("D") ||
+                            Value.name.get(1).toString().matches("E")){
                         if (str.contains("+")) {
                             if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
                                 renum = "0";
@@ -429,8 +454,13 @@ public class GetDeviceNum {
                                 if (newStr.matches("")) {
                                     renum = "0";
                                 } else {
-                                    renum = newStr;
-                                    Log.e(TAG, "renum = " + renum);
+                                    if(newStr.startsWith(".")){
+                                        renum = "0" + newStr;
+                                    }
+                                    else {
+                                        renum = newStr;
+                                        Log.e(TAG, "renum = " + renum);
+                                    }
                                 }
                             }
                         } else {
@@ -442,7 +472,12 @@ public class GetDeviceNum {
                                 if (newStr.matches("")) {
                                     renum = "0";
                                 } else {
-                                    renum = "-" + newStr;
+                                    if(newStr.startsWith(".")){
+                                        renum = "-"+ "0" + newStr;
+                                    }
+                                    else {
+                                        renum = "-" + newStr;
+                                    }
                                 }
                             }
                         }
@@ -474,7 +509,9 @@ public class GetDeviceNum {
                             }
                         }
                     }
-                    else if(Value.name.get(2).toString().matches("C")){
+                    else if(Value.name.get(2).toString().matches("C") ||
+                            Value.name.get(2).toString().matches("D") ||
+                            Value.name.get(2).toString().matches("E")){
                         if (str.contains("+")) {
                             if (str.substring(str.indexOf("+") + 1, str.length()).matches("0000.0")) {
                                 renum = "0";
