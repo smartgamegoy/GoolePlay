@@ -3214,6 +3214,9 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                     timelist.add(b.get(5999 - i));
                 }
 
+                Collections.reverse(charttime);
+                Collections.reverse(timelist);
+
                 Log.e(TAG, "timelist.size() = " + timelist.size());
                 Log.e(TAG, "timelist = " + timelist);
                 jsonflag = 2;
