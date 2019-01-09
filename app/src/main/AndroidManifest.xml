@@ -44,10 +44,18 @@
             android:name=".Activity.Engineer"
             android:theme="@style/nordic_use"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize"
             tools:ignore="InnerclassSeparator">
         </activity>
         <activity
             android:name=".Activity.DeviceFunction"
+            android:theme="@style/nordic_use"
+            android:screenOrientation="sensor"
+            android:configChanges="orientation|keyboardHidden"
+            tools:ignore="InnerclassSeparator">
+        </activity>
+        <activity
+            android:name=".Activity.DeviceEngineer"
             android:theme="@style/nordic_use"
             android:screenOrientation="sensor"
             android:configChanges="orientation|keyboardHidden"
