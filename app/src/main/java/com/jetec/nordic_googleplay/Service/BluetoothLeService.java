@@ -62,6 +62,7 @@ public class BluetoothLeService extends Service {
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
 
     public int flag = 0, count = 0;
+    private Boolean oppo = false;
     private ArrayList<String> loglist = new ArrayList<>();
 
     public void enableTXNotification() {
@@ -175,6 +176,10 @@ public class BluetoothLeService extends Service {
             }*/
             if (Value.connect_flag == 1) {
                 gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+            }
+            if(oppo){
+                gatt.disconnect();
+                gatt.close();
             }
             readCharacteristic(characteristic);
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
@@ -356,8 +361,12 @@ public class BluetoothLeService extends Service {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
+
+        if(Value.phonename.matches("OPPO")){
+            oppo = true;
+            mBluetoothGatt.connect();
+        }
         mBluetoothGatt.disconnect();
-        close();
     }
 
     /**
