@@ -320,6 +320,12 @@ public class DeviceList extends AppCompatActivity {
                             sendLog.start();*/
                         } else if (text.startsWith("BT")) {
                             Jsonlist.clear();
+                            if(text.contains("Y")){
+                                Value.YMD = true;
+                            }
+                            else {
+                                Value.YMD = false;
+                            }
                             Value.model = true;
                             Value.deviceModel = text;
                             modelJSON = modelSQL.getJSON(text);

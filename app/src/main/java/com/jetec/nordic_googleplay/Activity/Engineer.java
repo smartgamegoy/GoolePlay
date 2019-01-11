@@ -88,6 +88,7 @@ public class Engineer extends AppCompatActivity {
         Button SP1 = findViewById(R.id.button2);
         Button ER1 = findViewById(R.id.button3);
         Button SV1 = findViewById(R.id.button4);
+        Button GET = findViewById(R.id.button5);
         Button SP2 = findViewById(R.id.button6);
         Button ER2 = findViewById(R.id.button7);
         Button SV2 = findViewById(R.id.button8);
@@ -186,6 +187,21 @@ public class Engineer extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        GET.setOnClickListener(v -> {
+            vibrator.vibrate(100);
+            try {
+                String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                sendValue = new SendValue(mBluetoothLeService);
+                sendValue.send("get");
+                sleep(100);
+                listAdapter.add("[" + currentDateTimeString + "] send: " + "get");
+                list1.smoothScrollToPosition(listAdapter.getCount() - 1);
+                e1.setText("");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         });
 

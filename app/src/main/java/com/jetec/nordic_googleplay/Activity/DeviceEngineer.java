@@ -62,6 +62,7 @@ import android.widget.Toast;
 import com.jetec.nordic_googleplay.CheckDeviceName;
 import com.jetec.nordic_googleplay.Dialog.Interval;
 import com.jetec.nordic_googleplay.Dialog.ModifyPassword;
+import com.jetec.nordic_googleplay.Dialog.SetTime;
 import com.jetec.nordic_googleplay.Dialog.SwitchDialog;
 import com.jetec.nordic_googleplay.DialogFunction.CR;
 import com.jetec.nordic_googleplay.DialogFunction.EH;
@@ -1000,11 +1001,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(0).toString().matches("C") ||
                         Value.name.get(0).toString().matches("D") ||
                         Value.name.get(0).toString().matches("E")) {
-                    if(Value.name.get(0).toString().matches("C"))
+                    if (Value.name.get(0).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(0).toString().matches("D"))
+                    else if (Value.name.get(0).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(0).toString().matches("E"))
+                    else if (Value.name.get(0).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
                     editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
@@ -1077,11 +1078,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(1).toString().matches("C") ||
                         Value.name.get(1).toString().matches("D") ||
                         Value.name.get(1).toString().matches("E")) {
-                    if(Value.name.get(1).toString().matches("C"))
+                    if (Value.name.get(1).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(1).toString().matches("D"))
+                    else if (Value.name.get(1).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(1).toString().matches("E"))
+                    else if (Value.name.get(1).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
                     editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
@@ -1154,11 +1155,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(2).toString().matches("C") ||
                         Value.name.get(2).toString().matches("D") ||
                         Value.name.get(2).toString().matches("E")) {
-                    if(Value.name.get(2).toString().matches("C"))
+                    if (Value.name.get(2).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(2).toString().matches("D"))
+                    else if (Value.name.get(2).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(2).toString().matches("E"))
+                    else if (Value.name.get(2).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
                     editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
@@ -1231,11 +1232,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(0).toString().matches("C") ||
                         Value.name.get(0).toString().matches("D") ||
                         Value.name.get(0).toString().matches("E")) {
-                    if(Value.name.get(0).toString().matches("C"))
+                    if (Value.name.get(0).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(0).toString().matches("D"))
+                    else if (Value.name.get(0).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(0).toString().matches("E"))
+                    else if (Value.name.get(0).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
                     editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
@@ -1308,11 +1309,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(1).toString().matches("C") ||
                         Value.name.get(1).toString().matches("D") ||
                         Value.name.get(1).toString().matches("E")) {
-                    if(Value.name.get(1).toString().matches("C"))
+                    if (Value.name.get(1).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(1).toString().matches("D"))
+                    else if (Value.name.get(1).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(1).toString().matches("E"))
+                    else if (Value.name.get(1).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
                     editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
@@ -1385,11 +1386,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(2).toString().matches("C") ||
                         Value.name.get(2).toString().matches("D") ||
                         Value.name.get(2).toString().matches("E")) {
-                    if(Value.name.get(2).toString().matches("C"))
+                    if (Value.name.get(2).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(2).toString().matches("D"))
+                    else if (Value.name.get(2).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(2).toString().matches("E"))
+                    else if (Value.name.get(2).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
                     editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
@@ -1462,11 +1463,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(0).toString().matches("C") ||
                         Value.name.get(0).toString().matches("D") ||
                         Value.name.get(0).toString().matches("E")) {
-                    if(Value.name.get(0).toString().matches("C"))
+                    if (Value.name.get(0).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(0).toString().matches("D"))
+                    else if (Value.name.get(0).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(0).toString().matches("E"))
+                    else if (Value.name.get(0).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
                     editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
@@ -1539,11 +1540,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(1).toString().matches("C") ||
                         Value.name.get(1).toString().matches("D") ||
                         Value.name.get(1).toString().matches("E")) {
-                    if(Value.name.get(1).toString().matches("C"))
+                    if (Value.name.get(1).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(1).toString().matches("D"))
+                    else if (Value.name.get(1).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(1).toString().matches("E"))
+                    else if (Value.name.get(1).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
                     editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
@@ -1616,11 +1617,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(2).toString().matches("C") ||
                         Value.name.get(2).toString().matches("D") ||
                         Value.name.get(2).toString().matches("E")) {
-                    if(Value.name.get(2).toString().matches("C"))
+                    if (Value.name.get(2).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(2).toString().matches("D"))
+                    else if (Value.name.get(2).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(2).toString().matches("E"))
+                    else if (Value.name.get(2).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
                     editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
@@ -1694,11 +1695,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(0).toString().matches("C") ||
                         Value.name.get(0).toString().matches("D") ||
                         Value.name.get(0).toString().matches("E")) {
-                    if(Value.name.get(0).toString().matches("C"))
+                    if (Value.name.get(0).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(0).toString().matches("D"))
+                    else if (Value.name.get(0).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(0).toString().matches("E"))
+                    else if (Value.name.get(0).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
                     editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
@@ -1771,11 +1772,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(1).toString().matches("C") ||
                         Value.name.get(1).toString().matches("D") ||
                         Value.name.get(1).toString().matches("E")) {
-                    if(Value.name.get(1).toString().matches("C"))
+                    if (Value.name.get(1).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(1).toString().matches("D"))
+                    else if (Value.name.get(1).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(1).toString().matches("E"))
+                    else if (Value.name.get(1).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     c = true;
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
@@ -1848,11 +1849,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(2).toString().matches("C") ||
                         Value.name.get(2).toString().matches("D") ||
                         Value.name.get(2).toString().matches("E")) {
-                    if(Value.name.get(2).toString().matches("C"))
+                    if (Value.name.get(2).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(2).toString().matches("D"))
+                    else if (Value.name.get(2).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(2).toString().matches("E"))
+                    else if (Value.name.get(2).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     c = true;
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
@@ -1925,11 +1926,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(0).toString().matches("C") ||
                         Value.name.get(0).toString().matches("D") ||
                         Value.name.get(0).toString().matches("E")) {
-                    if(Value.name.get(0).toString().matches("C"))
+                    if (Value.name.get(0).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(0).toString().matches("D"))
+                    else if (Value.name.get(0).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(0).toString().matches("E"))
+                    else if (Value.name.get(0).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     c = true;
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
@@ -2002,11 +2003,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(1).toString().matches("C") ||
                         Value.name.get(1).toString().matches("D") ||
                         Value.name.get(1).toString().matches("E")) {
-                    if(Value.name.get(1).toString().matches("C"))
+                    if (Value.name.get(1).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(1).toString().matches("D"))
+                    else if (Value.name.get(1).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(1).toString().matches("E"))
+                    else if (Value.name.get(1).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     c = true;
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
@@ -2079,11 +2080,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 } else if (Value.name.get(2).toString().matches("C") ||
                         Value.name.get(2).toString().matches("D") ||
                         Value.name.get(2).toString().matches("E")) {
-                    if(Value.name.get(2).toString().matches("C"))
+                    if (Value.name.get(2).toString().matches("C"))
                         editText.setHint(" 0 ~ 2000");
-                    else if(Value.name.get(2).toString().matches("D"))
+                    else if (Value.name.get(2).toString().matches("D"))
                         editText.setHint(" 0 ~ 3000");
-                    else if(Value.name.get(2).toString().matches("E"))
+                    else if (Value.name.get(2).toString().matches("E"))
                         editText.setHint(" 0 ~ 5000");
                     c = true;
                     editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
@@ -2329,8 +2330,7 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 dataList = new DataList(this, listData, Value.all_Width);
                 list.setAdapter(dataList);
                 list.setOnItemClickListener(mLoadClickListener);
-            }
-            else {
+            } else {
                 list.setVisibility(View.GONE);
                 t1.setVisibility(View.VISIBLE);
             }
@@ -2501,8 +2501,7 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 dataList = new DataList(this, listData, Value.all_Width);
                 list.setAdapter(dataList);
                 list.setOnItemClickListener(mListClickListener);
-            }
-            else {
+            } else {
                 list.setVisibility(View.GONE);
                 t1.setVisibility(View.VISIBLE);
             }
@@ -2557,8 +2556,7 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                         dataList = new DataList(DeviceEngineer.this, listData, Value.all_Width);
                         list.setAdapter(dataList);
                         select_item = -1;
-                    }
-                    else {
+                    } else {
                         list.setVisibility(View.GONE);
                         t1.setVisibility(View.VISIBLE);
                         select_item = -1;
@@ -2616,8 +2614,7 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                     list.setAdapter(dataList);
                     select_item = -1;
                     upDialog.dismiss();
-                }
-                else {
+                } else {
                     Toast.makeText(DeviceEngineer.this, getString(R.string.same), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -2815,7 +2812,7 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                                 } else if (text.startsWith("PWR")) {
                                     Value.P_word = text.substring(4, text.length());
                                     Log.e(TAG, "客戶密碼 = " + Value.P_word);
-                                }else if(text.startsWith("+") || text.startsWith("-")){
+                                } else if (text.startsWith("+") || text.startsWith("-")) {
                                     sendValue = new SendValue(mBluetoothLeService);
                                     sendValue.send("STOP");
                                     Value.connect_flag = 0;
@@ -3410,6 +3407,16 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
         return true;
     }
 
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem setTime = menu.findItem(R.id.setTimes);
+        if (Value.YMD) {
+            setTime.setVisible(true);
+        } else {
+            setTime.setVisible(false);
+        }
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {   //toolbar menu item
         // Handle action bar item clicks here. The action bar will
@@ -3427,6 +3434,13 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
             Value.connected = false;
             data_table.close();
             disconnect();
+            return true;
+        }
+        if (id == R.id.setTimes) {
+            vibrator.vibrate(100);
+            SetTime setTime = new SetTime(this, Value.all_Width, Value.all_Height,
+                    mBluetoothLeService);
+            setTime.setDialog();
             return true;
         }
         return true;
@@ -3534,7 +3548,7 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                                         navigationView.getMenu().findItem(R.id.nav_share).setTitle(getString(R.string.end) + getString(R.string.LOG));
                                     }
                                     @SuppressLint("SimpleDateFormat") SimpleDateFormat get_date = new SimpleDateFormat("yyMMdd");
-                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat get_time = new SimpleDateFormat("hhmmss");
+                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat get_time = new SimpleDateFormat("HHmmss");
                                     Date date = new Date();
                                     String strDate = get_date.format(date);
                                     String strtime = get_time.format(date);
@@ -3627,7 +3641,7 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                     finish();
                 }
             }
-                break;
+            break;
             case KeyEvent.KEYCODE_DPAD_CENTER:
                 break;
             default:

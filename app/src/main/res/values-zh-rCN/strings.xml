@@ -11,6 +11,7 @@
     <string name="app_message_b1">离开</string>
     <string name="app_message_b2">取消</string>
     <string name="action_settings">断开链结</string>
+    <string name="settimes">时间设定</string>
     <string name="support">不支持此蓝芽设备!</string>
     <string name="BLE_adp">蓝芽未开启!</string>
     <string name="no_device">没有设备</string>
@@ -126,6 +127,10 @@
     <string name="timerange">范围</string>
     <string name="interval">时间间隔</string>
     <string name="description">时间间隔须为30秒到1小时之间</string>
+    <string name="formatwrong">时间格式错误</string>
+    <string name="year">年:</string>
+    <string name="month">月:</string>
+    <string name="day">日:</string>
     <string name="hour">小时:</string>
     <string name="minute">分钟:</string>
     <string name="seconds">秒:</string>
@@ -166,4 +171,5 @@
     <string name="choseway">选择下载方式</string>
     <string name="chosewaymessage">高速下载仅适用较高阶之手机设备</string>
     <string name="complete">完成</string>
+    <string name="quick">快速设定</string>
 </resources>

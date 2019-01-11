@@ -3,7 +3,6 @@ package com.jetec.nordic_googleplay.Dialog;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Vibrator;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
@@ -67,53 +66,50 @@ public class Interval {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(R.string.warning)
                     .setMessage(R.string.reinterval)
-                    .setPositiveButton(R.string.butoon_yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            vibrator.vibrate(100);
-                            String hour, minute, second;
-                            int ihour = 0, iminute = 0, isecond = 0, sum;
-                            Log.e("btn", "c = " + c);
-                            if(c) {
-                                if (!e1.getText().toString().trim().matches("")) {
-                                    hour = e1.getText().toString().trim();
-                                    ihour = Integer.valueOf(hour);
-                                }
-                                if (!e2.getText().toString().trim().matches("")) {
-                                    minute = e2.getText().toString().trim();
-                                    iminute = Integer.valueOf(minute);
-                                }
-                                if (!e3.getText().toString().trim().matches("")) {
-                                    second = e3.getText().toString().trim();
-                                    isecond = Integer.valueOf(second);
-                                }
-                                sum = ihour * 3600 + iminute * 60 + isecond;
-                                try {
-                                    if(sum <= 3600 && sum >= 30) {
-                                        Toast.makeText(context, context.getString(R.string.intervalset), Toast.LENGTH_SHORT).show();
-                                        try {
-                                            sendValue.send("END");
-                                            sleep(500);
-                                            sending(String.valueOf(sum));
-                                            sleep(500);
-                                            sendValue.send("START");
-                                            sleep(2000);
-                                            sendValue.send("END");
-                                            progressDialog.dismiss();
-                                        }catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                    else {
-                                        Toast.makeText(context, description, Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                }
+                    .setPositiveButton(R.string.butoon_yes, (dialog, which) -> {
+                        vibrator.vibrate(100);
+                        String hour, minute, second;
+                        int ihour = 0, iminute = 0, isecond = 0, sum;
+                        Log.e("btn", "c = " + c);
+                        if(c) {
+                            if (!e1.getText().toString().trim().matches("")) {
+                                hour = e1.getText().toString().trim();
+                                ihour = Integer.valueOf(hour);
                             }
-                            else {
-                                Toast.makeText(context, description, Toast.LENGTH_SHORT).show();
+                            if (!e2.getText().toString().trim().matches("")) {
+                                minute = e2.getText().toString().trim();
+                                iminute = Integer.valueOf(minute);
                             }
+                            if (!e3.getText().toString().trim().matches("")) {
+                                second = e3.getText().toString().trim();
+                                isecond = Integer.valueOf(second);
+                            }
+                            sum = ihour * 3600 + iminute * 60 + isecond;
+                            try {
+                                if(sum <= 3600 && sum >= 30) {
+                                    Toast.makeText(context, context.getString(R.string.intervalset), Toast.LENGTH_SHORT).show();
+                                    try {
+                                        sendValue.send("END");
+                                        sleep(500);
+                                        sending(String.valueOf(sum));
+                                        sleep(500);
+                                        sendValue.send("START");
+                                        sleep(2000);
+                                        sendValue.send("END");
+                                        progressDialog.dismiss();
+                                    }catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else {
+                                    Toast.makeText(context, description, Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            Toast.makeText(context, description, Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNegativeButton(R.string.butoon_no, (dialog, which) -> {

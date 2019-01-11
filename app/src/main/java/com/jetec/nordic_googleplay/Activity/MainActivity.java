@@ -59,8 +59,9 @@ public class MainActivity extends AppCompatActivity {
             "EL2", "EH3", "EL3", "CR1", "CR2", "CR3", "SPK", "OVER"};
     private static final String[] BT_3_THE = {"BT-3-THE", "PV1", "PV2", "PV3", "EH1", "EL1", "EH2",
             "EL2", "EH3", "EL3", "CR1", "CR2", "CR3", "SPK", "OVER"};
+    private static final String[] BT_2_TY = {"BT-2-TY", "PV1", "EH1", "EL1", "CR1", "SPK", "OVER"};
     private String[][] All_model = {default_model, BT_2_IIL, BT_2_II, BT_2_TH,
-            BT_1_I, BT_3_THC, BT_3_THD, BT_3_THE};
+            BT_1_I, BT_3_THC, BT_3_THD, BT_3_THE, BT_2_TY};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

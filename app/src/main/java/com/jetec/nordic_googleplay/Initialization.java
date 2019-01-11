@@ -579,6 +579,45 @@ public class Initialization {
                 }
             }
             break;
+            case ("BT-2-TY"):{
+                Log.e("初始化型號","BT-2-TY");
+                sendValue.send("NAMEJTC");
+                sleep(500);
+                sendValue.send("PWR=000000");
+                sleep(500);
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat get_time = new SimpleDateFormat("HHmmss");
+                Date date = new Date();
+                String strtime = get_time.format(date);
+                sendValue.send("TIME" + strtime);
+                sleep(500);
+                for(int i = 0; i < Value.Jsonlist.size(); i++) {
+                    if (Value.Jsonlist.get(i).matches("OVER")){
+                        //OVER
+                    }
+                    else if(Value.Jsonlist.get(i).matches("SPK")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0001.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("CR1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0065.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EL1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "-0010.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("EH1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0065.0");
+                        sleep(500);
+                    }
+                    else if(Value.Jsonlist.get(i).matches("PV1")){
+                        sendValue.send(Value.Jsonlist.get(i) + "+0000.0");
+                        sleep(500);
+                    }
+                }
+            }
+            break;
         }
     }
 

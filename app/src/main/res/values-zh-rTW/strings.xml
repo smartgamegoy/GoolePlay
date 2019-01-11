@@ -11,6 +11,7 @@
     <string name="app_message_b1">離開</string>
     <string name="app_message_b2">取消</string>
     <string name="action_settings">中斷連線</string>
+    <string name="settimes">時間設定</string>
     <string name="support">不支援此藍芽裝置!</string>
     <string name="BLE_adp">藍芽未開啟!</string>
     <string name="no_device">沒有設備</string>
@@ -126,6 +127,10 @@
     <string name="timerange">範圍</string>
     <string name="interval">時間間隔</string>
     <string name="description">時間間隔須為30秒到1小時之間</string>
+    <string name="formatwrong">時間格式錯誤</string>
+    <string name="year">年:</string>
+    <string name="month">月:</string>
+    <string name="day">日:</string>
     <string name="hour">小時:</string>
     <string name="minute">分鐘:</string>
     <string name="seconds">秒:</string>
@@ -166,4 +171,5 @@
     <string name="choseway">選擇下載方式</string>
     <string name="chosewaymessage">高速下載僅適用較高階之手機設備</string>
     <string name="complete">完成</string>
+    <string name="quick">快速設定</string>
 </resources>

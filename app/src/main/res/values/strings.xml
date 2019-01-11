@@ -11,6 +11,7 @@
     <string name="app_message_b1">Exit</string>
     <string name="app_message_b2">Cancel</string>
     <string name="action_settings">Disconnect</string>
+    <string name="settimes">Set Time</string>
     <string name="support">This BLE device is not support!</string>
     <string name="BLE_adp">Bluetooth not open!</string>
     <string name="no_device">No device</string>
@@ -125,6 +126,10 @@
     <string name="setdate">Set date</string>
     <string name="timerange">Range</string>
     <string name="description">The time interval must be between 30 seconds and 1 hour</string>
+    <string name="formatwrong">Time format error</string>
+    <string name="year">Year:</string>
+    <string name="month">Month:</string>
+    <string name="day">Day:</string>
     <string name="hour">Hour:</string>
     <string name="minute">Minute:</string>
     <string name="seconds">Seconds:</string>
@@ -166,4 +171,5 @@
     <string name="choseway">Choose the way of download</string>
     <string name="chosewaymessage">High speed only useful on advanced hardware device</string>
     <string name="complete">Complete</string>
+    <string name="quick">Quick set</string>
 </resources>
