@@ -13,11 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.jetec.nordic_googleplay.R;
 import com.jetec.nordic_googleplay.SendValue;
 import com.jetec.nordic_googleplay.Service.BluetoothLeService;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
