@@ -89,11 +89,10 @@ public class BluetoothLeService extends Service {
             mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
         }*/
         BluetoothGattDescriptor descriptor = TxChar.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
-        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE); //ENABLE_NOTIFICATION_VALUE
         mBluetoothGatt.writeDescriptor(descriptor);
         Log.e(TAG, "mBluetoothGatt = 發生變化");
     }
-
 
     public void writeRXCharacteristic(byte[] value) {
         BluetoothGattService RxService = mBluetoothGatt.getService(UUID.fromString(Service_uuid));
