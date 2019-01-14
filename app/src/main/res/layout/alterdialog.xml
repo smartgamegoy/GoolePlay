@@ -33,7 +33,6 @@
         android:layout_weight="1"
         android:background="@drawable/edittext"
         android:textSize="21sp"
-        android:maxLength="7"
         android:singleLine="true"
         app:layout_constraintBottom_toTopOf="@+id/button1"
         app:layout_constraintEnd_toEndOf="parent"
