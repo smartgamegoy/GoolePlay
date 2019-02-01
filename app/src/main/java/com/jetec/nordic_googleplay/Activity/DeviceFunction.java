@@ -3548,8 +3548,10 @@ public class DeviceFunction extends AppCompatActivity implements NavigationView.
                                     } else {
                                         navigationView.getMenu().findItem(R.id.nav_share).setTitle(getString(R.string.end) + getString(R.string.LOG));
                                     }
-                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat get_date = new SimpleDateFormat("yyMMdd");
-                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat get_time = new SimpleDateFormat("HHmmss");
+                                    @SuppressLint("SimpleDateFormat")
+                                    SimpleDateFormat get_date = new SimpleDateFormat("yyMMdd");
+                                    @SuppressLint("SimpleDateFormat")
+                                    SimpleDateFormat get_time = new SimpleDateFormat("HHmmss");
                                     Date date = new Date();
                                     String strDate = get_date.format(date);
                                     String strtime = get_time.format(date);

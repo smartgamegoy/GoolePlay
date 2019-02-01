@@ -320,12 +320,12 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
             //engin.setVisibility(View.VISIBLE);
             //header.setVisibility(View.GONE);
             //button.setVisibility(View.GONE);
-            b_save.setVisibility(View.VISIBLE);
-            b_load.setVisibility(View.VISIBLE);
-            b_download.setVisibility(View.VISIBLE);
-            b_dialog.setVisibility(View.VISIBLE);
-            b_re.setVisibility(View.VISIBLE);
-            l_b.setVisibility(View.VISIBLE);
+            b_save.setVisibility(View.GONE);
+            b_load.setVisibility(View.GONE);
+            b_download.setVisibility(View.GONE);
+            b_dialog.setVisibility(View.GONE);
+            b_re.setVisibility(View.GONE);
+            l_b.setVisibility(View.GONE);
         } else if (Value.passwordFlag == 2 || Value.passwordFlag == 3) {
             DrawerLayout(myToolbar);
             //header.setVisibility(View.VISIBLE);

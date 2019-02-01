@@ -15,7 +15,7 @@
     <string name="support">不支持此蓝芽设备!</string>
     <string name="BLE_adp">蓝芽未开启!</string>
     <string name="no_device">没有设备</string>
-    <string name="search_device">搜索中...</string>
+    <string name="search_device">搜索中…</string>
     <string name="search_complete">搜索完了!</string>
     <string name="mes_title">开启定位</string>
     <string name="mes_mess">当前安卓版本需开启定位功能，方可搜索到BLE蓝芽装置</string>

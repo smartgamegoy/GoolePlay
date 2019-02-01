@@ -51,6 +51,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
@@ -58,7 +59,6 @@ import static java.lang.Thread.sleep;
 public class DeviceList extends AppCompatActivity {
 
     private static final long SCAN_PERIOD = 8000; //8 seconds
-
     private ModelSQL modelSQL;
     private CheckDeviceName checkDeviceName;
     private GetString setString;
@@ -84,6 +84,14 @@ public class DeviceList extends AppCompatActivity {
     private boolean s_connect = false;
     private byte[] txValue;
     private SendLog sendLog;
+    private final String[] T = {"PV", "EH", "EL", "CR"};
+    private final String[] H = {"PV", "EH", "EL", "CR"};
+    private final String[] C = {"PV", "EH", "EL", "CR"};
+    private final String[] D = {"PV", "EH", "EL", "CR"};
+    private final String[] E = {"PV", "EH", "EL", "CR"};
+    private final String[] I = {"IH", "IL", "PV", "EH", "EL", "CR", "DP"};
+    private final String[] L = {"COUNT", "INTER", "DATE", "TIME", "LOG"};
+    private final String[] SP = {"SPK", "OVER"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -328,12 +336,63 @@ public class DeviceList extends AppCompatActivity {
                             }
                             Value.model = true;
                             Value.deviceModel = text;
-                            modelJSON = modelSQL.getJSON(text);
+                            /*modelJSON = modelSQL.getJSON(text);
                             for (int i = 0; i < modelJSON.length(); i++) {
                                 Jsonlist.add(modelJSON.get(i).toString());
                             }
                             Value.Jsonlist = Jsonlist;
-                            Log.e(TAG, "Jsonlist = " + Jsonlist);
+                            Log.e(TAG, "Jsonlist = " + Jsonlist);*/
+                            String num = text.substring(text.indexOf("-") + 1, text.indexOf("-") + 2);
+                            Log.e(TAG,"num = " + num);
+                            String num2 = text.substring(text.lastIndexOf("-") + 1, text.length());
+                            Log.e(TAG,"num2 = " + num2);
+                            ArrayList<String> newList = new ArrayList<>();
+                            newList.clear();
+                            for(int i = 0; i < num2.length(); i++){
+                                if(num2.charAt(i) == 'T'){
+                                    for(int j = 0; j < T.length; j++){
+                                        String str = T[j] + (i + 1);
+                                        newList.add(str);
+                                    }
+                                }
+                                else if(num2.charAt(i) == 'H'){
+                                    for(int j = 0; j < H.length; j++){
+                                        String str = H[j] + (i + 1);
+                                        newList.add(str);
+                                    }
+                                }
+                                else if(num2.charAt(i) == 'C'){
+                                    for(int j = 0; j < C.length; j++){
+                                        String str = C[j] + (i + 1);
+                                        newList.add(str);
+                                    }
+                                }
+                                else if(num2.charAt(i) == 'D'){
+                                    for(int j = 0; j < D.length; j++){
+                                        String str = D[j] + (i + 1);
+                                        newList.add(str);
+                                    }
+                                }
+                                else if(num2.charAt(i) == 'E'){
+                                    for(int j = 0; j < E.length; j++){
+                                        String str = E[j] + (i + 1);
+                                        newList.add(str);
+                                    }
+                                }
+                                else if(num2.charAt(i) == 'I'){
+                                    for(int j = 0; j < I.length; j++){
+                                        String str = I[j] + (i + 1);
+                                        newList.add(str);
+                                    }
+                                }
+                                else if(num2.charAt(i) == 'L'){
+                                    newList.addAll(Arrays.asList(L));
+                                }
+                            }
+                            newList.addAll(Arrays.asList(SP));
+                            Value.Jsonlist = newList;
+                            Log.e(TAG,"newList = " + newList);
+                            Log.e(TAG,"Jsonlist = " + Value.Jsonlist);
                         } else if (text.startsWith("ENGE")) {
                             Value.E_word = text.substring(4, text.length());
                             Log.e(TAG, "管理者密碼 = " + Value.E_word);
@@ -412,7 +471,7 @@ public class DeviceList extends AppCompatActivity {
                                 }
                             }
                         }
-                    } catch (UnsupportedEncodingException | InterruptedException | JSONException e) {
+                    } catch (UnsupportedEncodingException | InterruptedException e/* | JSONException e*/) {
                         e.printStackTrace();
                     }
                 });

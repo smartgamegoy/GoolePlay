@@ -24,7 +24,7 @@
         <activity
             android:name=".Activity.MainActivity"
             android:theme="@style/nordic_use"
-            android:screenOrientation="sensor"
+            android:screenOrientation="user"
             android:configChanges="orientation|keyboardHidden"
             tools:ignore="InnerclassSeparator">
             <intent-filter>
@@ -36,7 +36,7 @@
         <activity
             android:name=".Activity.DeviceList"
             android:theme="@style/nordic_use"
-            android:screenOrientation="sensor"
+            android:screenOrientation="user"
             android:configChanges="orientation|keyboardHidden"
             tools:ignore="InnerclassSeparator">
         </activity>
@@ -50,27 +50,27 @@
         <activity
             android:name=".Activity.DeviceFunction"
             android:theme="@style/nordic_use"
-            android:screenOrientation="sensor"
+            android:screenOrientation="user"
             android:configChanges="orientation|keyboardHidden"
             tools:ignore="InnerclassSeparator">
         </activity>
         <activity
             android:name=".Activity.DeviceEngineer"
             android:theme="@style/nordic_use"
-            android:screenOrientation="sensor"
+            android:screenOrientation="user"
             android:configChanges="orientation|keyboardHidden"
             tools:ignore="InnerclassSeparator">
         </activity>
         <activity android:name=".Activity.LogChartView"
             android:theme="@style/nordic_use"
-            android:screenOrientation="sensor"
+            android:screenOrientation="user"
             android:configChanges="orientation|keyboardHidden"
             tools:ignore="InnerclassSeparator">
         </activity>
         <activity android:name=".Activity.PDFView"
             android:theme="@style/nordic_use"
             android:permission="android.permission.BIND_PRINT_SERVICE"
-            android:screenOrientation="sensor"
+            android:screenOrientation="user"
             android:configChanges="orientation|keyboardHidden"
             tools:ignore="InnerclassSeparator">
             <intent-filter>
@@ -80,14 +80,14 @@
         <activity
             android:name=".Activity.ChartActivity"
             android:theme="@style/nordic_use"
-            android:screenOrientation="sensor"
+            android:screenOrientation="user"
             android:configChanges="orientation|keyboardHidden"
             tools:ignore="InnerclassSeparator">
         </activity>
         <activity
             android:name=".Activity.SearchActivity"
             android:theme="@style/nordic_use"
-            android:screenOrientation="sensor"
+            android:screenOrientation="user"
             android:configChanges="orientation|keyboardHidden"
             tools:ignore="InnerclassSeparator">
         </activity>

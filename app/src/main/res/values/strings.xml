@@ -15,7 +15,7 @@
     <string name="support">This BLE device is not support!</string>
     <string name="BLE_adp">Bluetooth not open!</string>
     <string name="no_device">No device</string>
-    <string name="search_device">Searching...</string>
+    <string name="search_device">Searching…</string>
     <string name="search_complete">Complete!</string>
     <string name="mes_title">Open positioning</string>
     <string name="mes_mess">This Android version must to open positioning that can searching BLE devices.</string>

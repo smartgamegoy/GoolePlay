@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String[] default_model = {"BT-2-THD", "PV1", "PV2", "EH1", "EL1", "EH2",
             "EL2", "CR1", "CR2", "ADR", "OVER"};
     //↑第一台功能設定
-    private static final String[] BT_2_IIL = {"BT-2-IIL", "IH1", "IL1", "IH2", "IL2", "PV1", "PV2",
+    /*private static final String[] BT_2_IIL = {"BT-2-IIL", "IH1", "IL1", "IH2", "IL2", "PV1", "PV2",
             "EH1", "EL1", "EH2", "EL2", "CR1", "CR2", "SPK", "DP1", "DP2", "COUNT", "INTER", "DATE",
             "TIME", "LOG", "OVER"};
     private static final String[] BT_2_II = {"BT-2-II", "IH1", "IL1", "IH2", "IL2", "PV1", "PV2",
@@ -61,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
             "EL2", "EH3", "EL3", "CR1", "CR2", "CR3", "SPK", "OVER"};
     private static final String[] BT_2_TY = {"BT-2-TY", "PV1", "EH1", "EL1", "CR1", "SPK", "OVER"};
     private static final String[] BT_3_THY = {"BT-3-THY", "PV1", "PV2", "EH1", "EL1", "EH2", "EL2",
-            "CR1", "CR2", "SPK", "OVER"};
-    private String[][] All_model = {default_model, BT_2_IIL, BT_2_II, BT_2_TH,
-            BT_1_I, BT_3_THC, BT_3_THD, BT_3_THE, BT_2_TY, BT_3_THY};
+            "CR1", "CR2", "SPK", "OVER"};*/
+    private String[][] All_model = {default_model/*, BT_2_IIL, BT_2_II, BT_2_TH,
+            BT_1_I, BT_3_THC, BT_3_THD, BT_3_THE, BT_2_TY, BT_3_THY*/};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

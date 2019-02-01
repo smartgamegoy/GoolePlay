@@ -447,6 +447,6 @@ public class BluetoothLeService extends Service {
     }
 
     private void showMessage(String msg) {
-        Log.e(TAG, msg);
+        Log.d(TAG, msg);
     }
 }

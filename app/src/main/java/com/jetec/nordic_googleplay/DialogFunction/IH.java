@@ -1263,7 +1263,7 @@ public class IH {
                 if (!Value.IDP3) {
                     Max = t;
                     if (Max > Min) {
-                        if (10 * t > 9999.0 || 10 * t < -9990) {
+                        if (10 * t > 99990 || 10 * t < -9990) {
                             Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                         } else {
                             if (t == 0.0) {

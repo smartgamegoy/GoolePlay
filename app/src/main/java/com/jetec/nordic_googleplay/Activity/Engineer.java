@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.jetec.nordic_googleplay.DialogFunction.ENGIN;
+import com.jetec.nordic_googleplay.Initialization;
 import com.jetec.nordic_googleplay.R;
 import com.jetec.nordic_googleplay.SendValue;
 import com.jetec.nordic_googleplay.Service.BluetoothLeService;
@@ -92,6 +93,7 @@ public class Engineer extends AppCompatActivity {
         Button SP2 = findViewById(R.id.button6);
         Button ER2 = findViewById(R.id.button7);
         Button SV2 = findViewById(R.id.button8);
+        Button init = findViewById(R.id.button9);
         Button SP3 = findViewById(R.id.button10);
         Button ER3 = findViewById(R.id.button11);
         Button SV3 = findViewById(R.id.button12);
@@ -259,6 +261,16 @@ public class Engineer extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        init.setOnClickListener(v -> {
+            vibrator.vibrate(100);
+            Initialization initialization = new Initialization(Value.deviceModel, mBluetoothLeService);
+            try {
+                initialization.start();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         });
 

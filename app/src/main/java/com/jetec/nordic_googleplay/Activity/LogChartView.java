@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.Vibrator;
@@ -25,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
@@ -55,7 +53,6 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.opencsv.CSVWriter;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -79,9 +76,6 @@ public class LogChartView extends AppCompatActivity {
     private YAxis leftAxis;
     private LimitLine yLimitLinedown, yLimitLineup;
     private boolean setdpp = false;
-    private ChartList chartList;
-    private FileWriter mFileWriter;
-    private CSVWriter writer;
     private FileOutputStream fOut;
 
     @Override
@@ -115,12 +109,12 @@ public class LogChartView extends AppCompatActivity {
     }
 
     private void list() {
-        Firstlist = new ArrayList<String>();
-        Secondlist = new ArrayList<String>();
-        Thirdlist = new ArrayList<String>();
-        charttime = new ArrayList<String>();
-        timelist = new ArrayList<String>();
-        List_d_num = new ArrayList<String>();
+        Firstlist = new ArrayList<>();
+        Secondlist = new ArrayList<>();
+        Thirdlist = new ArrayList<>();
+        charttime = new ArrayList<>();
+        timelist = new ArrayList<>();
+        List_d_num = new ArrayList<>();
 
         Firstlist.clear();
         Secondlist.clear();
@@ -140,14 +134,13 @@ public class LogChartView extends AppCompatActivity {
             if ((select_item == -1) || (select_item == position)) {
                 view.setBackgroundColor(Color.YELLOW); //為View加上選取效果
             } else {
+                //noinspection deprecation
                 view1.setBackgroundDrawable(null); //將上一次點選的View保存在view1
                 view.setBackgroundColor(Color.YELLOW); //為View加上選取效果
             }
             view1 = view; //保存點選的View
             select_item = position;//保存目前的View位置
             //======================
-            view1 = view; //保存點選的View
-            select_item = position;//保存目前的View位置
             dialogflag = select_item;
         }
     };
@@ -218,19 +211,16 @@ public class LogChartView extends AppCompatActivity {
                     .show();
         });
 
-        b4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                vibrator.vibrate(100);
-                flag = 2;
-                if (!setdpp) {
-                    running.show();
-                    running.setCanceledOnTouchOutside(false);
-                } else {
-                    Intent intent = new Intent(LogChartView.this, PDFView.class);
-                    startActivity(intent);
-                    finish();
-                }
+        b4.setOnClickListener(v -> {
+            vibrator.vibrate(100);
+            flag = 2;
+            if (!setdpp) {
+                running.show();
+                running.setCanceledOnTouchOutside(false);
+            } else {
+                Intent intent = new Intent(LogChartView.this, PDFView.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -757,7 +747,7 @@ public class LogChartView extends AppCompatActivity {
             }
         }
 
-        chartList = new ChartList(this, all_Width, all_Height, chartview);
+        ChartList chartList = new ChartList(this, all_Width, all_Height, chartview);
         chart_list.setAdapter(chartList);
         chart_list.setOnItemClickListener(mchosechart);
 
@@ -943,8 +933,9 @@ public class LogChartView extends AppCompatActivity {
                 Log.e(TAG, "filePath = " + filePath);
                 file = new File(filePath);
                 Log.e(TAG, "overthere?");
+                CSVWriter writer;
                 if (file.exists() && !file.isDirectory()) {
-                    mFileWriter = new FileWriter(filePath, false);
+                    FileWriter mFileWriter = new FileWriter(filePath, false);
                     writer = new CSVWriter(mFileWriter);
                     writer.writeNext(data_array);
                     for (int i = 0; i < charttime.size(); i++) {

@@ -15,7 +15,7 @@
     <string name="support">不支援此藍芽裝置!</string>
     <string name="BLE_adp">藍芽未開啟!</string>
     <string name="no_device">沒有設備</string>
-    <string name="search_device">搜尋中...</string>
+    <string name="search_device">搜尋中…</string>
     <string name="search_complete">搜尋結束!</string>
     <string name="mes_title">開啟定位</string>
     <string name="mes_mess">當前安卓版本需開啟定位功能，才能搜尋到BLE藍芽裝置</string>
@@ -49,7 +49,7 @@
     <string name="IL1">第一排 最小量程</string>
     <string name="IH2">第二排 最大量程</string>
     <string name="IL2">第二排 最小量程</string>
-    <string name="IH3">第三排 最大量程e</string>
+    <string name="IH3">第三排 最大量程</string>
     <string name="IL3">第三排 最小量程</string>
     <string name="SPK">警報</string>
     <string name="DP1">小數點</string>
