@@ -939,10 +939,24 @@ public class LogChartView extends AppCompatActivity {
                     writer = new CSVWriter(mFileWriter);
                     writer.writeNext(data_array);
                     for (int i = 0; i < charttime.size(); i++) {
-                        data2 = new String[]{String.valueOf(i), charttime.get(i),
-                                String.valueOf(Float.valueOf(Firstlist.get(i))),
-                                String.valueOf(Float.valueOf(Secondlist.get(i)))};
-                        writer.writeNext(data2);
+                        if(Firstlist.size() !=0 && Secondlist.size() != 0 && Thirdlist.size() != 0){
+                            data2 = new String[]{String.valueOf(i), charttime.get(i),
+                                    String.valueOf(Float.valueOf(Firstlist.get(i))),
+                                    String.valueOf(Float.valueOf(Secondlist.get(i))),
+                                    String.valueOf(Float.valueOf(Thirdlist.get(i)))};
+                            writer.writeNext(data2);
+                        }
+                        else if(Firstlist.size() !=0 && Secondlist.size() != 0){
+                            data2 = new String[]{String.valueOf(i), charttime.get(i),
+                                    String.valueOf(Float.valueOf(Firstlist.get(i))),
+                                    String.valueOf(Float.valueOf(Secondlist.get(i)))};
+                            writer.writeNext(data2);
+                        }
+                        else if(Firstlist.size() !=0){
+                            data2 = new String[]{String.valueOf(i), charttime.get(i),
+                                    String.valueOf(Float.valueOf(Firstlist.get(i)))};
+                            writer.writeNext(data2);
+                        }
                     }
                     Log.e(TAG, "writer = " + writer);
                     writer.close();
@@ -951,11 +965,24 @@ public class LogChartView extends AppCompatActivity {
                     writer = new CSVWriter(new FileWriter(filePath));
                     writer.writeNext(data_array);
                     for (int i = 0; i < charttime.size(); i++) {
-                        data2 = new String[]{String.valueOf(i), charttime.get(i),
-                                String.valueOf(Float.valueOf(Firstlist.get(i))),
-                                String.valueOf(Float.valueOf(Secondlist.get(i)))};
-                        Log.e(TAG, "data2 = " + data2);
-                        writer.writeNext(data2);
+                        if(Firstlist.size() !=0 && Secondlist.size() != 0 && Thirdlist.size() != 0){
+                            data2 = new String[]{String.valueOf(i), charttime.get(i),
+                                    String.valueOf(Float.valueOf(Firstlist.get(i))),
+                                    String.valueOf(Float.valueOf(Secondlist.get(i))),
+                                    String.valueOf(Float.valueOf(Thirdlist.get(i)))};
+                            writer.writeNext(data2);
+                        }
+                        else if(Firstlist.size() !=0 && Secondlist.size() != 0){
+                            data2 = new String[]{String.valueOf(i), charttime.get(i),
+                                    String.valueOf(Float.valueOf(Firstlist.get(i))),
+                                    String.valueOf(Float.valueOf(Secondlist.get(i)))};
+                            writer.writeNext(data2);
+                        }
+                        else if(Firstlist.size() !=0){
+                            data2 = new String[]{String.valueOf(i), charttime.get(i),
+                                    String.valueOf(Float.valueOf(Firstlist.get(i)))};
+                            writer.writeNext(data2);
+                        }
                     }
                     writer.close();
                     Log.e(TAG, "here?");

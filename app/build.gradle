@@ -14,8 +14,8 @@ android {
         applicationId "com.jetec.nordic_googleplay"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 40
-        versionName "4.1.3"
+        versionCode 41
+        versionName "4.2.0"
         buildConfigField("boolean", "LOG", "true")
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

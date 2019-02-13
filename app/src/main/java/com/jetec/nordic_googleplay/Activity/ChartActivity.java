@@ -13,9 +13,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+
 import com.jetec.nordic_googleplay.R;
 import com.jetec.nordic_googleplay.Value;
 import com.jetec.nordic_googleplay.ViewAdapter.ChartData;
+
 import java.util.ArrayList;
 
 public class ChartActivity extends AppCompatActivity {
@@ -23,7 +25,7 @@ public class ChartActivity extends AppCompatActivity {
     private Vibrator vibrator;
     private Menu menu;
     private ArrayList<String> timelist, charttime, Logdata, Firstlist, Secondlist, Thirdlist;
-    private String TAG = "Chartlog", getdate, getsize, gett, geth, getc;
+    private String TAG = "Chartlog", getdate, getsize, gett = "", geth = "", getc = "";
     private int thread;
     private ChartData chartData;
     private double all_Width, all_Height;
@@ -33,19 +35,19 @@ public class ChartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
-            setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
 
         chartlistview();
     }
 
-    private void chartlistview(){
+    private void chartlistview() {
         setContentView(R.layout.chart_listview);
 
         thread = 0;
 
-        ListView chart_list = (ListView)findViewById(R.id.datalist1);
+        ListView chart_list = (ListView) findViewById(R.id.datalist1);
 
         timelist = new ArrayList<String>();
         charttime = new ArrayList<String>();
@@ -78,43 +80,68 @@ public class ChartActivity extends AppCompatActivity {
         getdate = getString(R.string.datetime);
         getsize = getString(R.string.size);
 
-        if(Value.name.get(2).toString().matches("C")) {
-            getc = getString(R.string.Co2);
-        }
-        else if(Value.name.get(2).toString().matches("T")){
-            getc = getString(R.string.Temperature);
-        }
-        else if(Value.name.get(2).toString().matches("H")){
-            getc = getString(R.string.Humidity);
-        }
-        else if(Value.name.get(2).toString().matches("I")){
-            getc = getString(R.string.I3row);
-        }
+        if(Firstlist.size() != 0 && Secondlist.size() != 0 && Thirdlist.size() != 0) {
+            if (Value.name.get(2).toString().matches("C")) {
+                getc = getString(R.string.Co2);
+            } else if (Value.name.get(2).toString().matches("T")) {
+                getc = getString(R.string.Temperature);
+            } else if (Value.name.get(2).toString().matches("H")) {
+                getc = getString(R.string.Humidity);
+            } else if (Value.name.get(2).toString().matches("I")) {
+                getc = getString(R.string.I3row);
+            }
 
-        if(Value.name.get(1).toString().matches("C")) {
-            geth = getString(R.string.Co2);
-        }
-        else if(Value.name.get(1).toString().matches("T")){
-            geth = getString(R.string.Temperature);
-        }
-        else if(Value.name.get(1).toString().matches("H")){
-            geth = getString(R.string.Humidity);
-        }
-        else if(Value.name.get(1).toString().matches("I")){
-            geth = getString(R.string.I2row);
-        }
+            if (Value.name.get(1).toString().matches("C")) {
+                geth = getString(R.string.Co2);
+            } else if (Value.name.get(1).toString().matches("T")) {
+                geth = getString(R.string.Temperature);
+            } else if (Value.name.get(1).toString().matches("H")) {
+                geth = getString(R.string.Humidity);
+            } else if (Value.name.get(1).toString().matches("I")) {
+                geth = getString(R.string.I2row);
+            }
 
-        if(Value.name.get(0).toString().matches("C")) {
-            gett = getString(R.string.Co2);
+            if (Value.name.get(0).toString().matches("C")) {
+                gett = getString(R.string.Co2);
+            } else if (Value.name.get(0).toString().matches("T")) {
+                gett = getString(R.string.Temperature);
+            } else if (Value.name.get(0).toString().matches("H")) {
+                gett = getString(R.string.Humidity);
+            } else if (Value.name.get(0).toString().matches("I")) {
+                gett = getString(R.string.I1row);
+            }
         }
-        else if(Value.name.get(0).toString().matches("T")){
-            gett = getString(R.string.Temperature);
+        else if(Firstlist.size() != 0 && Secondlist.size() != 0){
+            if (Value.name.get(1).toString().matches("C")) {
+                geth = getString(R.string.Co2);
+            } else if (Value.name.get(1).toString().matches("T")) {
+                geth = getString(R.string.Temperature);
+            } else if (Value.name.get(1).toString().matches("H")) {
+                geth = getString(R.string.Humidity);
+            } else if (Value.name.get(1).toString().matches("I")) {
+                geth = getString(R.string.I2row);
+            }
+
+            if (Value.name.get(0).toString().matches("C")) {
+                gett = getString(R.string.Co2);
+            } else if (Value.name.get(0).toString().matches("T")) {
+                gett = getString(R.string.Temperature);
+            } else if (Value.name.get(0).toString().matches("H")) {
+                gett = getString(R.string.Humidity);
+            } else if (Value.name.get(0).toString().matches("I")) {
+                gett = getString(R.string.I1row);
+            }
         }
-        else if(Value.name.get(0).toString().matches("H")){
-            gett = getString(R.string.Humidity);
-        }
-        else if(Value.name.get(0).toString().matches("I")){
-            gett = getString(R.string.I1row);
+        else if(Firstlist.size() != 0){
+            if (Value.name.get(0).toString().matches("C")) {
+                gett = getString(R.string.Co2);
+            } else if (Value.name.get(0).toString().matches("T")) {
+                gett = getString(R.string.Temperature);
+            } else if (Value.name.get(0).toString().matches("H")) {
+                gett = getString(R.string.Humidity);
+            } else if (Value.name.get(0).toString().matches("I")) {
+                gett = getString(R.string.I1row);
+            }
         }
 
         chartData = new ChartData(this, charttime, Firstlist, Secondlist, Thirdlist, getdate, getsize,
@@ -122,7 +149,7 @@ public class ChartActivity extends AppCompatActivity {
         chart_list.setAdapter(chartData);
     }
 
-    private void searchdata(){
+    private void searchdata() {
 
         Intent intent = new Intent(ChartActivity.this, SearchActivity.class);
 
@@ -159,11 +186,11 @@ public class ChartActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.e(TAG,"onDestroy()");
+        Log.e(TAG, "onDestroy()");
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
     }
 
@@ -177,7 +204,7 @@ public class ChartActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    private void back(){
+    private void back() {
         Intent result = new Intent();
         setResult(LogChartView.RESULT_OK, result);
         finish();

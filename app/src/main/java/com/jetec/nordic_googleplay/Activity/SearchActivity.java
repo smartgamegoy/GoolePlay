@@ -1,5 +1,6 @@
 package com.jetec.nordic_googleplay.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -27,15 +28,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
 import com.jetec.nordic_googleplay.R;
 import com.jetec.nordic_googleplay.Value;
 import com.jetec.nordic_googleplay.ViewAdapter.SearchData;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import static java.lang.Thread.sleep;
 
 public class SearchActivity extends AppCompatActivity {
@@ -43,7 +47,7 @@ public class SearchActivity extends AppCompatActivity {
     private Vibrator vibrator;
     private SearchData searchData;
     private Dialog datedialog = null, timedialog = null;
-    private int page, state;
+    private int page, state, chose_position;
     private ArrayList<String> charttime, Firstlist, Secondlist, Thirdlist, condition1, condition2, condition3;
     private ArrayList<String> new_time, new_T, new_H, new_C, idlist;
     private String date, CO2, Humidity, Temperature, record, getdate = "yyyy-mm-dd", gettime = "00:00",
@@ -59,50 +63,50 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
-            setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
 
         searchmenu();
     }
 
-    private static String Fix(int c){
+    private static String Fix(int c) {
         if (c >= 10)
             return String.valueOf(c);
         else
             return "0" + String.valueOf(c);
     }
 
-    private void searchmenu(){
+    private void searchmenu() {
 
         setContentView(R.layout.searchdatalist);
 
-        Spinner s1 = (Spinner)findViewById(R.id.spinner1);
-        Spinner s2 = (Spinner)findViewById(R.id.spinner2);
-        EditText e1 = (EditText)findViewById(R.id.editText1);
-        Button b1 = (Button)findViewById(R.id.button1);
-        Button b2 = (Button)findViewById(R.id.button2);
-        Button b3 = (Button)findViewById(R.id.button3);
-        TextView t1 = (TextView)findViewById(R.id.textView5);
-        t2 = (TextView)findViewById(R.id.textView6);
-        t3 = (TextView)findViewById(R.id.textView7);
-        LinearLayout l1 = (LinearLayout)findViewById(R.id.textlinear);
+        Spinner s1 = findViewById(R.id.spinner1);
+        Spinner s2 = findViewById(R.id.spinner2);
+        EditText e1 = findViewById(R.id.editText1);
+        Button b1 = findViewById(R.id.button1);
+        Button b2 = findViewById(R.id.button2);
+        Button b3 = findViewById(R.id.button3);
+        TextView t1 = findViewById(R.id.textView5);
+        t2 = findViewById(R.id.textView6);
+        t3 = findViewById(R.id.textView7);
+        LinearLayout l1 = findViewById(R.id.textlinear);
 
         page = 0;
         state = 0;
 
-        charttime = new ArrayList<String>();
-        Firstlist = new ArrayList<String>();
-        Secondlist = new ArrayList<String>();
-        Thirdlist = new ArrayList<String>();
-        condition1 = new ArrayList<String>();
-        condition2 = new ArrayList<String>();
-        condition3 = new ArrayList<String>();
-        new_time = new ArrayList<String>();
-        new_T = new ArrayList<String>();
-        new_H = new ArrayList<String>();
-        new_C = new ArrayList<String>();
-        idlist = new ArrayList<String>();
+        charttime = new ArrayList<>();
+        Firstlist = new ArrayList<>();
+        Secondlist = new ArrayList<>();
+        Thirdlist = new ArrayList<>();
+        condition1 = new ArrayList<>();
+        condition2 = new ArrayList<>();
+        condition3 = new ArrayList<>();
+        new_time = new ArrayList<>();
+        new_T = new ArrayList<>();
+        new_H = new ArrayList<>();
+        new_C = new ArrayList<>();
+        idlist = new ArrayList<>();
 
         charttime.clear();
         Firstlist.clear();
@@ -125,50 +129,74 @@ public class SearchActivity extends AppCompatActivity {
         all_Height = Value.all_Height;
 
         date = getString(R.string.datetime);    //項目，條件，數值
-        if(Value.name.get(2).toString().matches("C")) {
-            CO2 = getString(R.string.Co2);
-        }
-        else if(Value.name.get(2).toString().matches("T")){
-            CO2 = getString(R.string.Temperature);
-        }
-        else if(Value.name.get(2).toString().matches("H")){
-            CO2 = getString(R.string.Humidity);
-        }
-        else if(Value.name.get(2).toString().matches("I")){
-            CO2 = getString(R.string.I3row);
-        }
 
-        if(Value.name.get(1).toString().matches("C")) {
-            Humidity = getString(R.string.Co2);
-        }
-        else if(Value.name.get(1).toString().matches("T")){
-            Humidity = getString(R.string.Temperature);
-        }
-        else if(Value.name.get(1).toString().matches("H")){
-            Humidity = getString(R.string.Humidity);
-        }
-        else if(Value.name.get(1).toString().matches("I")){
-            Humidity = getString(R.string.I2row);
-        }
+        if (Firstlist.size() != 0 && Secondlist.size() != 0 && Thirdlist.size() != 0) {
+            if (Value.name.get(2).toString().matches("C")) {
+                CO2 = getString(R.string.Co2);
+            } else if (Value.name.get(2).toString().matches("T")) {
+                CO2 = getString(R.string.Temperature);
+            } else if (Value.name.get(2).toString().matches("H")) {
+                CO2 = getString(R.string.Humidity);
+            } else if (Value.name.get(2).toString().matches("I")) {
+                CO2 = getString(R.string.I3row);
+            }
 
-        if(Value.name.get(0).toString().matches("C")) {
-            Temperature = getString(R.string.Co2);
-        }
-        else if(Value.name.get(0).toString().matches("T")){
-            Temperature = getString(R.string.Temperature);
-        }
-        else if(Value.name.get(0).toString().matches("H")){
-            Temperature = getString(R.string.Humidity);
-        }
-        else if(Value.name.get(0).toString().matches("I")){
-            Temperature = getString(R.string.I1row);
+            if (Value.name.get(1).toString().matches("C")) {
+                Humidity = getString(R.string.Co2);
+            } else if (Value.name.get(1).toString().matches("T")) {
+                Humidity = getString(R.string.Temperature);
+            } else if (Value.name.get(1).toString().matches("H")) {
+                Humidity = getString(R.string.Humidity);
+            } else if (Value.name.get(1).toString().matches("I")) {
+                Humidity = getString(R.string.I2row);
+            }
+
+            if (Value.name.get(0).toString().matches("C")) {
+                Temperature = getString(R.string.Co2);
+            } else if (Value.name.get(0).toString().matches("T")) {
+                Temperature = getString(R.string.Temperature);
+            } else if (Value.name.get(0).toString().matches("H")) {
+                Temperature = getString(R.string.Humidity);
+            } else if (Value.name.get(0).toString().matches("I")) {
+                Temperature = getString(R.string.I1row);
+            }
+        } else if (Firstlist.size() != 0 && Secondlist.size() != 0) {
+            if (Value.name.get(1).toString().matches("C")) {
+                Humidity = getString(R.string.Co2);
+            } else if (Value.name.get(1).toString().matches("T")) {
+                Humidity = getString(R.string.Temperature);
+            } else if (Value.name.get(1).toString().matches("H")) {
+                Humidity = getString(R.string.Humidity);
+            } else if (Value.name.get(1).toString().matches("I")) {
+                Humidity = getString(R.string.I2row);
+            }
+
+            if (Value.name.get(0).toString().matches("C")) {
+                Temperature = getString(R.string.Co2);
+            } else if (Value.name.get(0).toString().matches("T")) {
+                Temperature = getString(R.string.Temperature);
+            } else if (Value.name.get(0).toString().matches("H")) {
+                Temperature = getString(R.string.Humidity);
+            } else if (Value.name.get(0).toString().matches("I")) {
+                Temperature = getString(R.string.I1row);
+            }
+        } else if (Firstlist.size() != 0) {
+            if (Value.name.get(0).toString().matches("C")) {
+                Temperature = getString(R.string.Co2);
+            } else if (Value.name.get(0).toString().matches("T")) {
+                Temperature = getString(R.string.Temperature);
+            } else if (Value.name.get(0).toString().matches("H")) {
+                Temperature = getString(R.string.Humidity);
+            } else if (Value.name.get(0).toString().matches("I")) {
+                Temperature = getString(R.string.I1row);
+            }
         }
 
         record = getString(R.string.size);
 
         new Thread(timecheck).start();
         new Thread(arrayadd).start();
-        for(;state == 0;){
+        for (; state == 0; ) {
             try {
                 sleep(100);
             } catch (InterruptedException e) {
@@ -183,17 +211,14 @@ public class SearchActivity extends AppCompatActivity {
         b2.setVisibility(View.GONE);
 
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this, R.layout.spinner_style, condition1){    //android.R.layout.simple_spinner_item
+                this, R.layout.spinner_style, condition1) {    //android.R.layout.simple_spinner_item
             @Override
-            public boolean isEnabled(int position){
-                if(position == 0)
-                {
+            public boolean isEnabled(int position) {
+                if (position == 0) {
                     // Disable the first item from Spinner
                     // First item will be use for hint
                     return false;
-                }
-                else
-                {
+                } else {
                     return true;
                 }
             }
@@ -204,11 +229,10 @@ public class SearchActivity extends AppCompatActivity {
         s1.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("myLog","position = " + position);
-                if(position == 0){
+                Log.e("myLog", "position = " + position);
+                if (position == 0) {
 
-                }
-                else if(position == 1){
+                } else if (position == 1) {
                     s2.setEnabled(true);
                     e1.setVisibility(View.GONE);
                     t3.setVisibility(View.VISIBLE);
@@ -216,8 +240,7 @@ public class SearchActivity extends AppCompatActivity {
                     b2.setVisibility(View.VISIBLE);
                     l1.setVisibility(View.VISIBLE);
                     chose1 = date;
-                }
-                else if(position == 2){
+                } else if (position == 2) {
                     s2.setEnabled(true);
                     e1.setVisibility(View.VISIBLE);
                     e1.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -228,51 +251,52 @@ public class SearchActivity extends AppCompatActivity {
                     b2.setVisibility(View.GONE);
                     l1.setVisibility(View.GONE);
                     chose1 = condition1.get(position);
-                }
-                else {
+                } else {
                     s2.setEnabled(true);
                     e1.setVisibility(View.VISIBLE);
                     e1.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED |
                             InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                    if(position == 3){
-                        if(Value.name.get(0).toString().matches("T")){
+                    chose_position = position;
+                    if (position == 3) {
+                        if (Value.name.get(0).toString().matches("T")) {
                             e1.setHint(" - 10 ~ 65");
-                        }
-                        else if(Value.name.get(0).toString().matches("H")){
+                        } else if (Value.name.get(0).toString().matches("H")) {
                             e1.setHint(" 0 ~ 99");
-                        }
-                        else if(Value.name.get(0).toString().matches("C")){
-
-                        }
-                        else if(Value.name.get(0).toString().matches("I")){
+                        } else if (Value.name.get(0).toString().matches("C")) {
+                            e1.setHint(" 0 ~ 2000");
+                        } else if (Value.name.get(0).toString().matches("D")) {
+                            e1.setHint(" 0 ~ 3000");
+                        } else if (Value.name.get(0).toString().matches("E")) {
+                            e1.setHint(" 0 ~ 5000");
+                        } else if (Value.name.get(0).toString().matches("I")) {
                             e1.setHint(" 9999 ~ -999");
                         }
-                    }
-                    else if(position == 4){
-                        if(Value.name.get(0).toString().matches("T")){
+                    } else if (position == 4) {
+                        if (Value.name.get(1).toString().matches("T")) {
                             e1.setHint(" - 10 ~ 65");
-                        }
-                        else if(Value.name.get(0).toString().matches("H")){
+                        } else if (Value.name.get(1).toString().matches("H")) {
                             e1.setHint(" 0 ~ 99");
-                        }
-                        else if(Value.name.get(0).toString().matches("C")){
-
-                        }
-                        else if(Value.name.get(0).toString().matches("I")){
+                        } else if (Value.name.get(1).toString().matches("C")) {
+                            e1.setHint(" 0 ~ 2000");
+                        } else if (Value.name.get(1).toString().matches("D")) {
+                            e1.setHint(" 0 ~ 3000");
+                        } else if (Value.name.get(1).toString().matches("E")) {
+                            e1.setHint(" 0 ~ 5000");
+                        } else if (Value.name.get(1).toString().matches("I")) {
                             e1.setHint(" 9999 ~ -999");
                         }
-                    }
-                    else {
-                        if(Value.name.get(0).toString().matches("T")){
+                    } else {
+                        if (Value.name.get(2).toString().matches("T")) {
                             e1.setHint(" - 10 ~ 65");
-                        }
-                        else if(Value.name.get(0).toString().matches("H")){
+                        } else if (Value.name.get(2).toString().matches("H")) {
                             e1.setHint(" 0 ~ 99");
-                        }
-                        else if(Value.name.get(0).toString().matches("C")){
-
-                        }
-                        else if(Value.name.get(0).toString().matches("I")){
+                        } else if (Value.name.get(2).toString().matches("C")) {
+                            e1.setHint(" 0 ~ 2000");
+                        } else if (Value.name.get(2).toString().matches("D")) {
+                            e1.setHint(" 0 ~ 3000");
+                        } else if (Value.name.get(2).toString().matches("E")) {
+                            e1.setHint(" 0 ~ 5000");
+                        } else if (Value.name.get(2).toString().matches("I")) {
                             e1.setHint(" 9999 ~ -999");
                         }
                     }
@@ -281,7 +305,7 @@ public class SearchActivity extends AppCompatActivity {
                     b2.setVisibility(View.GONE);
                     l1.setVisibility(View.GONE);
                     chose1 = condition1.get(position);
-                    Log.e(TAG,"chose1 = " + chose1);
+                    Log.e(TAG, "chose1 = " + chose1);
                 }
             }
 
@@ -291,17 +315,14 @@ public class SearchActivity extends AppCompatActivity {
         });
 
         ArrayAdapter<String> spinnerArrayAdapter2 = new ArrayAdapter<String>(
-                this, R.layout.spinner_style, condition2){    //android.R.layout.simple_spinner_item
+                this, R.layout.spinner_style, condition2) {    //android.R.layout.simple_spinner_item
             @Override
-            public boolean isEnabled(int position){
-                if(position == 0)
-                {
+            public boolean isEnabled(int position) {
+                if (position == 0) {
                     // Disable the first item from Spinner
                     // First item will be use for hint
                     return false;
-                }
-                else
-                {
+                } else {
                     return true;
                 }
             }
@@ -312,7 +333,7 @@ public class SearchActivity extends AppCompatActivity {
         s2.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("myLog","position2 = " + position);
+                Log.e("myLog", "position2 = " + position);
                 chose2 = condition2.get(position);
             }
 
@@ -338,188 +359,247 @@ public class SearchActivity extends AppCompatActivity {
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(chose1.matches(date) && !chose2.matches("") && !getdate.matches("yy-mm-dd")){
-                    SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
-                    String timecomparison = getdate + " " + gettime + ":00";
-                    try {
-                        if(chose2.matches("＞")) {
-                            if (sdf.parse(timecomparison).after(sdf.parse(charttime.get(charttime.size() - 1)))
-                                    || sdf.parse(timecomparison).before(sdf.parse(charttime.get(0)))) {
-                                Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
-                            }
-                            else{
-                                for(int i = 0; i < charttime.size(); i++){
-                                    if(sdf.parse(timecomparison).before(sdf.parse(charttime.get(i)))){
-                                        new_time.add(charttime.get(i));
-                                        idlist.add(String.valueOf(i + 1));
-                                        if (Firstlist.size() > 0)
-                                            new_T.add(Firstlist.get(i));
-                                        if (Secondlist.size() > 0)
-                                            new_H.add(Secondlist.get(i));
-                                        if (Thirdlist.size() > 0)
-                                            new_T.add(Thirdlist.get(i));
+                if (chose1.matches(date)) {
+                    if (chose1.matches(date) && !chose2.matches("") && !getdate.matches("yyyy-mm-dd")) {
+                        @SuppressLint("SimpleDateFormat")
+                        SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+                        String timecomparison = getdate + " " + gettime + ":00";
+                        Log.e(TAG,"timecomparison = " + timecomparison);
+                        try {
+                            if (chose2.matches("＞")) {
+                                if (sdf.parse(timecomparison).after(sdf.parse(charttime.get(charttime.size() - 1)))
+                                        || sdf.parse(timecomparison).before(sdf.parse(charttime.get(0)))) {
+                                    Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    for (int i = 0; i < charttime.size(); i++) {
+                                        if (sdf.parse(timecomparison).before(sdf.parse(charttime.get(i)))) {
+                                            new_time.add(charttime.get(i));
+                                            idlist.add(String.valueOf(i + 1));
+                                            if (Firstlist.size() > 0)
+                                                new_T.add(Firstlist.get(i));
+                                            if (Secondlist.size() > 0)
+                                                new_H.add(Secondlist.get(i));
+                                            if (Thirdlist.size() > 0)
+                                                new_T.add(Thirdlist.get(i));
+                                        }
                                     }
+                                    showpage();
                                 }
-                                showpage();
-                            }
-                        }
-                        else if(chose2.matches("≧")){
-                            if (sdf.parse(timecomparison).after(sdf.parse(charttime.get(charttime.size() - 1)))
-                                    || sdf.parse(timecomparison).before(sdf.parse(charttime.get(0)))) {
-                                Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                for(int i = 0; i < charttime.size(); i++){
-                                    if(sdf.parse(timecomparison).before(sdf.parse(charttime.get(i)))
-                                            || sdf.parse(timecomparison).equals(sdf.parse(charttime.get(i)))){
-                                        new_time.add(charttime.get(i));
-                                        idlist.add(String.valueOf(i + 1));
-                                        if(Firstlist.size() > 0)
-                                            new_T.add(Firstlist.get(i));
-                                        if(Secondlist.size() > 0)
-                                            new_H.add(Secondlist.get(i));
-                                        if(Thirdlist.size() > 0)
-                                            new_T.add(Thirdlist.get(i));
+                            } else if (chose2.matches("≧")) {
+                                if (sdf.parse(timecomparison).after(sdf.parse(charttime.get(charttime.size() - 1)))
+                                        || sdf.parse(timecomparison).before(sdf.parse(charttime.get(0)))) {
+                                    Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    for (int i = 0; i < charttime.size(); i++) {
+                                        if (sdf.parse(timecomparison).before(sdf.parse(charttime.get(i)))
+                                                || sdf.parse(timecomparison).equals(sdf.parse(charttime.get(i)))) {
+                                            new_time.add(charttime.get(i));
+                                            idlist.add(String.valueOf(i + 1));
+                                            if (Firstlist.size() > 0)
+                                                new_T.add(Firstlist.get(i));
+                                            if (Secondlist.size() > 0)
+                                                new_H.add(Secondlist.get(i));
+                                            if (Thirdlist.size() > 0)
+                                                new_T.add(Thirdlist.get(i));
+                                        }
                                     }
+                                    showpage();
                                 }
-                                showpage();
-                            }
-                        }
-                        else if(chose2.matches("＝")){
-                            if (sdf.parse(timecomparison).after(sdf.parse(charttime.get(charttime.size() - 1)))
-                                    || sdf.parse(timecomparison).before(sdf.parse(charttime.get(0)))) {
-                                Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                for(int i = 0; i < charttime.size(); i++){
-                                    if(sdf.parse(timecomparison).equals(sdf.parse(charttime.get(i)))){
-                                        new_time.add(charttime.get(i));
-                                        idlist.add(String.valueOf(i + 1));
-                                        if(Firstlist.size() > 0)
-                                            new_T.add(Firstlist.get(i));
-                                        if(Secondlist.size() > 0)
-                                            new_H.add(Secondlist.get(i));
-                                        if(Thirdlist.size() > 0)
-                                            new_T.add(Thirdlist.get(i));
+                            } else if (chose2.matches("＝")) {
+                                if (sdf.parse(timecomparison).after(sdf.parse(charttime.get(charttime.size() - 1)))
+                                        || sdf.parse(timecomparison).before(sdf.parse(charttime.get(0)))) {
+                                    Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    for (int i = 0; i < charttime.size(); i++) {
+                                        if (sdf.parse(timecomparison).equals(sdf.parse(charttime.get(i)))) {
+                                            new_time.add(charttime.get(i));
+                                            idlist.add(String.valueOf(i + 1));
+                                            if (Firstlist.size() > 0)
+                                                new_T.add(Firstlist.get(i));
+                                            if (Secondlist.size() > 0)
+                                                new_H.add(Secondlist.get(i));
+                                            if (Thirdlist.size() > 0)
+                                                new_T.add(Thirdlist.get(i));
+                                        }
                                     }
+                                    showpage();
                                 }
-                                showpage();
-                            }
-                        }
-                        else if(chose2.matches("≦")){
-                            if (sdf.parse(timecomparison).after(sdf.parse(charttime.get(charttime.size() - 1)))
-                                    || sdf.parse(timecomparison).before(sdf.parse(charttime.get(0)))) {
-                                Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
-                            }
-                            else{
-                                for(int i = 0; i < charttime.size(); i++){
-                                    if(sdf.parse(timecomparison).after(sdf.parse(charttime.get(i)))
-                                            || sdf.parse(timecomparison).equals(sdf.parse(charttime.get(i)))){
-                                        new_time.add(charttime.get(i));
-                                        idlist.add(String.valueOf(i + 1));
-                                        if(Firstlist.size() > 0)
-                                            new_T.add(Firstlist.get(i));
-                                        if(Secondlist.size() > 0)
-                                            new_H.add(Secondlist.get(i));
-                                        if(Thirdlist.size() > 0)
-                                            new_T.add(Thirdlist.get(i));
+                            } else if (chose2.matches("≦")) {
+                                if (sdf.parse(timecomparison).after(sdf.parse(charttime.get(charttime.size() - 1)))
+                                        || sdf.parse(timecomparison).before(sdf.parse(charttime.get(0)))) {
+                                    Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    for (int i = 0; i < charttime.size(); i++) {
+                                        if (sdf.parse(timecomparison).after(sdf.parse(charttime.get(i)))
+                                                || sdf.parse(timecomparison).equals(sdf.parse(charttime.get(i)))) {
+                                            new_time.add(charttime.get(i));
+                                            idlist.add(String.valueOf(i + 1));
+                                            if (Firstlist.size() > 0)
+                                                new_T.add(Firstlist.get(i));
+                                            if (Secondlist.size() > 0)
+                                                new_H.add(Secondlist.get(i));
+                                            if (Thirdlist.size() > 0)
+                                                new_T.add(Thirdlist.get(i));
+                                        }
                                     }
+                                    showpage();
                                 }
-                                showpage();
-                            }
-                        }
-                        else if(chose2.matches("＜")){
-                            if (sdf.parse(timecomparison).after(sdf.parse(charttime.get(charttime.size() - 1)))
-                                    || sdf.parse(timecomparison).before(sdf.parse(charttime.get(0)))) {
-                                Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                for(int i = 0; i < charttime.size(); i++){
-                                    if(sdf.parse(timecomparison).after(sdf.parse(charttime.get(i)))){
-                                        new_time.add(charttime.get(i));
-                                        idlist.add(String.valueOf(i + 1));
-                                        if(Firstlist.size() > 0)
-                                            new_T.add(Firstlist.get(i));
-                                        if(Secondlist.size() > 0)
-                                            new_H.add(Secondlist.get(i));
-                                        if(Thirdlist.size() > 0)
-                                            new_T.add(Thirdlist.get(i));
+                            } else if (chose2.matches("＜")) {
+                                if (sdf.parse(timecomparison).after(sdf.parse(charttime.get(charttime.size() - 1)))
+                                        || sdf.parse(timecomparison).before(sdf.parse(charttime.get(0)))) {
+                                    Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    for (int i = 0; i < charttime.size(); i++) {
+                                        if (sdf.parse(timecomparison).after(sdf.parse(charttime.get(i)))) {
+                                            new_time.add(charttime.get(i));
+                                            idlist.add(String.valueOf(i + 1));
+                                            if (Firstlist.size() > 0)
+                                                new_T.add(Firstlist.get(i));
+                                            if (Secondlist.size() > 0)
+                                                new_H.add(Secondlist.get(i));
+                                            if (Thirdlist.size() > 0)
+                                                new_T.add(Thirdlist.get(i));
+                                        }
                                     }
+                                    showpage();
                                 }
-                                showpage();
-                            }
+                            } else
+                                Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
-                        else
-                            Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else if(chose1.matches(record) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")){
-                    calculate(chose1, chose2, e1.getText().toString().trim());
-                }
-                if(Value.name.get(0).toString().matches("T") || Value.name.get(0).toString().matches("H") ||
-                        Value.name.get(0).toString().matches("C") || Value.name.get(0).toString().matches("I")) {
-                    if (chose1.matches(Temperature) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("") && c) {
-                        if (Value.name.get(0).toString().matches("T")) {
-                            if (Float.valueOf(e1.getText().toString().trim()) >= -10 && Float.valueOf(e1.getText().toString().trim()) <= 65)
-                                calculate(chose1, chose2, e1.getText().toString().trim());
-                        } else if (Value.name.get(0).toString().matches("H")) {
-                            if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 99)
-                                calculate(chose1, chose2, e1.getText().toString().trim());
-                        } else if (Value.name.get(0).toString().matches("C")) {
-
-                        } else if (Value.name.get(0).toString().matches("I")) {
-                            if (Float.valueOf(e1.getText().toString().trim()) >= -999 && Float.valueOf(e1.getText().toString().trim()) <= 9999)
-                                calculate(chose1, chose2, e1.getText().toString().trim());
-                        } else
-                            Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if(Value.name.get(1).toString().matches("T") || Value.name.get(1).toString().matches("H") ||
-                        Value.name.get(1).toString().matches("C") || Value.name.get(1).toString().matches("I")) {
-                    if (chose1.matches(Humidity) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("") && c) {
-                        if (Value.name.get(1).toString().matches("T")) {
-                            if (Float.valueOf(e1.getText().toString().trim()) >= -10 && Float.valueOf(e1.getText().toString().trim()) <= 65)
-                                calculate(chose1, chose2, e1.getText().toString().trim());
-                        } else if (Value.name.get(1).toString().matches("H")) {
-                            if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 99)
-                                calculate(chose1, chose2, e1.getText().toString().trim());
-                        } else if (Value.name.get(1).toString().matches("C")) {
-
-                        } else if (Value.name.get(1).toString().matches("I")) {
-                            if (Float.valueOf(e1.getText().toString().trim()) >= -999 && Float.valueOf(e1.getText().toString().trim()) <= 9999)
-                                calculate(chose1, chose2, e1.getText().toString().trim());
-                        } else
-                            Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if(Value.name.get(2).toString().matches("T") || Value.name.get(2).toString().matches("H") ||
-                        Value.name.get(2).toString().matches("C") || Value.name.get(2).toString().matches("I")) {
-                    if (chose1.matches(CO2) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")) {
-                        if (Value.name.get(2).toString().matches("T")) {
-                            if (Float.valueOf(e1.getText().toString().trim()) >= -10 && Float.valueOf(e1.getText().toString().trim()) <= 65)
-                                calculate(chose1, chose2, e1.getText().toString().trim());
-                        } else if (Value.name.get(2).toString().matches("H")) {
-                            if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 99)
-                                calculate(chose1, chose2, e1.getText().toString().trim());
-                        } else if (Value.name.get(2).toString().matches("C")) {
-
-                        } else if (Value.name.get(2).toString().matches("I")) {
-                            if (Float.valueOf(e1.getText().toString().trim()) >= -999 && Float.valueOf(e1.getText().toString().trim()) <= 9999)
-                                calculate(chose1, chose2, e1.getText().toString().trim());
-                        }
+                    } else
+                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                } else if (chose1.matches(record)) {
+                    if (chose1.matches(record) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches(""))
                         calculate(chose1, chose2, e1.getText().toString().trim());
+                    else
+                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                } else {
+                    if (chose_position == 3) {
+                        if (Value.name.get(0).toString().matches("T") || Value.name.get(0).toString().matches("H") ||
+                                Value.name.get(0).toString().matches("C") || Value.name.get(0).toString().matches("I")) {
+                            if (chose1.matches(Temperature) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")) {
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= -10 && Float.valueOf(e1.getText().toString().trim()) <= 65)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 99)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 2000)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(0).toString().matches("D")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 3000)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(0).toString().matches("E")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 5000)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= -999 && Float.valueOf(e1.getText().toString().trim()) <= 9999)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                }
+                            } else
+                                Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                        }
+                    } else if (chose_position == 4) {
+                        if (Value.name.get(1).toString().matches("T") || Value.name.get(1).toString().matches("H") ||
+                                Value.name.get(1).toString().matches("C") || Value.name.get(1).toString().matches("I")) {
+                            if (chose1.matches(Humidity) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")) {
+                                if (Value.name.get(1).toString().matches("T")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= -10 && Float.valueOf(e1.getText().toString().trim()) <= 65)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 99)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 2000)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(1).toString().matches("D")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 3000)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(1).toString().matches("E")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 5000)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= -999 && Float.valueOf(e1.getText().toString().trim()) <= 9999)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                }
+                            } else
+                                Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                        }
+                    } else if (chose_position == 5) {
+                        if (Value.name.get(2).toString().matches("T") || Value.name.get(2).toString().matches("H") ||
+                                Value.name.get(2).toString().matches("C") || Value.name.get(2).toString().matches("I")) {
+                            if (chose1.matches(CO2) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")) {
+                                if (Value.name.get(2).toString().matches("T")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= -10 && Float.valueOf(e1.getText().toString().trim()) <= 65)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 99)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 2000)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(2).toString().matches("D")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 3000)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(2).toString().matches("E")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= 0 && Float.valueOf(e1.getText().toString().trim()) <= 5000)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Float.valueOf(e1.getText().toString().trim()) >= -999 && Float.valueOf(e1.getText().toString().trim()) <= 9999)
+                                        calculate(chose1, chose2, e1.getText().toString().trim());
+                                    else
+                                        Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                                }
+                            } else
+                                Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.e(TAG, "Value.name.size() = " + Value.name.size());
+                            Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-                else {
-                    Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private void datechose(){
+    private void datechose() {
         final Calendar c = Calendar.getInstance();
         int mYear = c.get(Calendar.YEAR); // current year
         int mMonth = c.get(Calendar.MONTH); // current month
@@ -539,7 +619,7 @@ public class SearchActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void timechose(){
+    private void timechose() {
         final Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minutes = c.get(Calendar.MINUTE);
@@ -564,309 +644,286 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
-    private void calculate(String s1, String s2, String s3){
+    private void calculate(String s1, String s2, String s3) {
 
-        if(s1.matches(record)){
-            if(s2.matches("＞")){
+        if (s1.matches(record)) {
+            if (s2.matches("＞")) {
                 int i = Integer.valueOf(s3) - 1;
                 int j = charttime.size() - 1;
-                for(; i < j; i++){
+                for (; i < j; i++) {
                     new_time.add(charttime.get(i));
                     idlist.add(String.valueOf(i + 2));
-                    if(Firstlist.size() > 0) {
+                    if (Firstlist.size() > 0) {
                         new_T.add(Firstlist.get(i));
                     }
-                    if(Secondlist.size() > 0){
+                    if (Secondlist.size() > 0) {
                         new_H.add(Secondlist.get(i));
                     }
-                    if(Thirdlist.size() > 0){
+                    if (Thirdlist.size() > 0) {
                         new_C.add(Thirdlist.get(i));
                     }
                 }
                 showpage();
-            }
-            else if(s2.matches("≧")){
+            } else if (s2.matches("≧")) {
                 int i = Integer.valueOf(s3) - 1;
                 int j = charttime.size() - 1;
-                for(; i <= j; i++){
+                for (; i <= j; i++) {
                     new_time.add(charttime.get(i));
                     idlist.add(String.valueOf(i + 1));
-                    if(Firstlist.size() > 0) {
+                    if (Firstlist.size() > 0) {
                         new_T.add(Firstlist.get(i));
                     }
-                    if(Secondlist.size() > 0){
+                    if (Secondlist.size() > 0) {
                         new_H.add(Secondlist.get(i));
                     }
-                    if(Thirdlist.size() > 0){
+                    if (Thirdlist.size() > 0) {
                         new_C.add(Thirdlist.get(i));
                     }
                 }
                 showpage();
-            }
-            else if(s2.matches("＝")){
+            } else if (s2.matches("＝")) {
                 int i = Integer.valueOf(s3) - 1;
                 int j = charttime.size() - 1;
                 new_time.add(charttime.get(i));
                 idlist.add(String.valueOf(i + 1));
-                if(Firstlist.size() > 0) {
+                if (Firstlist.size() > 0) {
                     new_T.add(Firstlist.get(j));
                 }
-                if(Secondlist.size() > 0){
+                if (Secondlist.size() > 0) {
                     new_H.add(Secondlist.get(j));
                 }
-                if(Thirdlist.size() > 0){
+                if (Thirdlist.size() > 0) {
                     new_C.add(Thirdlist.get(j));
                 }
                 showpage();
-            }
-            else if(s2.matches("≦")){
+            } else if (s2.matches("≦")) {
                 int i = Integer.valueOf(s3) - 1;
-                for(int j = 0; j <= i; j++){
+                for (int j = 0; j <= i; j++) {
                     new_time.add(charttime.get(j));
                     idlist.add(String.valueOf(j + 1));
-                    if(Firstlist.size() > 0) {
+                    if (Firstlist.size() > 0) {
                         new_T.add(Firstlist.get(j));
                     }
-                    if(Secondlist.size() > 0){
+                    if (Secondlist.size() > 0) {
                         new_H.add(Secondlist.get(j));
                     }
-                    if(Thirdlist.size() > 0){
+                    if (Thirdlist.size() > 0) {
                         new_C.add(Thirdlist.get(j));
                     }
                 }
                 showpage();
-            }
-            else if(s2.matches("＜")){
+            } else if (s2.matches("＜")) {
                 int i = Integer.valueOf(s3) - 1;
-                for(int j = 0; j < i; j++){
+                for (int j = 0; j < i; j++) {
                     new_time.add(charttime.get(j));
                     idlist.add(String.valueOf(j + 1));
-                    if(Firstlist.size() > 0) {
+                    if (Firstlist.size() > 0) {
                         new_T.add(Firstlist.get(j));
                     }
-                    if(Secondlist.size() > 0){
+                    if (Secondlist.size() > 0) {
                         new_H.add(Secondlist.get(j));
                     }
-                    if(Thirdlist.size() > 0){
+                    if (Thirdlist.size() > 0) {
                         new_C.add(Thirdlist.get(j));
                     }
                 }
                 showpage();
-            }
-            else{
+            } else {
                 Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
             }
-        }
-        else if(s1.matches(Temperature)){
-            if(s2.matches("＞")){
+        } else if (s1.matches(Temperature)) {
+            if (s2.matches("＞")) {
                 float i = Float.valueOf(s3);
                 Log.e(TAG, "i = " + i);
-                for(int k = 0; k < charttime.size(); k++){
-                    if(Firstlist.size() > 0) {
-                        if((Float.valueOf(Firstlist.get(k)) / 10) > i) {
+                for (int k = 0; k < charttime.size(); k++) {
+                    if (Firstlist.size() > 0) {
+                        if ((Float.valueOf(Firstlist.get(k)) / 10) > i) {
                             Log.e(TAG, "Firstlist = " + Firstlist.get(k));
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
                             new_T.add(Firstlist.get(k));
-                            if(Secondlist.size() > 0)
+                            if (Secondlist.size() > 0)
                                 new_H.add(Secondlist.get(k));
-                            if(Thirdlist.size() > 0)
+                            if (Thirdlist.size() > 0)
                                 new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
                 showpage();
-            }
-            else if(s2.matches("≧")){
+            } else if (s2.matches("≧")) {
                 float i = Float.valueOf(s3);
-                for(int k = 0; k < charttime.size(); k++){
-                    if(Firstlist.size() > 0) {
-                        if((Float.valueOf(Firstlist.get(k)) / 10) >= i) {
+                for (int k = 0; k < charttime.size(); k++) {
+                    if (Firstlist.size() > 0) {
+                        if ((Float.valueOf(Firstlist.get(k)) / 10) >= i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
                             new_T.add(Firstlist.get(k));
-                            if(Secondlist.size() > 0)
+                            if (Secondlist.size() > 0)
                                 new_H.add(Secondlist.get(k));
-                            if(Thirdlist.size() > 0)
+                            if (Thirdlist.size() > 0)
                                 new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
                 showpage();
-            }
-            else if(s2.matches("＝")){
+            } else if (s2.matches("＝")) {
                 float i = Float.valueOf(s3);
-                for(int k = 0; k < charttime.size(); k++){
-                    if(Firstlist.size() > 0) {
-                        if((Float.valueOf(Firstlist.get(k)) / 10) == i) {
+                for (int k = 0; k < charttime.size(); k++) {
+                    if (Firstlist.size() > 0) {
+                        if ((Float.valueOf(Firstlist.get(k)) / 10) == i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
                             new_T.add(Firstlist.get(k));
-                            if(Secondlist.size() > 0)
+                            if (Secondlist.size() > 0)
                                 new_H.add(Secondlist.get(k));
-                            if(Thirdlist.size() > 0)
+                            if (Thirdlist.size() > 0)
                                 new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
                 showpage();
-            }
-            else if(s2.matches("≦")){
+            } else if (s2.matches("≦")) {
                 float i = Float.valueOf(s3);
-                for(int k = 0; k < charttime.size(); k++){
-                    if(Firstlist.size() > 0) {
-                        if((Float.valueOf(Firstlist.get(k)) / 10) <= i) {
+                for (int k = 0; k < charttime.size(); k++) {
+                    if (Firstlist.size() > 0) {
+                        if ((Float.valueOf(Firstlist.get(k)) / 10) <= i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
                             new_T.add(Firstlist.get(k));
-                            if(Secondlist.size() > 0)
+                            if (Secondlist.size() > 0)
                                 new_H.add(Secondlist.get(k));
-                            if(Thirdlist.size() > 0)
+                            if (Thirdlist.size() > 0)
                                 new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
                 showpage();
-            }
-            else if(s2.matches("＜")){
+            } else if (s2.matches("＜")) {
                 float i = Float.valueOf(s3);
-                for(int k = 0; k < charttime.size(); k++){
-                    if(Firstlist.size() > 0) {
-                        if((Float.valueOf(Firstlist.get(k)) / 10) < i) {
+                for (int k = 0; k < charttime.size(); k++) {
+                    if (Firstlist.size() > 0) {
+                        if ((Float.valueOf(Firstlist.get(k)) / 10) < i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
                             new_T.add(Firstlist.get(k));
-                            if(Secondlist.size() > 0)
+                            if (Secondlist.size() > 0)
                                 new_H.add(Secondlist.get(k));
-                            if(Thirdlist.size() > 0)
+                            if (Thirdlist.size() > 0)
                                 new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
                 showpage();
-            }
-            else{
+            } else {
                 Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
             }
-        }
-        else if(s1.matches(Humidity)){
-            if(s2.matches("＞")){
+        } else if (s1.matches(Humidity)) {
+            if (s2.matches("＞")) {
                 float i = Float.valueOf(s3);
-                for(int k = 0; k < charttime.size(); k++){
-                    if(Secondlist.size() > 0) {
-                        if((Float.valueOf(Secondlist.get(k)) / 10) > i) {
+                for (int k = 0; k < charttime.size(); k++) {
+                    if (Secondlist.size() > 0) {
+                        if ((Float.valueOf(Secondlist.get(k)) / 10) > i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
                             new_H.add(Secondlist.get(k));
-                            if(Firstlist.size() > 0)
+                            if (Firstlist.size() > 0)
                                 new_T.add(Firstlist.get(k));
-                            if(Thirdlist.size() > 0)
+                            if (Thirdlist.size() > 0)
                                 new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
                 showpage();
-            }
-            else if(s2.matches("≧")){
+            } else if (s2.matches("≧")) {
                 float i = Float.valueOf(s3);
-                for(int k = 0; k < charttime.size(); k++){
-                    if(Secondlist.size() > 0) {
-                        if((Float.valueOf(Secondlist.get(k)) / 10) >= i) {
+                for (int k = 0; k < charttime.size(); k++) {
+                    if (Secondlist.size() > 0) {
+                        if ((Float.valueOf(Secondlist.get(k)) / 10) >= i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
                             new_H.add(Secondlist.get(k));
-                            if(Firstlist.size() > 0)
+                            if (Firstlist.size() > 0)
                                 new_T.add(Firstlist.get(k));
-                            if(Thirdlist.size() > 0)
+                            if (Thirdlist.size() > 0)
                                 new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
                 showpage();
-            }
-            else if(s2.matches("＝")){
+            } else if (s2.matches("＝")) {
                 float i = Float.valueOf(s3);
-                for(int k = 0; k < charttime.size(); k++){
-                    if(Secondlist.size() > 0) {
-                        if((Float.valueOf(Secondlist.get(k)) / 10) == i) {
+                for (int k = 0; k < charttime.size(); k++) {
+                    if (Secondlist.size() > 0) {
+                        if ((Float.valueOf(Secondlist.get(k)) / 10) == i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
                             new_H.add(Secondlist.get(k));
-                            if(Firstlist.size() > 0)
+                            if (Firstlist.size() > 0)
                                 new_T.add(Firstlist.get(k));
-                            if(Thirdlist.size() > 0)
+                            if (Thirdlist.size() > 0)
                                 new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
                 showpage();
-            }
-            else if(s2.matches("≦")){
+            } else if (s2.matches("≦")) {
                 float i = Float.valueOf(s3);
-                for(int k = 0; k < charttime.size(); k++){
-                    if(Secondlist.size() > 0) {
-                        if((Float.valueOf(Secondlist.get(k)) / 10) <= i) {
+                for (int k = 0; k < charttime.size(); k++) {
+                    if (Secondlist.size() > 0) {
+                        if ((Float.valueOf(Secondlist.get(k)) / 10) <= i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
                             new_H.add(Secondlist.get(k));
-                            if(Firstlist.size() > 0)
+                            if (Firstlist.size() > 0)
                                 new_T.add(Firstlist.get(k));
-                            if(Thirdlist.size() > 0)
+                            if (Thirdlist.size() > 0)
                                 new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
                 showpage();
-            }
-            else if(s2.matches("＜")){
+            } else if (s2.matches("＜")) {
                 float i = Float.valueOf(s3);
-                for(int k = 0; k < charttime.size(); k++){
-                    if(Secondlist.size() > 0) {
-                        if((Float.valueOf(Secondlist.get(k)) / 10) < i) {
+                for (int k = 0; k < charttime.size(); k++) {
+                    if (Secondlist.size() > 0) {
+                        if ((Float.valueOf(Secondlist.get(k)) / 10) < i) {
                             new_time.add(charttime.get(k));
                             idlist.add(String.valueOf(k + 1));
                             new_H.add(Secondlist.get(k));
-                            if(Firstlist.size() > 0)
+                            if (Firstlist.size() > 0)
                                 new_T.add(Firstlist.get(k));
-                            if(Thirdlist.size() > 0)
+                            if (Thirdlist.size() > 0)
                                 new_C.add(Thirdlist.get(k));
                         }
                     }
                 }
                 showpage();
-            }
-            else{
+            } else {
                 Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
             }
-        }
-        else if(s1.matches(CO2)){
-            if(s2.matches("＞")){
+        } else if (s1.matches(CO2)) {
+            if (s2.matches("＞")) {
 
-            }
-            else if(s2.matches("≧")){
+            } else if (s2.matches("≧")) {
 
-            }
-            else if(s2.matches("＝")){
+            } else if (s2.matches("＝")) {
 
-            }
-            else if(s2.matches("≦")){
+            } else if (s2.matches("≦")) {
 
-            }
-            else if(s2.matches("＜")){
+            } else if (s2.matches("＜")) {
 
-            }
-            else{
+            } else {
 
             }
         }
     }
 
-    private void showpage(){
+    private void showpage() {
         setContentView(R.layout.chart_listview);
 
         page = 1;
 
-        ListView chart_list = (ListView)findViewById(R.id.datalist1);
+        ListView chart_list = (ListView) findViewById(R.id.datalist1);
 
         searchData = new SearchData(this, new_time, new_T, new_H, new_C, idlist, date, record,
                 Temperature, Humidity, CO2);
@@ -877,22 +934,22 @@ public class SearchActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                if(charttime.size() > 0){
+                if (charttime.size() > 0) {
                     condition1.add(getString(R.string.condition1));
                     sleep(30);
                     condition1.add(date);
                     sleep(30);
                     condition1.add(record);
                     sleep(30);
-                    if(Firstlist.size() > 0){
+                    if (Firstlist.size() > 0) {
                         condition1.add(Temperature);
                         sleep(30);
                     }
-                    if(Secondlist.size() > 0){
+                    if (Secondlist.size() > 0) {
                         condition1.add(Humidity);
                         sleep(30);
                     }
-                    if(Thirdlist.size() > 0){
+                    if (Thirdlist.size() > 0) {
                         condition1.add(CO2);
                         sleep(30);
                     }
@@ -921,13 +978,11 @@ public class SearchActivity extends AppCompatActivity {
             case KeyEvent.KEYCODE_SEARCH:
                 break;
             case KeyEvent.KEYCODE_BACK:
-                if(page == 0) {
+                if (page == 0) {
                     finish();
-                }
-                else if(page == 1){
+                } else if (page == 1) {
                     searchmenu();
-                }
-                else if(page == 2){
+                } else if (page == 2) {
 
                 }
                 break;

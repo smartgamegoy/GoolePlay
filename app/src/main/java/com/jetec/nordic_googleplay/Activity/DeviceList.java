@@ -328,7 +328,7 @@ public class DeviceList extends AppCompatActivity {
                             sendLog.start();*/
                         } else if (text.startsWith("BT")) {
                             Jsonlist.clear();
-                            if(text.contains("Y")){
+                            if(text.contains("Y")){ //timeclock
                                 Value.YMD = true;
                             }
                             else {
