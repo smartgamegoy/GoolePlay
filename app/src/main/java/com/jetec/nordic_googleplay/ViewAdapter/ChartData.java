@@ -76,6 +76,13 @@ public class ChartData extends BaseAdapter {
         TextView first = ((TextView) view.findViewById(R.id.textView3));
         TextView second = ((TextView) view.findViewById(R.id.textView4));
         TextView third = ((TextView) view.findViewById(R.id.textView5));
+        TextView textView6 = ((TextView) view.findViewById(R.id.textView6));
+        TextView textView7 = ((TextView) view.findViewById(R.id.textView7));
+        TextView textView8 = ((TextView) view.findViewById(R.id.textView8));
+
+        textView6.setVisibility(View.GONE);
+        textView7.setVisibility(View.GONE);
+        textView8.setVisibility(View.GONE);
 
         time.setText(getdate + " : " + timelist.get(position));
         value.setText(getsize + " : " + String.valueOf((position + 1)));

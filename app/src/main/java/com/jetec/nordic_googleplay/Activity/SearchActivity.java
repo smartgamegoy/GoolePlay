@@ -48,10 +48,11 @@ public class SearchActivity extends AppCompatActivity {
     private SearchData searchData;
     private Dialog datedialog = null, timedialog = null;
     private int page, state, chose_position;
-    private ArrayList<String> charttime, Firstlist, Secondlist, Thirdlist, condition1, condition2, condition3;
-    private ArrayList<String> new_time, new_T, new_H, new_C, idlist;
-    private String date, CO2, Humidity, Temperature, record, getdate = "yyyy-mm-dd", gettime = "00:00",
-            TAG = "searchLog", chose1, chose2, intput;
+    private ArrayList<String> charttime, Firstlist, Secondlist, Thirdlist, condition1, condition2, condition3,
+            intputlist1, intputlist2, intputlist3;
+    private ArrayList<String> new_time, new_T, new_H, new_C, idlist, new_I1, new_I2, new_I3;
+    private String date, CO2 = "", Humidity = "", Temperature = "", record, getdate = "yyyy-mm-dd", gettime = "00:00",
+            TAG = "searchLog", chose1, chose2, intput1 = "", intput2 = "", intput3 = "";
     private double all_Width, all_Height;
     private TextView t2, t3;
     private DatePickerDialog datePickerDialog;
@@ -102,16 +103,25 @@ public class SearchActivity extends AppCompatActivity {
         condition1 = new ArrayList<>();
         condition2 = new ArrayList<>();
         condition3 = new ArrayList<>();
+        intputlist1 = new ArrayList<>();
+        intputlist2 = new ArrayList<>();
+        intputlist3 = new ArrayList<>();
         new_time = new ArrayList<>();
         new_T = new ArrayList<>();
         new_H = new ArrayList<>();
         new_C = new ArrayList<>();
         idlist = new ArrayList<>();
+        new_I1 = new ArrayList<>();
+        new_I2 = new ArrayList<>();
+        new_I3 = new ArrayList<>();
 
         charttime.clear();
         Firstlist.clear();
         Secondlist.clear();
         Thirdlist.clear();
+        intputlist1.clear();
+        intputlist2.clear();
+        intputlist3.clear();
         idlist.clear();
         condition1.clear();
         condition2.clear();
@@ -120,6 +130,9 @@ public class SearchActivity extends AppCompatActivity {
         new_T.clear();
         new_H.clear();
         new_C.clear();
+        new_I1.clear();
+        new_I2.clear();
+        new_I3.clear();
 
         charttime = Value.charttime;
         Firstlist = Value.Firstlist;
@@ -134,61 +147,61 @@ public class SearchActivity extends AppCompatActivity {
             if (Value.name.get(2).toString().matches("C")) {
                 CO2 = getString(R.string.Co2);
             } else if (Value.name.get(2).toString().matches("T")) {
-                CO2 = getString(R.string.Temperature);
+                Temperature = getString(R.string.Temperature);
             } else if (Value.name.get(2).toString().matches("H")) {
-                CO2 = getString(R.string.Humidity);
+                Humidity = getString(R.string.Humidity);
             } else if (Value.name.get(2).toString().matches("I")) {
-                CO2 = getString(R.string.I3row);
+                intput3 = getString(R.string.I3row);
             }
 
             if (Value.name.get(1).toString().matches("C")) {
-                Humidity = getString(R.string.Co2);
+                CO2 = getString(R.string.Co2);
             } else if (Value.name.get(1).toString().matches("T")) {
-                Humidity = getString(R.string.Temperature);
+                Temperature = getString(R.string.Temperature);
             } else if (Value.name.get(1).toString().matches("H")) {
                 Humidity = getString(R.string.Humidity);
             } else if (Value.name.get(1).toString().matches("I")) {
-                Humidity = getString(R.string.I2row);
+                intput2 = getString(R.string.I2row);
             }
 
             if (Value.name.get(0).toString().matches("C")) {
-                Temperature = getString(R.string.Co2);
+                CO2 = getString(R.string.Co2);
             } else if (Value.name.get(0).toString().matches("T")) {
                 Temperature = getString(R.string.Temperature);
             } else if (Value.name.get(0).toString().matches("H")) {
-                Temperature = getString(R.string.Humidity);
+                Humidity = getString(R.string.Humidity);
             } else if (Value.name.get(0).toString().matches("I")) {
-                Temperature = getString(R.string.I1row);
+                intput1 = getString(R.string.I1row);
             }
         } else if (Firstlist.size() != 0 && Secondlist.size() != 0) {
             if (Value.name.get(1).toString().matches("C")) {
-                Humidity = getString(R.string.Co2);
+                CO2 = getString(R.string.Co2);
             } else if (Value.name.get(1).toString().matches("T")) {
-                Humidity = getString(R.string.Temperature);
+                Temperature = getString(R.string.Temperature);
             } else if (Value.name.get(1).toString().matches("H")) {
                 Humidity = getString(R.string.Humidity);
             } else if (Value.name.get(1).toString().matches("I")) {
-                Humidity = getString(R.string.I2row);
+                intput2 = getString(R.string.I2row);
             }
 
             if (Value.name.get(0).toString().matches("C")) {
-                Temperature = getString(R.string.Co2);
+                CO2 = getString(R.string.Co2);
             } else if (Value.name.get(0).toString().matches("T")) {
                 Temperature = getString(R.string.Temperature);
             } else if (Value.name.get(0).toString().matches("H")) {
-                Temperature = getString(R.string.Humidity);
+                Humidity = getString(R.string.Humidity);
             } else if (Value.name.get(0).toString().matches("I")) {
-                Temperature = getString(R.string.I1row);
+                intput1 = getString(R.string.I1row);
             }
         } else if (Firstlist.size() != 0) {
             if (Value.name.get(0).toString().matches("C")) {
-                Temperature = getString(R.string.Co2);
+                CO2 = getString(R.string.Co2);
             } else if (Value.name.get(0).toString().matches("T")) {
                 Temperature = getString(R.string.Temperature);
             } else if (Value.name.get(0).toString().matches("H")) {
-                Temperature = getString(R.string.Humidity);
+                Humidity = getString(R.string.Humidity);
             } else if (Value.name.get(0).toString().matches("I")) {
-                Temperature = getString(R.string.I1row);
+                intput1 = getString(R.string.I1row);
             }
         }
 
@@ -479,7 +492,7 @@ public class SearchActivity extends AppCompatActivity {
                     if (chose_position == 3) {
                         if (Value.name.get(0).toString().matches("T") || Value.name.get(0).toString().matches("H") ||
                                 Value.name.get(0).toString().matches("C") || Value.name.get(0).toString().matches("I")) {
-                            if (chose1.matches(Temperature) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")) {
+                            if (/*chose1.matches(Temperature) && */!chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")) {
                                 if (Value.name.get(0).toString().matches("T")) {
                                     if (Float.valueOf(e1.getText().toString().trim()) >= -10 && Float.valueOf(e1.getText().toString().trim()) <= 65)
                                         calculate(chose1, chose2, e1.getText().toString().trim());
@@ -517,7 +530,7 @@ public class SearchActivity extends AppCompatActivity {
                     } else if (chose_position == 4) {
                         if (Value.name.get(1).toString().matches("T") || Value.name.get(1).toString().matches("H") ||
                                 Value.name.get(1).toString().matches("C") || Value.name.get(1).toString().matches("I")) {
-                            if (chose1.matches(Humidity) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")) {
+                            if (/*chose1.matches(Humidity) && */!chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")) {
                                 if (Value.name.get(1).toString().matches("T")) {
                                     if (Float.valueOf(e1.getText().toString().trim()) >= -10 && Float.valueOf(e1.getText().toString().trim()) <= 65)
                                         calculate(chose1, chose2, e1.getText().toString().trim());
@@ -555,7 +568,7 @@ public class SearchActivity extends AppCompatActivity {
                     } else if (chose_position == 5) {
                         if (Value.name.get(2).toString().matches("T") || Value.name.get(2).toString().matches("H") ||
                                 Value.name.get(2).toString().matches("C") || Value.name.get(2).toString().matches("I")) {
-                            if (chose1.matches(CO2) && !chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")) {
+                            if (/*chose1.matches(CO2) && */!chose2.matches(getString(R.string.condition2)) && !e1.getText().toString().trim().matches("")) {
                                 if (Value.name.get(2).toString().matches("T")) {
                                     if (Float.valueOf(e1.getText().toString().trim()) >= -10 && Float.valueOf(e1.getText().toString().trim()) <= 65)
                                         calculate(chose1, chose2, e1.getText().toString().trim());
@@ -646,6 +659,16 @@ public class SearchActivity extends AppCompatActivity {
 
     private void calculate(String s1, String s2, String s3) {
 
+        Log.e(TAG,"s1 = " + s1);
+        Log.e(TAG,"s2 = " + s2);
+        Log.e(TAG,"s3 = " + s3);
+        Log.e(TAG,"Temperature = " + Temperature);
+        Log.e(TAG,"Humidity = " + Humidity);
+        Log.e(TAG,"CO2 = " + CO2);
+        Log.e(TAG,"intput1 = " + intput1);
+        Log.e(TAG,"intput2 = " + intput2);
+        Log.e(TAG,"intput3 = " + intput3);
+
         if (s1.matches(record)) {
             if (s2.matches("＞")) {
                 int i = Integer.valueOf(s3) - 1;
@@ -653,14 +676,54 @@ public class SearchActivity extends AppCompatActivity {
                 for (; i < j; i++) {
                     new_time.add(charttime.get(i));
                     idlist.add(String.valueOf(i + 2));
-                    if (Firstlist.size() > 0) {
-                        new_T.add(Firstlist.get(i));
-                    }
-                    if (Secondlist.size() > 0) {
-                        new_H.add(Secondlist.get(i));
-                    }
-                    if (Thirdlist.size() > 0) {
-                        new_C.add(Thirdlist.get(i));
+                    if(Value.name.get(0).toString().matches("T")){
+                        if (Firstlist.size() > 0) {
+                            new_T.add(Firstlist.get(i));
+                        }
+                    }else if(Value.name.get(0).toString().matches("H")){
+                        if (Firstlist.size() > 0) {
+                            new_H.add(Firstlist.get(i));
+                        }
+                    }else if(Value.name.get(0).toString().matches("C")){
+                        if (Firstlist.size() > 0) {
+                            new_C.add(Firstlist.get(i));
+                        }
+                    }else if(Value.name.get(0).toString().matches("I")){
+                        if (Firstlist.size() > 0) {
+                            new_I1.add(Firstlist.get(i));
+                        }
+                    } else if(Value.name.get(1).toString().matches("T")){
+                        if (Secondlist.size() > 0) {
+                            new_T.add(Secondlist.get(i));
+                        }
+                    }else if(Value.name.get(1).toString().matches("H")){
+                        if (Secondlist.size() > 0) {
+                            new_H.add(Secondlist.get(i));
+                        }
+                    }else if(Value.name.get(1).toString().matches("C")){
+                        if (Secondlist.size() > 0) {
+                            new_C.add(Secondlist.get(i));
+                        }
+                    }else if(Value.name.get(1).toString().matches("I")){
+                        if (Secondlist.size() > 0) {
+                            new_I2.add(Secondlist.get(i));
+                        }
+                    } else if(Value.name.get(2).toString().matches("T")){
+                        if (Thirdlist.size() > 0) {
+                            new_T.add(Thirdlist.get(i));
+                        }
+                    }else if(Value.name.get(2).toString().matches("H")){
+                        if (Thirdlist.size() > 0) {
+                            new_H.add(Thirdlist.get(i));
+                        }
+                    }else if(Value.name.get(2).toString().matches("C")){
+                        if (Thirdlist.size() > 0) {
+                            new_C.add(Thirdlist.get(i));
+                        }
+                    }else if(Value.name.get(2).toString().matches("I")){
+                        if (Thirdlist.size() > 0) {
+                            new_I3.add(Thirdlist.get(i));
+                        }
                     }
                 }
                 showpage();
@@ -670,14 +733,54 @@ public class SearchActivity extends AppCompatActivity {
                 for (; i <= j; i++) {
                     new_time.add(charttime.get(i));
                     idlist.add(String.valueOf(i + 1));
-                    if (Firstlist.size() > 0) {
-                        new_T.add(Firstlist.get(i));
-                    }
-                    if (Secondlist.size() > 0) {
-                        new_H.add(Secondlist.get(i));
-                    }
-                    if (Thirdlist.size() > 0) {
-                        new_C.add(Thirdlist.get(i));
+                    if(Value.name.get(0).toString().matches("T")){
+                        if (Firstlist.size() > 0) {
+                            new_T.add(Firstlist.get(i));
+                        }
+                    }else if(Value.name.get(0).toString().matches("H")){
+                        if (Firstlist.size() > 0) {
+                            new_H.add(Firstlist.get(i));
+                        }
+                    }else if(Value.name.get(0).toString().matches("C")){
+                        if (Firstlist.size() > 0) {
+                            new_C.add(Firstlist.get(i));
+                        }
+                    }else if(Value.name.get(0).toString().matches("I")){
+                        if (Firstlist.size() > 0) {
+                            new_I1.add(Firstlist.get(i));
+                        }
+                    } else if(Value.name.get(1).toString().matches("T")){
+                        if (Secondlist.size() > 0) {
+                            new_T.add(Secondlist.get(i));
+                        }
+                    }else if(Value.name.get(1).toString().matches("H")){
+                        if (Secondlist.size() > 0) {
+                            new_H.add(Secondlist.get(i));
+                        }
+                    }else if(Value.name.get(1).toString().matches("C")){
+                        if (Secondlist.size() > 0) {
+                            new_C.add(Secondlist.get(i));
+                        }
+                    }else if(Value.name.get(1).toString().matches("I")){
+                        if (Secondlist.size() > 0) {
+                            new_I2.add(Secondlist.get(i));
+                        }
+                    } else if(Value.name.get(2).toString().matches("T")){
+                        if (Thirdlist.size() > 0) {
+                            new_T.add(Thirdlist.get(i));
+                        }
+                    }else if(Value.name.get(2).toString().matches("H")){
+                        if (Thirdlist.size() > 0) {
+                            new_H.add(Thirdlist.get(i));
+                        }
+                    }else if(Value.name.get(2).toString().matches("C")){
+                        if (Thirdlist.size() > 0) {
+                            new_C.add(Thirdlist.get(i));
+                        }
+                    }else if(Value.name.get(2).toString().matches("I")){
+                        if (Thirdlist.size() > 0) {
+                            new_I3.add(Thirdlist.get(i));
+                        }
                     }
                 }
                 showpage();
@@ -686,14 +789,54 @@ public class SearchActivity extends AppCompatActivity {
                 int j = charttime.size() - 1;
                 new_time.add(charttime.get(i));
                 idlist.add(String.valueOf(i + 1));
-                if (Firstlist.size() > 0) {
-                    new_T.add(Firstlist.get(j));
-                }
-                if (Secondlist.size() > 0) {
-                    new_H.add(Secondlist.get(j));
-                }
-                if (Thirdlist.size() > 0) {
-                    new_C.add(Thirdlist.get(j));
+                if(Value.name.get(0).toString().matches("T")){
+                    if (Firstlist.size() > 0) {
+                        new_T.add(Firstlist.get(j));
+                    }
+                }else if(Value.name.get(0).toString().matches("H")){
+                    if (Firstlist.size() > 0) {
+                        new_H.add(Firstlist.get(j));
+                    }
+                }else if(Value.name.get(0).toString().matches("C")){
+                    if (Firstlist.size() > 0) {
+                        new_C.add(Firstlist.get(j));
+                    }
+                }else if(Value.name.get(0).toString().matches("I")){
+                    if (Firstlist.size() > 0) {
+                        new_I1.add(Firstlist.get(j));
+                    }
+                } else if(Value.name.get(1).toString().matches("T")){
+                    if (Secondlist.size() > 0) {
+                        new_T.add(Secondlist.get(j));
+                    }
+                }else if(Value.name.get(1).toString().matches("H")){
+                    if (Secondlist.size() > 0) {
+                        new_H.add(Secondlist.get(j));
+                    }
+                }else if(Value.name.get(1).toString().matches("C")){
+                    if (Secondlist.size() > 0) {
+                        new_C.add(Secondlist.get(j));
+                    }
+                }else if(Value.name.get(1).toString().matches("I")){
+                    if (Secondlist.size() > 0) {
+                        new_I2.add(Secondlist.get(j));
+                    }
+                } else if(Value.name.get(2).toString().matches("T")){
+                    if (Thirdlist.size() > 0) {
+                        new_T.add(Thirdlist.get(j));
+                    }
+                }else if(Value.name.get(2).toString().matches("H")){
+                    if (Thirdlist.size() > 0) {
+                        new_H.add(Thirdlist.get(j));
+                    }
+                }else if(Value.name.get(2).toString().matches("C")){
+                    if (Thirdlist.size() > 0) {
+                        new_C.add(Thirdlist.get(j));
+                    }
+                }else if(Value.name.get(2).toString().matches("I")){
+                    if (Thirdlist.size() > 0) {
+                        new_I3.add(Thirdlist.get(j));
+                    }
                 }
                 showpage();
             } else if (s2.matches("≦")) {
@@ -701,14 +844,54 @@ public class SearchActivity extends AppCompatActivity {
                 for (int j = 0; j <= i; j++) {
                     new_time.add(charttime.get(j));
                     idlist.add(String.valueOf(j + 1));
-                    if (Firstlist.size() > 0) {
-                        new_T.add(Firstlist.get(j));
-                    }
-                    if (Secondlist.size() > 0) {
-                        new_H.add(Secondlist.get(j));
-                    }
-                    if (Thirdlist.size() > 0) {
-                        new_C.add(Thirdlist.get(j));
+                    if(Value.name.get(0).toString().matches("T")){
+                        if (Firstlist.size() > 0) {
+                            new_T.add(Firstlist.get(j));
+                        }
+                    }else if(Value.name.get(0).toString().matches("H")){
+                        if (Firstlist.size() > 0) {
+                            new_H.add(Firstlist.get(j));
+                        }
+                    }else if(Value.name.get(0).toString().matches("C")){
+                        if (Firstlist.size() > 0) {
+                            new_C.add(Firstlist.get(j));
+                        }
+                    }else if(Value.name.get(0).toString().matches("I")){
+                        if (Firstlist.size() > 0) {
+                            new_I1.add(Firstlist.get(j));
+                        }
+                    } else if(Value.name.get(1).toString().matches("T")){
+                        if (Secondlist.size() > 0) {
+                            new_T.add(Secondlist.get(j));
+                        }
+                    }else if(Value.name.get(1).toString().matches("H")){
+                        if (Secondlist.size() > 0) {
+                            new_H.add(Secondlist.get(j));
+                        }
+                    }else if(Value.name.get(1).toString().matches("C")){
+                        if (Secondlist.size() > 0) {
+                            new_C.add(Secondlist.get(j));
+                        }
+                    }else if(Value.name.get(1).toString().matches("I")){
+                        if (Secondlist.size() > 0) {
+                            new_I2.add(Secondlist.get(j));
+                        }
+                    } else if(Value.name.get(2).toString().matches("T")){
+                        if (Thirdlist.size() > 0) {
+                            new_T.add(Thirdlist.get(j));
+                        }
+                    }else if(Value.name.get(2).toString().matches("H")){
+                        if (Thirdlist.size() > 0) {
+                            new_H.add(Thirdlist.get(j));
+                        }
+                    }else if(Value.name.get(2).toString().matches("C")){
+                        if (Thirdlist.size() > 0) {
+                            new_C.add(Thirdlist.get(j));
+                        }
+                    }else if(Value.name.get(2).toString().matches("I")){
+                        if (Thirdlist.size() > 0) {
+                            new_I3.add(Thirdlist.get(j));
+                        }
                     }
                 }
                 showpage();
@@ -717,14 +900,54 @@ public class SearchActivity extends AppCompatActivity {
                 for (int j = 0; j < i; j++) {
                     new_time.add(charttime.get(j));
                     idlist.add(String.valueOf(j + 1));
-                    if (Firstlist.size() > 0) {
-                        new_T.add(Firstlist.get(j));
-                    }
-                    if (Secondlist.size() > 0) {
-                        new_H.add(Secondlist.get(j));
-                    }
-                    if (Thirdlist.size() > 0) {
-                        new_C.add(Thirdlist.get(j));
+                    if(Value.name.get(0).toString().matches("T")){
+                        if (Firstlist.size() > 0) {
+                            new_T.add(Firstlist.get(j));
+                        }
+                    }else if(Value.name.get(0).toString().matches("H")){
+                        if (Firstlist.size() > 0) {
+                            new_H.add(Firstlist.get(j));
+                        }
+                    }else if(Value.name.get(0).toString().matches("C")){
+                        if (Firstlist.size() > 0) {
+                            new_C.add(Firstlist.get(j));
+                        }
+                    }else if(Value.name.get(0).toString().matches("I")){
+                        if (Firstlist.size() > 0) {
+                            new_I1.add(Firstlist.get(j));
+                        }
+                    } else if(Value.name.get(1).toString().matches("T")){
+                        if (Secondlist.size() > 0) {
+                            new_T.add(Secondlist.get(j));
+                        }
+                    }else if(Value.name.get(1).toString().matches("H")){
+                        if (Secondlist.size() > 0) {
+                            new_H.add(Secondlist.get(j));
+                        }
+                    }else if(Value.name.get(1).toString().matches("C")){
+                        if (Secondlist.size() > 0) {
+                            new_C.add(Secondlist.get(j));
+                        }
+                    }else if(Value.name.get(1).toString().matches("I")){
+                        if (Secondlist.size() > 0) {
+                            new_I2.add(Secondlist.get(j));
+                        }
+                    } else if(Value.name.get(2).toString().matches("T")){
+                        if (Thirdlist.size() > 0) {
+                            new_T.add(Thirdlist.get(j));
+                        }
+                    }else if(Value.name.get(2).toString().matches("H")){
+                        if (Thirdlist.size() > 0) {
+                            new_H.add(Thirdlist.get(j));
+                        }
+                    }else if(Value.name.get(2).toString().matches("C")){
+                        if (Thirdlist.size() > 0) {
+                            new_C.add(Thirdlist.get(j));
+                        }
+                    }else if(Value.name.get(2).toString().matches("I")){
+                        if (Thirdlist.size() > 0) {
+                            new_I3.add(Thirdlist.get(j));
+                        }
                     }
                 }
                 showpage();
@@ -736,16 +959,179 @@ public class SearchActivity extends AppCompatActivity {
                 float i = Float.valueOf(s3);
                 Log.e(TAG, "i = " + i);
                 for (int k = 0; k < charttime.size(); k++) {
-                    if (Firstlist.size() > 0) {
-                        if ((Float.valueOf(Firstlist.get(k)) / 10) > i) {
-                            Log.e(TAG, "Firstlist = " + Firstlist.get(k));
-                            new_time.add(charttime.get(k));
-                            idlist.add(String.valueOf(k + 1));
-                            new_T.add(Firstlist.get(k));
-                            if (Secondlist.size() > 0)
-                                new_H.add(Secondlist.get(k));
-                            if (Thirdlist.size() > 0)
-                                new_C.add(Thirdlist.get(k));
+                    if(Value.name.get(0).toString().matches("T")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k)) / 10) > i) {
+                                Log.e(TAG, "Firstlist = " + Firstlist.get(k));
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(1).toString().matches("T")){
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k)) / 10) > i) {
+                                Log.e(TAG, "Firstlist = " + Firstlist.get(k));
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(2).toString().matches("T")){
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k)) / 10) > i) {
+                                Log.e(TAG, "Firstlist = " + Firstlist.get(k));
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -753,15 +1139,176 @@ public class SearchActivity extends AppCompatActivity {
             } else if (s2.matches("≧")) {
                 float i = Float.valueOf(s3);
                 for (int k = 0; k < charttime.size(); k++) {
-                    if (Firstlist.size() > 0) {
-                        if ((Float.valueOf(Firstlist.get(k)) / 10) >= i) {
-                            new_time.add(charttime.get(k));
-                            idlist.add(String.valueOf(k + 1));
-                            new_T.add(Firstlist.get(k));
-                            if (Secondlist.size() > 0)
-                                new_H.add(Secondlist.get(k));
-                            if (Thirdlist.size() > 0)
-                                new_C.add(Thirdlist.get(k));
+                    if(Value.name.get(0).toString().matches("T")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k)) / 10) >= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(1).toString().matches("T")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k)) / 10) >= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(2).toString().matches("T")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k)) / 10) >= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -769,15 +1316,173 @@ public class SearchActivity extends AppCompatActivity {
             } else if (s2.matches("＝")) {
                 float i = Float.valueOf(s3);
                 for (int k = 0; k < charttime.size(); k++) {
-                    if (Firstlist.size() > 0) {
-                        if ((Float.valueOf(Firstlist.get(k)) / 10) == i) {
-                            new_time.add(charttime.get(k));
-                            idlist.add(String.valueOf(k + 1));
-                            new_T.add(Firstlist.get(k));
-                            if (Secondlist.size() > 0)
-                                new_H.add(Secondlist.get(k));
-                            if (Thirdlist.size() > 0)
-                                new_C.add(Thirdlist.get(k));
+                    if(Value.name.get(0).toString().matches("T")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k)) / 10) == i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(1).toString().matches("T")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k)) / 10) == i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(2).toString().matches("T")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k)) / 10) == i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -785,15 +1490,173 @@ public class SearchActivity extends AppCompatActivity {
             } else if (s2.matches("≦")) {
                 float i = Float.valueOf(s3);
                 for (int k = 0; k < charttime.size(); k++) {
-                    if (Firstlist.size() > 0) {
-                        if ((Float.valueOf(Firstlist.get(k)) / 10) <= i) {
-                            new_time.add(charttime.get(k));
-                            idlist.add(String.valueOf(k + 1));
-                            new_T.add(Firstlist.get(k));
-                            if (Secondlist.size() > 0)
-                                new_H.add(Secondlist.get(k));
-                            if (Thirdlist.size() > 0)
-                                new_C.add(Thirdlist.get(k));
+                    if(Value.name.get(0).toString().matches("T")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k)) / 10) <= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(1).toString().matches("T")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k)) / 10) <= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(2).toString().matches("T")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k)) / 10) <= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -801,15 +1664,173 @@ public class SearchActivity extends AppCompatActivity {
             } else if (s2.matches("＜")) {
                 float i = Float.valueOf(s3);
                 for (int k = 0; k < charttime.size(); k++) {
-                    if (Firstlist.size() > 0) {
-                        if ((Float.valueOf(Firstlist.get(k)) / 10) < i) {
-                            new_time.add(charttime.get(k));
-                            idlist.add(String.valueOf(k + 1));
-                            new_T.add(Firstlist.get(k));
-                            if (Secondlist.size() > 0)
-                                new_H.add(Secondlist.get(k));
-                            if (Thirdlist.size() > 0)
-                                new_C.add(Thirdlist.get(k));
+                    if(Value.name.get(0).toString().matches("T")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k)) / 10) < i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(1).toString().matches("T")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k)) / 10) < i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(2).toString().matches("T")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k)) / 10) < i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -821,15 +1842,173 @@ public class SearchActivity extends AppCompatActivity {
             if (s2.matches("＞")) {
                 float i = Float.valueOf(s3);
                 for (int k = 0; k < charttime.size(); k++) {
-                    if (Secondlist.size() > 0) {
-                        if ((Float.valueOf(Secondlist.get(k)) / 10) > i) {
-                            new_time.add(charttime.get(k));
-                            idlist.add(String.valueOf(k + 1));
-                            new_H.add(Secondlist.get(k));
-                            if (Firstlist.size() > 0)
-                                new_T.add(Firstlist.get(k));
-                            if (Thirdlist.size() > 0)
-                                new_C.add(Thirdlist.get(k));
+                    if(Value.name.get(0).toString().matches("H")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k)) / 10) > i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(1).toString().matches("H")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k)) / 10) > i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(2).toString().matches("H")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k)) / 10) > i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -837,15 +2016,173 @@ public class SearchActivity extends AppCompatActivity {
             } else if (s2.matches("≧")) {
                 float i = Float.valueOf(s3);
                 for (int k = 0; k < charttime.size(); k++) {
-                    if (Secondlist.size() > 0) {
-                        if ((Float.valueOf(Secondlist.get(k)) / 10) >= i) {
-                            new_time.add(charttime.get(k));
-                            idlist.add(String.valueOf(k + 1));
-                            new_H.add(Secondlist.get(k));
-                            if (Firstlist.size() > 0)
-                                new_T.add(Firstlist.get(k));
-                            if (Thirdlist.size() > 0)
-                                new_C.add(Thirdlist.get(k));
+                    if(Value.name.get(0).toString().matches("H")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k)) / 10) >= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(1).toString().matches("H")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k)) / 10) >= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(2).toString().matches("H")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k)) / 10) >= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -853,15 +2190,173 @@ public class SearchActivity extends AppCompatActivity {
             } else if (s2.matches("＝")) {
                 float i = Float.valueOf(s3);
                 for (int k = 0; k < charttime.size(); k++) {
-                    if (Secondlist.size() > 0) {
-                        if ((Float.valueOf(Secondlist.get(k)) / 10) == i) {
-                            new_time.add(charttime.get(k));
-                            idlist.add(String.valueOf(k + 1));
-                            new_H.add(Secondlist.get(k));
-                            if (Firstlist.size() > 0)
-                                new_T.add(Firstlist.get(k));
-                            if (Thirdlist.size() > 0)
-                                new_C.add(Thirdlist.get(k));
+                    if(Value.name.get(0).toString().matches("H")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k)) / 10) == i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(1).toString().matches("H")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k)) / 10) == i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(2).toString().matches("H")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k)) / 10) == i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -869,15 +2364,173 @@ public class SearchActivity extends AppCompatActivity {
             } else if (s2.matches("≦")) {
                 float i = Float.valueOf(s3);
                 for (int k = 0; k < charttime.size(); k++) {
-                    if (Secondlist.size() > 0) {
-                        if ((Float.valueOf(Secondlist.get(k)) / 10) <= i) {
-                            new_time.add(charttime.get(k));
-                            idlist.add(String.valueOf(k + 1));
-                            new_H.add(Secondlist.get(k));
-                            if (Firstlist.size() > 0)
-                                new_T.add(Firstlist.get(k));
-                            if (Thirdlist.size() > 0)
-                                new_C.add(Thirdlist.get(k));
+                    if(Value.name.get(0).toString().matches("H")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k)) / 10) <= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(1).toString().matches("H")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k)) / 10) <= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(2).toString().matches("H")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k)) / 10) <= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -885,15 +2538,173 @@ public class SearchActivity extends AppCompatActivity {
             } else if (s2.matches("＜")) {
                 float i = Float.valueOf(s3);
                 for (int k = 0; k < charttime.size(); k++) {
-                    if (Secondlist.size() > 0) {
-                        if ((Float.valueOf(Secondlist.get(k)) / 10) < i) {
-                            new_time.add(charttime.get(k));
-                            idlist.add(String.valueOf(k + 1));
-                            new_H.add(Secondlist.get(k));
-                            if (Firstlist.size() > 0)
-                                new_T.add(Firstlist.get(k));
-                            if (Thirdlist.size() > 0)
-                                new_C.add(Thirdlist.get(k));
+                    if(Value.name.get(0).toString().matches("H")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k)) / 10) < i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(1).toString().matches("H")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k)) / 10) < i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }else if(Value.name.get(2).toString().matches("H")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k)) / 10) < i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -915,6 +2726,948 @@ public class SearchActivity extends AppCompatActivity {
             } else {
 
             }
+        }else if (s1.matches(intput1)){
+            if (s2.matches("＞")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(0).toString().matches("I")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k))) > i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else if (s2.matches("≧")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(0).toString().matches("I")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k))) >= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else if (s2.matches("＝")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(0).toString().matches("I")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k))) == i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else if (s2.matches("≦")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(0).toString().matches("I")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k))) <= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else if (s2.matches("＜")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(0).toString().matches("I")) {
+                        if (Firstlist.size() > 0) {
+                            if ((Float.valueOf(Firstlist.get(k))) < i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else {
+                Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+            }
+        }else if (s1.matches(intput2)){
+            if (s2.matches("＞")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(1).toString().matches("I")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k))) > i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else if (s2.matches("≧")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(1).toString().matches("I")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k))) >= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else if (s2.matches("＝")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(1).toString().matches("I")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k))) == i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else if (s2.matches("≦")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(1).toString().matches("I")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k))) <= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else if (s2.matches("＜")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(1).toString().matches("I")) {
+                        if (Secondlist.size() > 0) {
+                            if ((Float.valueOf(Secondlist.get(k))) < i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else {
+                Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+            }
+        }else if (s1.matches(intput3)){
+            if (s2.matches("＞")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(2).toString().matches("I")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k))) > i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else if (s2.matches("≧")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(2).toString().matches("I")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k))) >= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else if (s2.matches("＝")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(2).toString().matches("I")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k))) == i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else if (s2.matches("≦")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(2).toString().matches("I")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k))) <= i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else if (s2.matches("＜")) {
+                float i = Float.valueOf(s3);
+                for (int k = 0; k < charttime.size(); k++) {
+                    if(Value.name.get(2).toString().matches("I")) {
+                        if (Thirdlist.size() > 0) {
+                            if ((Float.valueOf(Thirdlist.get(k))) < i) {
+                                new_time.add(charttime.get(k));
+                                idlist.add(String.valueOf(k + 1));
+                                if (Value.name.get(0).toString().matches("T")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_T.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("H")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_H.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("C")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_C.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(0).toString().matches("I")) {
+                                    if (Firstlist.size() > 0) {
+                                        new_I1.add(Firstlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("T")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_T.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("H")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_H.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("C")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_C.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(1).toString().matches("I")) {
+                                    if (Secondlist.size() > 0) {
+                                        new_I2.add(Secondlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("T")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_T.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("H")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_H.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("C")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_C.add(Thirdlist.get(k));
+                                    }
+                                } else if (Value.name.get(2).toString().matches("I")) {
+                                    if (Thirdlist.size() > 0) {
+                                        new_I3.add(Thirdlist.get(k));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                showpage();
+            } else {
+                Toast.makeText(SearchActivity.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -925,8 +3678,9 @@ public class SearchActivity extends AppCompatActivity {
 
         ListView chart_list = (ListView) findViewById(R.id.datalist1);
 
-        searchData = new SearchData(this, new_time, new_T, new_H, new_C, idlist, date, record,
-                Temperature, Humidity, CO2);
+        searchData = new SearchData(this, new_time, new_T, new_H, new_C,
+                new_I1, new_I2, new_I3, idlist, date, record, Temperature,
+                Humidity, CO2, intput1, intput2, intput3);
         chart_list.setAdapter(searchData);
     }
 
@@ -941,17 +3695,20 @@ public class SearchActivity extends AppCompatActivity {
                     sleep(30);
                     condition1.add(record);
                     sleep(30);
-                    if (Firstlist.size() > 0) {
-                        condition1.add(Temperature);
-                        sleep(30);
-                    }
-                    if (Secondlist.size() > 0) {
-                        condition1.add(Humidity);
-                        sleep(30);
-                    }
-                    if (Thirdlist.size() > 0) {
-                        condition1.add(CO2);
-                        sleep(30);
+                    for(int i = 0; i < Value.name.size(); i++) {
+                        if (Value.name.get(i).toString().matches("T")) {
+                            condition1.add(Temperature);
+                            sleep(30);
+                        } else if (Value.name.get(i).toString().matches("H")) {
+                            condition1.add(Humidity);
+                            sleep(30);
+                        } else if (Value.name.get(i).toString().matches("C")) {
+                            condition1.add(CO2);
+                            sleep(30);
+                        } else if (Value.name.get(i).toString().matches("I")) {
+                            condition1.add(intput1);
+                            sleep(30);
+                        }
                     }
                 }
                 condition2.add(getString(R.string.condition2));

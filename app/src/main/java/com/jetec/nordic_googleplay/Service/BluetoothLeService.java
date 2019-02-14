@@ -366,6 +366,7 @@ public class BluetoothLeService extends Service {
             mBluetoothGatt.connect();
         }
         mBluetoothGatt.disconnect();
+        close();
     }
 
     /**
