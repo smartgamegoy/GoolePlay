@@ -32,9 +32,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -42,9 +44,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -59,9 +63,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -83,9 +89,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -93,9 +101,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -110,9 +120,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -134,9 +146,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -144,9 +158,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -167,9 +183,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -197,9 +215,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -207,9 +227,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -230,9 +252,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -260,9 +284,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -270,9 +296,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -293,9 +321,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -324,9 +354,11 @@ public class CR {
                         Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                     } else {
                         if (t == 0.0) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
@@ -334,9 +366,11 @@ public class CR {
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
-                                sendValue.send("END");
-                                sleep(100);
-                                Value.downlog = false;
+                                if(Value.downlog) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                }
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -351,9 +385,11 @@ public class CR {
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
-                                sendValue.send("END");
-                                sleep(100);
-                                Value.downlog = false;
+                                if(Value.downlog) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                }
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -381,9 +417,11 @@ public class CR {
                         Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -407,9 +445,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -440,9 +480,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -450,9 +492,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -467,9 +511,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -491,9 +537,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -501,9 +549,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -518,9 +568,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -542,9 +594,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -552,9 +606,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -575,9 +631,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -605,9 +663,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -615,9 +675,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -638,9 +700,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -668,9 +732,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -678,9 +744,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -701,9 +769,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -732,9 +802,11 @@ public class CR {
                         Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                     } else {
                         if (t == 0.0) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
@@ -742,9 +814,11 @@ public class CR {
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
-                                sendValue.send("END");
-                                sleep(100);
-                                Value.downlog = false;
+                                if(Value.downlog) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                }
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -759,9 +833,11 @@ public class CR {
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
-                                sendValue.send("END");
-                                sleep(100);
-                                Value.downlog = false;
+                                if(Value.downlog) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                }
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -789,9 +865,11 @@ public class CR {
                         Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -815,9 +893,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -848,9 +928,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -858,9 +940,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -875,9 +959,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -899,9 +985,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -909,9 +997,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -926,9 +1016,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -950,9 +1042,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -960,9 +1054,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -983,9 +1079,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -1013,9 +1111,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -1023,9 +1123,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -1046,9 +1148,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -1076,9 +1180,11 @@ public class CR {
                     Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                 } else {
                     if (t == 0.0) {
-                        sendValue.send("END");
-                        sleep(100);
-                        Value.downlog = false;
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         String out = name + "+" + "0000.0";
                         Log.e(TAG, "out = " + out);
                         sendValue.send(out);
@@ -1086,9 +1192,11 @@ public class CR {
                         inDialog.dismiss();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -1109,9 +1217,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -1140,9 +1250,11 @@ public class CR {
                         Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                     } else {
                         if (t == 0.0) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             String out = name + "+" + "0000.0";
                             Log.e(TAG, "out = " + out);
                             sendValue.send(out);
@@ -1150,9 +1262,11 @@ public class CR {
                             inDialog.dismiss();
                         } else {
                             if (gets.startsWith("-")) {
-                                sendValue.send("END");
-                                sleep(100);
-                                Value.downlog = false;
+                                if(Value.downlog) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                }
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -1167,9 +1281,11 @@ public class CR {
                                 function.notifyDataSetChanged();
                                 inDialog.dismiss();
                             } else {
-                                sendValue.send("END");
-                                sleep(100);
-                                Value.downlog = false;
+                                if(Value.downlog) {
+                                    sendValue.send("END");
+                                    sleep(100);
+                                    Value.downlog = false;
+                                }
                                 gets = String.valueOf(t);
                                 int i = gets.indexOf(".");
                                 Log.e(TAG, "gets = " + gets);
@@ -1197,9 +1313,11 @@ public class CR {
                         Toast.makeText(context, context.getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                     } else {
                         if (gets.startsWith("-")) {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);
@@ -1223,9 +1341,11 @@ public class CR {
                             function.notifyDataSetChanged();
                             inDialog.dismiss();
                         } else {
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             gets = String.valueOf(t);
                             int i = gets.indexOf(".");
                             Log.e(TAG, "gets = " + gets);

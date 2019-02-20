@@ -29,7 +29,7 @@ public class EditChangeName implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable editable) {
-        int len = 20;
+        int len = 15;
         byte[] bytes = String.valueOf(editable).getBytes();
         if (bytes.length > len) {
             byte[] newBytes = new byte[len];

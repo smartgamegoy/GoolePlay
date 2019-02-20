@@ -534,9 +534,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                     switch (name) {
                         case "NAME": {
                             String out = "NAME" + gets;
-                            sendValue.send("END");
-                            sleep(100);
-                            Value.downlog = false;
+                            if(Value.downlog) {
+                                sendValue.send("END");
+                                sleep(100);
+                                Value.downlog = false;
+                            }
                             sendValue.send(out);
                             if (mBluetoothLeService != null) {
                                 Value.BName = gets;
@@ -659,18 +661,22 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                                 Toast.makeText(DeviceEngineer.this, getString(R.string.wrong), Toast.LENGTH_SHORT).show();
                             } else {
                                 if (t == 0.0) {
-                                    sendValue.send("END");
-                                    sleep(100);
-                                    Value.downlog = false;
+                                    if(Value.downlog) {
+                                        sendValue.send("END");
+                                        sleep(100);
+                                        Value.downlog = false;
+                                    }
                                     String out = name + "+" + "0000.0";
                                     Log.e(TAG, "out = " + out);
                                     sendValue.send(out);
                                     inDialog.dismiss();
                                 } else {
                                     if (gets.startsWith("-")) {
-                                        sendValue.send("END");
-                                        sleep(100);
-                                        Value.downlog = false;
+                                        if(Value.downlog) {
+                                            sendValue.send("END");
+                                            sleep(100);
+                                            Value.downlog = false;
+                                        }
                                         gets = String.valueOf(t);
                                         int i = gets.indexOf(".");
                                         Log.e(TAG, "gets = " + gets);
@@ -685,9 +691,11 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                                         function.notifyDataSetChanged();
                                         inDialog.dismiss();
                                     } else {
-                                        sendValue.send("END");
-                                        sleep(100);
-                                        Value.downlog = false;
+                                        if(Value.downlog) {
+                                            sendValue.send("END");
+                                            sleep(100);
+                                            Value.downlog = false;
+                                        }
                                         gets = String.valueOf(t);
                                         int i = gets.indexOf(".");
                                         Log.e(TAG, "gets = " + gets);
@@ -727,7 +735,7 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
                 editText.setKeyListener(DigitsKeyListener.getInstance(".,$%&^!()-_=+';:|}{[]*→←↘↖、，。?~～#€￠" +
                         "￡￥abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@>/<"));
                 editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                editText.addTextChangedListener(new EditChangeName(this, editText, 20));
+                editText.addTextChangedListener(new EditChangeName(this, editText, 15));
             }
             break;
             case "PV1": {

@@ -74,11 +74,13 @@ public class SwitchDialog {
             if (position.matches("DP1")) {
                 if (switch_p != null) {
                     try {
-                        sendValue.send("END");
-                        sleep(100);
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         sendValue.send(switch_p);
                         Value.IDP1 = getboolean;
-                        Value.downlog = false;
                         sendset(position);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -87,11 +89,13 @@ public class SwitchDialog {
             } else if (position.matches("DP2")) {
                 if (switch_p != null) {
                     try {
-                        sendValue.send("END");
-                        sleep(100);
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         sendValue.send(switch_p);
                         Value.IDP2 = getboolean;
-                        Value.downlog = false;
                         sendset(position);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -100,11 +104,13 @@ public class SwitchDialog {
             } else if (position.matches("DP3")) {
                 if (switch_p != null) {
                     try {
-                        sendValue.send("END");
-                        sleep(100);
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         sendValue.send(switch_p);
                         Value.IDP3 = getboolean;
-                        Value.downlog = false;
                         sendset(position);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -112,13 +118,14 @@ public class SwitchDialog {
                 }
             } else if (position.matches("SPK")) {
                 if (switch_p != null) {
-
                     try {
-                        sendValue.send("END");
-                        sleep(100);
+                        if(Value.downlog) {
+                            sendValue.send("END");
+                            sleep(100);
+                            Value.downlog = false;
+                        }
                         sendValue.send(switch_p);
                         Value.SPK = getboolean;
-                        Value.downlog = false;
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
