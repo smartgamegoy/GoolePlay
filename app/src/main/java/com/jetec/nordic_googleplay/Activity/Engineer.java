@@ -37,6 +37,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Objects;
+
 import static com.jetec.nordic_googleplay.Activity.DeviceList.getManager;
 import static java.lang.Thread.sleep;
 
@@ -105,7 +106,7 @@ public class Engineer extends AppCompatActivity {
         b1.setOnClickListener(v -> {
             vibrator.vibrate(100);
             String message = e1.getText().toString().trim();
-            if(!message.matches("")){
+            if (!message.matches("")) {
                 try {
                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
                     sendValue = new SendValue(mBluetoothLeService);
@@ -138,7 +139,7 @@ public class Engineer extends AppCompatActivity {
         SP1.setOnClickListener(v -> {
             vibrator.vibrate(100);
             String message = e1.getText().toString().trim();
-            if(!message.matches("")){
+            if (!message.matches("")) {
                 try {
                     message = engin.todo(Float.valueOf(message), "SP1", message);
                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
@@ -157,7 +158,7 @@ public class Engineer extends AppCompatActivity {
         ER1.setOnClickListener(v -> {
             vibrator.vibrate(100);
             String message = e1.getText().toString().trim();
-            if(!message.matches("")){
+            if (!message.matches("")) {
                 try {
                     message = engin.todo(Float.valueOf(message), "ER1", message);
                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
@@ -176,7 +177,7 @@ public class Engineer extends AppCompatActivity {
         SV1.setOnClickListener(v -> {
             vibrator.vibrate(100);
             String message = e1.getText().toString().trim();
-            if(!message.matches("")){
+            if (!message.matches("")) {
                 try {
                     message = engin.todo(Float.valueOf(message), "SV1", message);
                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
@@ -210,7 +211,7 @@ public class Engineer extends AppCompatActivity {
         SP2.setOnClickListener(v -> {
             vibrator.vibrate(100);
             String message = e1.getText().toString().trim();
-            if(!message.matches("")){
+            if (!message.matches("")) {
                 try {
                     message = engin.todo(Float.valueOf(message), "SP2", message);
                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
@@ -229,7 +230,7 @@ public class Engineer extends AppCompatActivity {
         ER2.setOnClickListener(v -> {
             vibrator.vibrate(100);
             String message = e1.getText().toString().trim();
-            if(!message.matches("")){
+            if (!message.matches("")) {
                 try {
                     message = engin.todo(Float.valueOf(message), "ER2", message);
                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
@@ -248,7 +249,7 @@ public class Engineer extends AppCompatActivity {
         SV2.setOnClickListener(v -> {
             vibrator.vibrate(100);
             String message = e1.getText().toString().trim();
-            if(!message.matches("")){
+            if (!message.matches("")) {
                 try {
                     message = engin.todo(Float.valueOf(message), "SV2", message);
                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
@@ -266,18 +267,40 @@ public class Engineer extends AppCompatActivity {
 
         init.setOnClickListener(v -> {
             vibrator.vibrate(100);
-            Initialization initialization = new Initialization(Value.deviceModel, mBluetoothLeService);
-            try {
-                initialization.start();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            sendValue = new SendValue(mBluetoothLeService);
+            int i = 0;
+            if (Value.deviceModel.substring(3, 4).matches("1")) {
+                i = 1;    //幾排
+            } else if (Value.deviceModel.substring(3, 4).matches("2")) {
+                i = 2;
+            } else if (Value.deviceModel.substring(3, 4).matches("3")) {
+                i = 3;
+            }
+
+            String sp, er, sv;
+
+            for (int j = 0; j < i; j++) {
+                try {
+                    sp = "SP" + i + "+1250.0";
+                    sendValue.send(sp);
+                    sleep(100);
+                    er = "ER" + i + "+1000.0";
+                    sendValue.send(er);
+                    sleep(100);
+                    sv = "SV" + i + "+0000.0";
+                    sendValue.send(sv);
+                    sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
         SP3.setOnClickListener(v -> {
             vibrator.vibrate(100);
             String message = e1.getText().toString().trim();
-            if(!message.matches("")){
+            if (!message.matches("")) {
                 try {
                     message = engin.todo(Float.valueOf(message), "SP3", message);
                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
@@ -296,7 +319,7 @@ public class Engineer extends AppCompatActivity {
         ER3.setOnClickListener(v -> {
             vibrator.vibrate(100);
             String message = e1.getText().toString().trim();
-            if(!message.matches("")){
+            if (!message.matches("")) {
                 try {
                     message = engin.todo(Float.valueOf(message), "ER3", message);
                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
@@ -315,7 +338,7 @@ public class Engineer extends AppCompatActivity {
         SV3.setOnClickListener(v -> {
             vibrator.vibrate(100);
             String message = e1.getText().toString().trim();
-            if(!message.matches("")){
+            if (!message.matches("")) {
                 try {
                     message = engin.todo(Float.valueOf(message), "SV3", message);
                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
@@ -392,7 +415,7 @@ public class Engineer extends AppCompatActivity {
                         })
                         .show();
             }
-                break;
+            break;
             case KeyEvent.KEYCODE_DPAD_CENTER:
                 break;
             default:
@@ -432,7 +455,17 @@ public class Engineer extends AppCompatActivity {
             startActivity(intent);
             finish();
             return true;
+        } else if (id == R.id.reset) {
+            vibrator.vibrate(100);
+            Initialization initialization = new Initialization(Value.deviceModel, mBluetoothLeService);
+            try {
+                initialization.start();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return true;
         }
+
         return true;
     }
 
