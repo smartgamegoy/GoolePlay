@@ -824,8 +824,8 @@ public class LogChartView extends AppCompatActivity {
             pdffile = new File(filePath);
             Log.e(TAG, "file = " + pdffile);
             try {
-
                 int alldata = Value.charttime.size(), page;
+
                 if (alldata % 300 == 0) {
                     page = alldata / 300;
                 } else {

@@ -44,7 +44,6 @@ public class CreatTable {
         this.page = page;
     }
 
-
     public PdfPTable createTable(Document document) throws IOException, DocumentException {
 
         String a = "", b = "", c = "";

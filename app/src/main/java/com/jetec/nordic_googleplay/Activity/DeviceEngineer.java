@@ -732,9 +732,10 @@ public class DeviceEngineer extends AppCompatActivity implements NavigationView.
             case "NAME": {  //editChangeName
                 c = true;
                 editText.setHint(getString(R.string.changename));
-                editText.setKeyListener(DigitsKeyListener.getInstance(".,$%&^!()-_=+';:|}{[]*→←↘↖、，。?~～#€￠" +
+                /*editText.setKeyListener(DigitsKeyListener.getInstance(".,$%&^!()-_=+';:|}{[]*→←↘↖、，。?~～#€￠" +
                         "￡￥abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@>/<"));
-                editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);*/
+                editText.setInputType(InputType.TYPE_CLASS_TEXT);
                 editText.addTextChangedListener(new EditChangeName(this, editText, 15));
             }
             break;
